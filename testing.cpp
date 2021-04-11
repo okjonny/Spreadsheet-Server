@@ -2,6 +2,6 @@
 
 int main()
 {
-  std::cout << "this is a test." << std::endl;
+  std::cout << "IM TESTING SHIT HOMIE." << std::endl;
   return 0;
 }
