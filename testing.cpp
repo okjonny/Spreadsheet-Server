@@ -9,7 +9,7 @@ using std::endl;
 string read_(tcp::socket & socket) {
        boost::asio::streambuf buf;
        boost::asio::read_until( socket, buf, "\n" );
-       string data = boost::asio::buffercast<const char*>(buf.data());
+       string data = boost::asio::buffer_cast<const char*>(buf.data());
        return data;
 }
 void send(tcp::socket & socket, const string& message) {
