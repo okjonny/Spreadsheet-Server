@@ -47,3 +47,7 @@ COPY . /cs3505
 
 # Setup github repository
 # RUN cd /cs3505 && mkdir spreadsheet && git init
+# Clone our private GitHub Repository
+#RUN cd /cs3505 && git clone -b docker https://ghp_DWQCU3VSkHzNe4EAwi9GjVyWesgiET1T25y:github.com/okjonny/TeamPog-CS3505.git
+RUN  git config --global user.email jpalactor@gmail.com
+RUN  git config --global user.name "Jonny Palacios-Torres"
