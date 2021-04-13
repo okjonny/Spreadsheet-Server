@@ -11,7 +11,7 @@ namespace networking_util
     the_socket = null;
     next_id = 0;
 
-    socket_state::socket_state(std::function<networking_util::socket_state> to_call, tcp::socket s)
+    socket_state::socket_state(std::function<networking_util::socket_state> to_call, ip::tcp::socket s)
     {
         on_network_action = to_call;
         the_socket = s;

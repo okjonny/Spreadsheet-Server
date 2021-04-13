@@ -7,7 +7,7 @@
 #ifndef SOCKSTATE_H 
 #define SOCKSTATE_H
 
-using namespace boost::asio;
+//using namespace boost::asio;
 
 namespace networking_util
 {
@@ -18,12 +18,12 @@ namespace networking_util
 
         public:
             // member variables
-            const ip::tcp::socket the_socket;
-            const int buffer_size = 4096;
+            const boost::asio::ip::tcp::socket the_socket;
+            const int buffer_size;
             const long id;
 
             // methods
-            socket_state(std::function<networking_util::socket_state> to_call, ip::tcp::socket s);
+            socket_state(std::function<networking_util::socket_state> to_call, boost::asio::ip::tcp::socket s);
             std::function<networking_util::socket_state()> on_network_action;
             std::string get_error_message;
             bool get_error_occured;
@@ -32,7 +32,7 @@ namespace networking_util
 
         private:
             // member variables
-            unsigned char buffer[buffer_size];
+            unsigned char buffer[4096];
             std::stringstream data;
             std::string error_message;
 
