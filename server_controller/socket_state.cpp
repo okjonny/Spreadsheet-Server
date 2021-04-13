@@ -8,13 +8,10 @@ using namespace boost::asio;
 
 namespace networking_util
 {
-    friend class networking;
+    the_socket = null;
+    next_id = 0;
 
-    const tcp::socket the_socket = null;
-    const int buffer_size = 4096;
-    const long id;
-
-    socket_state::socket_state(std::function<networking_util::socket_state> toCall, tcp::socket s)
+    socket_state::socket_state(std::function<networking_util::socket_state> to_call, tcp::socket s)
     {
         on_network_action = to_call;
         the_socket = s;
@@ -48,9 +45,8 @@ namespace networking_util
 
     void socket_state::clear_data()
     {
-
+        data.str( std::string() );
+        data.clear();
     }
 
-    static long next_id = 0;
-    std::mutex data_mutex;
 }

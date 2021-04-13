@@ -2,6 +2,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/asio.hpp>
 #include <mutex>
+#include <string>
 
 #ifndef SOCKSTATE_H 
 #define SOCKSTATE_H
@@ -18,12 +19,12 @@ namespace networking_util
         public:
             // member variables
             const ip::tcp::socket the_socket;
-            const int buffer_size;
+            const int buffer_size = 4096;
             const long id;
 
             // methods
-            socket_state();
-            std::function<networking_util::socket_state> on_network_action;
+            socket_state(std::function<networking_util::socket_state> to_call, ip::tcp::socket s);
+            std::function<networking_util::socket_state()> on_network_action;
             std::string get_error_message;
             bool get_error_occured;
             void remove_data(int start, int length);
@@ -31,8 +32,8 @@ namespace networking_util
 
         private:
             // member variables
-            std::byte buffer [buffer_size];
-            std::basic_stringstream data;
+            unsigned char buffer[buffer_size];
+            std::stringstream data;
             std::string error_message;
 
             static long next_id;
