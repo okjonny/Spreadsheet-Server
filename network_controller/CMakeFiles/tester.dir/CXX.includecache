@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/TeamPog-CS3505/network_controller/networking_main.cpp
+iostream
+-
+socket_state.h
+/TeamPog-CS3505/network_controller/socket_state.h
+
+/TeamPog-CS3505/network_controller/socket_state.cpp
+socket_state.h
+/TeamPog-CS3505/network_controller/socket_state.h
+boost/asio.hpp
+-
+mutex
+-
+
+/TeamPog-CS3505/network_controller/socket_state.h
+boost/asio.hpp
+-
+mutex
+-
+string
+-
+
