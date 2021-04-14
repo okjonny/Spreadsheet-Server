@@ -12,4 +12,4 @@ add_executable(
     networking_main.cpp
 )
 
-target_link_libraries( test ${CMAKE_THREAD_LIBS_INIT} )
+target_link_libraries( tester ${CMAKE_THREAD_LIBS_INIT} )

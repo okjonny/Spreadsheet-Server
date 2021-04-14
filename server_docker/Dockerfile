@@ -36,7 +36,8 @@ RUN apt-get -y update && apt-get -y install \
    git \
    apt-utils \
    vim \
-   libboost-all-dev
+   libboost-all-dev \
+   cmake
 
 # Copy in the files from the current folder (recursively) For our purposes,
 # put them in /cs3505.  This is why the current folder is called the
