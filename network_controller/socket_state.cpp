@@ -3,23 +3,22 @@
 //#include <boost/thread/mutex.hpp>
 #include <boost/asio.hpp>
 #include <mutex>
-
 //using namespace boost::asio;
 //using ip::tcp;
 
-namespace networking_util
+namespace network_util
 {
     //the_socket = null;
     long socket_state::next_id = 0;
 
     //std::function<networking_util::socket_state()> &to_call,
 
-    socket_state::socket_state(const networking_util::socket_state & other)
+    socket_state::socket_state(const network_util::socket_state & other)
     {
         *this = other;
     }
 
-    socket_state::socket_state(std::function<networking_util::socket_state()> to_call, boost::asio::ip::tcp::socket &s)
+    socket_state::socket_state(std::function<network_util::socket_state()> to_call, boost::asio::ip::tcp::socket &s)
     {
         on_network_action = to_call;
         the_socket = &s;
