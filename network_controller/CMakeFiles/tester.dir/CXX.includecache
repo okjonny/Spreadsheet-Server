@@ -11,13 +11,7 @@ iostream
 -
 socket_state.h
 /TeamPog-CS3505/network_controller/socket_state.h
-
-/TeamPog-CS3505/network_controller/socket_state.cpp
-socket_state.h
-/TeamPog-CS3505/network_controller/socket_state.h
 boost/asio.hpp
--
-mutex
 -
 
 /TeamPog-CS3505/network_controller/socket_state.h
