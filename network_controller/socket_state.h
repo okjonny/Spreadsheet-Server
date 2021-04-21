@@ -1,6 +1,7 @@
 //#include <boost/filesystem/operations.hpp>
 //#include <boost/thread/mutex.hpp>
 #include <boost/asio.hpp>
+#include <boost/asio/buffer.hpp>
 #include <mutex>
 #include <string>
 
@@ -19,8 +20,8 @@ namespace network_util
         friend class networking;
         
         // member variables
-        std::byte buffer[4096];
-        std::string data;
+        boost::asio::mutable_buffer buffer; // TODO: change to boost buffer
+        std::wstring DATA;
         std::string error_message;
         bool error_occured;
         static long next_id; //used to be static
@@ -44,7 +45,8 @@ namespace network_util
             void remove_data(int start, int length);
             void clear_data();
 
-
+        private:
+            void receive_callback(const boost::system::error_code& error, std::size_t num_bytes);
     };
 }
 

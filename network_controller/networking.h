@@ -24,14 +24,11 @@ namespace network_util
             //General networking stuff
             static void get_data(socket_state state);
             static bool send(boost::asio::ip::tcp::socket &socket, std::string data);
-            static bool send_and_close(boost::asio::ip::tcp::socket &socket, std::string data);
 
 
         private:
-            static void receive_callback(boost::asio::async_result ar);
             static void send_callback(boost::asio::async_result ar);
-            static void accept_new_client(boost::asio::async_result ar);
-            static void send_and_close_callback(boost::asio::async_result ar);
+            static void accept_new_client(std::function<network_util::socket_state()> to_call, boost::asio::ip::tcp::acceptor listener, boost::asio::ip::tcp::socket client);
             static void error_call(socket_state error_state, std::string error_message);
     };
 }
