@@ -20,12 +20,12 @@ namespace network_util
         friend class networking;
         
         // member variables
-        boost::asio::mutable_buffer buffer; // TODO: change to boost buffer
-        std::wstring DATA;
+        std::wstring data;
         std::string error_message;
         bool error_occured;
         static long next_id; //used to be static
         std::mutex data_lock;
+        // boost::asio::mutable_buffer the_buffer; // TODO: change to boost buffer
 
         public:
             // member variables
@@ -34,8 +34,8 @@ namespace network_util
 
             // methods
             socket_state(const network_util::socket_state& other);
-            socket_state(std::function<network_util::socket_state()> to_call, boost::asio::ip::tcp::socket &s);
-            std::function<network_util::socket_state()> on_network_action;
+            socket_state(std::function<network_util::socket_state(network_util::socket_state() &)> & to_call, boost::asio::ip::tcp::socket &s);
+            std::function<network_util::socket_state(network_util::socket_state() &)> * on_network_action;
             std::string get_error_message() const;
             bool get_error_occured() const;
 

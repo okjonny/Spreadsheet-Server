@@ -13,7 +13,7 @@ namespace network_util
 {
     //the_socket = null;
     long socket_state::next_id = 0;
-
+    boost::asio::mutable_buffer the_buffer(); // TODO: change to boost buffer
     //std::function<networking_util::socket_state()> &to_call,
 
     socket_state::socket_state(const network_util::socket_state & other)
@@ -21,9 +21,9 @@ namespace network_util
         *this = other;
     }
 
-    socket_state::socket_state(std::function<network_util::socket_state()> to_call, boost::asio::ip::tcp::socket &s)
+    socket_state::socket_state(std::function<network_util::socket_state(network_util::socket_state()&)> & to_call, boost::asio::ip::tcp::socket &s)
     {
-        on_network_action = to_call;
+        on_network_action = & to_call;
         the_socket = &s;
         id = next_id++;
     }
@@ -58,7 +58,7 @@ namespace network_util
         std::lock_guard<std::mutex> guard(data_lock);
         using convert_typeX = std::codecvt_utf8<wchar_t>;
         std::wstring_convert<convert_typeX, wchar_t> converterX;
-        return converterX.to_bytes(DATA);
+        return converterX.to_bytes(data);
         }
     }
 
@@ -66,7 +66,7 @@ namespace network_util
     {
         {
             std::lock_guard<std::mutex> guard(data_lock);
-            DATA.erase(start, length);
+            data.erase(start, length);
         }
     }
 
@@ -74,7 +74,7 @@ namespace network_util
     {
         {
             std::lock_guard<std::mutex> guard(data_lock);
-            DATA.clear();
+            data.clear();
         }
     }
 
@@ -95,10 +95,8 @@ namespace network_util
         /// <param name="ar"> 
         /// This contains the SocketState that is stored with the callback when the initial BeginReceive is called.
         /// </param>
-        void receive_callback(const boost::system::error_code& error, std::size_t num_bytes) // only takes in buffer and num bytes received
+        void socket_state::receive_callback(const boost::system::error_code& error, std::size_t num_bytes) // only takes in buffer and num bytes received
         {
-            socket_state the_state = the_state;
-
             // try
             // {
                 //TODO: boost - number of bytes are returned in the parameter
@@ -113,12 +111,11 @@ namespace network_util
                 }
 
                 //std::string new_data = Encoding.UTF8.GetString(state.buffer, 0, numBytes);
-                std::string new_data(boost::asio::buffers_begin(static_cast<unsigned char*>(buffer.data())), buffers_begin(static_cast<unsigned char*>(buffer.data())) + num_bytes);
+                std::string new_data(boost::asio::buffers_begin(the_buffer.data()), boost::asio::buffers_begin(the_buffer.data()) + num_bytes);
 
-                std::wstring encoded_data = boost::locale::conv::to_utf<wchar_t>(new_data,"UTF-8", default_method); 
+                std::wstring encoded_data = boost::locale::conv::to_utf<wchar_t>(new_data,"UTF-8", boost::locale::conv::default_method); 
 
                 //Buffering the data
-                
                 {
                     std::lock_guard<std::mutex> guard(data_lock);
                     data += encoded_data;
