@@ -1,51 +1,36 @@
 #include "socket_state.h"
-//#include <boost/filesystem/operations.hpp>
-//#include <boost/thread/mutex.hpp>
-#include <boost/asio.hpp>
-#include <boost/locale.hpp>
 #include <mutex>
 #include <locale>
 #include <codecvt>
-//using namespace boost::asio;
-//using ip::tcp;
 
-
-// This is a test
-
-namespace network_util
-{
+namespace network_util {
     //the_socket = null;
-    long socket_state::next_id = 0;
     //std::function<networking_util::socket_state()> &to_call,
 
-    socket_state::socket_state(const network_util::socket_state & other)
-    {
-        *this = other;
-    }
+//    socket_state::socket_state(const network_util::socket_state & other)
+//    {
+//        *this = other;
+//    }
 
-    socket_state::socket_state(int _socket)
-    {
+    socket_state::socket_state(int _socket) {
         socket = _socket;
     }
 
-    socket_state & socket_state::operator=(const socket_state & other)
-    {
-        //Fill in with copying shtuff
-        return *this;
-    }
+//    socket_state & socket_state::operator=(const socket_state & other)
+//    {
+//        //Fill in with copying shtuff
+//        return *this;
+//    }
 
-    std::string socket_state::get_error_message() const
-    {
+    std::string socket_state::get_error_message() const {
         return error_message;
     }
 
-    bool socket_state::get_error_occured() const
-    {
+    bool socket_state::get_error_occured() const {
         return error_occured;
     }
 
-    std::string socket_state::get_data()
-    {
+    std::string socket_state::get_data() {
         std::string retval;
         {
             std::lock_guard<std::mutex> guard(data_lock);
@@ -62,16 +47,14 @@ namespace network_util
         // }
     }
 
-    void socket_state::remove_data(int start, int length)
-    {
+    void socket_state::remove_data(int start, int length) {
         {
             std::lock_guard<std::mutex> guard(data_lock);
             data.erase(start, length);
         }
     }
 
-    void socket_state::clear_data()
-    {
+    void socket_state::clear_data() {
         {
             std::lock_guard<std::mutex> guard(data_lock);
             data.clear();
