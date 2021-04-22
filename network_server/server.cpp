@@ -24,7 +24,7 @@ void CountUp(int threadid);
 // void CountDown(int threadid);
 void ListenForNewClients();
 
-// char buffer[4096];
+ char buffer[4096];
 int new_socket;
 int valread;
 int server_fd;
@@ -47,7 +47,8 @@ int main(int argc, char const *argv[]) {
 int SetUpServer(){
     ThreadID = 0;
 
-    buffer[4096] = {0}; 
+    std::cout << "Running..." << std:: endl;
+    buffer[4096] = {0};
        
     // Creating socket file descriptor 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
