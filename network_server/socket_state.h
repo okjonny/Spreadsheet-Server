@@ -9,31 +9,25 @@ namespace network_util {
     class socket_state {
         friend class server;
 
-        // member variables
         std::string data;
         int socket;
         std::string error_message;
         bool error_occured;
-        // static long next_id; //used to be static
         std::mutex data_lock;
         char buffer[4096];
-        // boost::asio::mutable_buffer the_buffer; // TODO: change to boost buffer
 
     public:
-        // methods
-//            socket_state(const network_util::socket_state& other);
+        socket_state();
+
         socket_state(int _socket);
-
-        // std::function<network_util::socket_state(network_util::socket_state() &)> * on_network_action;
         std::string get_error_message() const;
-
         bool get_error_occured() const;
 
-//            socket_state & operator=(const network_util::socket_state & other);
         std::string get_data();
 
-        void remove_data(int start, int length);
+        int get_socket_id() const;
 
+        void remove_data(int start, int length);
         void clear_data();
     };
 }
