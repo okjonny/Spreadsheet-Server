@@ -19,12 +19,23 @@
 #define PORT 1100
 
 namespace network_util {
-    server::server() {
-        addrlen = sizeof(address);
-        opt = 1;
-        thread_id = 0;
-        buffer[4096] = {0};
-    }
+    int server::addrlen = sizeof(address);
+    int server::opt = 1;
+    int server::thread_id = 0;
+    int server::valread;
+    char server::buffer[4096];
+    int server::server_fd;
+    struct sockaddr_in server::address;
+    std::thread server::threads[100];
+    std::mutex server::mtx;
+    socket_state server::clients[100];
+
+//    server::server() {
+//        addrlen = sizeof(address);
+//        opt = 1;
+//        thread_id = 0;
+//        buffer[4096] = {0};
+//    }
 
     int server::setup_server() {
         std::cout << "Running..." << std::endl;
@@ -66,18 +77,10 @@ namespace network_util {
             if (threads[thread_id].joinable()) {
                 threads[thread_id].join();
             }
+//            threads[thread_id] = std::thread([this] { CountUp(thread_id); });
+//            threads[thread_id] = std::thread(std::bind(&server::CountUp, this, thread_id));
+            threads[thread_id] = std::thread(&server::CountUp, thread_id);
 
-            // if(thread_id == 1)
-            // {
-            //     threads[thread_id] = std::thread(CountDown,thread_id);
-            // }
-            // else
-            // {
-            //     threads[thread_id] = std::thread(CountUp,thread_id);
-            // }
-
-            threads[thread_id] = std::thread([this] { CountUp(thread_id); });
-//            threads[thread_id] = std::thread(network_util::server::CountUp, thread_id);
             clients[thread_id].socket = c.socket;
             thread_id++;
         }
@@ -91,17 +94,17 @@ namespace network_util {
             valread = read(clients[thread_id].socket, buffer, 4096);
             std::cout << thread_id << ":" << buffer << std::endl;
             std::string s = buffer;
-            int value = std::stoi(s);
-            if (value == -1) {
+//            int value = std::stoi(s);
+            if (s == "Disconnect") {
                 mtx.unlock();
                 break;
             }
-            value++;
-            std::string sToSend = std::to_string(value);
-            send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
+//            value++;
+//            std::string sToSend = std::to_string(value);
+//            send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
             std::fill_n(buffer, 4096, 0);
             mtx.unlock();
         }
-        thread_id--;
+        server::thread_id--;
     }
 }

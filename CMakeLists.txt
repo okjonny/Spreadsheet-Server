@@ -15,7 +15,7 @@ include_directories(network_server)
 
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-set(SOURCE_FILES network_server/server.cpp network_server/socket_state.cpp network_server/server.h network_server/run_server.cpp)
+set(SOURCE_FILES network_server/server.cpp network_server/socket_state.cpp network_server/server.h network_server/run_server.cpp network_server/CMakeFiles/suuuuuuuuurvur.cpp)
 project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)
 
