@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++17 -g CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o -o TeamPog_CS3505  -lpthread 

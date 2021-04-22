@@ -6,7 +6,8 @@ namespace network_util {
 
     socket_state::socket_state() {}
 
-    socket_state::socket_state(int _socket) {
+    socket_state::socket_state(std::function<socket_state(socket_state)> &to_call, int _socket) {
+        on_network_action = to_call;
         socket = _socket;
     }
 
@@ -44,4 +45,16 @@ namespace network_util {
             data.clear();
         }
     }
+
+    socket_state & socket_state::operator=(const socket_state & other)
+    {
+        //Fill in with copying shtuff
+        return *this;
+    }
+
+    socket_state::socket_state(const network_util::socket_state & other)
+    {
+        *this = other;
+    }
+
 }

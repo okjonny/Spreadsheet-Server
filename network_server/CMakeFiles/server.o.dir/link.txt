@@ -1,1 +1,0 @@
-/usr/bin/c++   -std=c++17 -g  -rdynamic CMakeFiles/server.o.dir/server.cpp.o  -o server.o  -lpthread 

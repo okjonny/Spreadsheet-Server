@@ -1,3 +1,0 @@
-/TeamPog-CS3505/network_server/CMakeFiles/rebuild_cache.dir
-/TeamPog-CS3505/network_server/CMakeFiles/edit_cache.dir
-/TeamPog-CS3505/network_server/CMakeFiles/server.o.dir
