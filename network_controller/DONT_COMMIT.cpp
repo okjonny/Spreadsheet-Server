@@ -1,4 +1,3 @@
-
 // Client side C/C++ program to demonstrate Socket programming 
 #include <stdio.h> 
 #include <sys/socket.h> 
@@ -7,14 +6,14 @@
 #include <string.h> 
 #include <string>
 #include <iostream>
-#define PORT 8080 
+#define PORT 1100
 
 int SetUpConnection();
 int SendMessage();
 
 int sock;
 std::string message;
-char buffer[1024];
+char buffer[4096];
 int valread;
    
 int main(int argc, char const *argv[]) 
@@ -27,8 +26,8 @@ int main(int argc, char const *argv[])
 int SetUpConnection(){
     sock = 0, valread; 
     struct sockaddr_in serv_addr; 
-    message = "1"; 
-    buffer[1024] = {0}; 
+    message = (char *) "2"; 
+    buffer[4096] = {0}; 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
     { 
         printf("\n Socket creation error \n"); 
@@ -56,13 +55,14 @@ int SetUpConnection(){
 }
 
 int SendMessage(){
+
     while(message.compare("1000000") || message.compare("-1000000")){
-        send(sock , message.c_str() , strlen(message.c_str()) , 0 ); 
-        valread = read( sock , buffer, 1024); 
+        send(sock , message.c_str() , strlen(message.c_str()) , 0); 
+        valread = read( sock , buffer, 4096); 
         printf("%s\n",buffer ); 
 
         message = buffer;
-        std::fill_n(buffer, 1024, 0);
+        std::fill_n(buffer, 4096, 0);
     }
     if(message.compare("1000000") == 0)
         send(sock , "-1" , strlen("-1") , 0 ); 

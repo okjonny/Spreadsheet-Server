@@ -12,17 +12,19 @@
 #include <iostream>
 #define PORT 1100 
 
-struct Client{
-    int socket;
-};
+// struct Client{
+//      int socket;
+//      char buffer[4096];
+//  };
+
+int client;
 
 int SetUpServer();
 void CountUp(int threadid);
-void CountDown(int threadid);
+// void CountDown(int threadid);
 void ListenForNewClients();
 
-char* message;
-char buffer[4096];
+// char buffer[4096];
 int new_socket;
 int valread;
 int server_fd;
@@ -33,7 +35,7 @@ std::thread threads[10];
 int rc;
 int ThreadID;
 std::mutex mtx;
-Client clients[5];
+int clients[100];
 
 int main(int argc, char const *argv[]) { 
     SetUpServer();
@@ -46,7 +48,6 @@ int SetUpServer(){
     ThreadID = 0;
 
     buffer[4096] = {0}; 
-    message = (char *) "2"; 
        
     // Creating socket file descriptor 
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
@@ -55,9 +56,7 @@ int SetUpServer(){
         exit(EXIT_FAILURE); 
     } 
        
-    // Forcefully attaching socket to the port 8080 
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, 
-                                                  &opt, sizeof(opt))) 
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
     { 
         perror("setsockopt"); 
         exit(EXIT_FAILURE); 
@@ -67,8 +66,7 @@ int SetUpServer(){
     address.sin_port = htons( PORT ); 
        
     // Forcefully attaching socket to the port 8080 
-    if (bind(server_fd, (struct sockaddr *)&address,  
-                                 sizeof(address))<0) 
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0) 
     { 
         perror("bind failed"); 
         exit(EXIT_FAILURE); 
@@ -78,30 +76,35 @@ int SetUpServer(){
 }
 
 void ListenForNewClients(){
-    while(true){
-        Client c;
+    while(true)
+    {
+        int c;
         if (listen(server_fd, 3) < 0) 
         { 
             perror("listen"); 
             exit(EXIT_FAILURE); 
         } 
-        if ((c.socket = accept(server_fd, (struct sockaddr *)&address,  
-                        (socklen_t*)&addrlen))<0) 
+        if ((c = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
         { 
             perror("accept"); 
             exit(EXIT_FAILURE); 
         } 
 
-        if(threads[ThreadID].joinable()){
+        if(threads[ThreadID].joinable())
+        {
             threads[ThreadID].join();
         }
         
-        if(ThreadID == 1){
-            threads[ThreadID] = std::thread(CountDown,ThreadID);
-        }else{
-            threads[ThreadID] = std::thread(CountUp,ThreadID);
-        }
+        // if(ThreadID == 1)
+        // {
+        //     threads[ThreadID] = std::thread(CountDown,ThreadID);
+        // }
+        // else
+        // {
+        //     threads[ThreadID] = std::thread(CountUp,ThreadID);
+        // }
         
+        threads[ThreadID] = std::thread(CountUp,ThreadID);
         clients[ThreadID] = c;
         
         ThreadID++;
@@ -112,8 +115,8 @@ void CountUp(int threadid){
     std::cout << "Operating on Threadid " << (long)threadid << std::endl;
     while(true){
         mtx.lock();
-        std::fill_n(buffer, 1024, 0);
-        valread = read( clients[threadid].socket , buffer, 1024); 
+        std::fill_n(buffer, 4096, 0);
+        valread = read( clients[threadid] , buffer, 4096); 
         std::cout << threadid << ":" << buffer << std::endl;
         std::string s = buffer;
         int value = std::stoi(s);
@@ -123,31 +126,31 @@ void CountUp(int threadid){
         }
         value++;
         std::string sToSend = std::to_string(value);
-        send(clients[threadid].socket , sToSend.c_str() , strlen(sToSend.c_str()) , 0 ); 
-        std::fill_n(buffer, 1024, 0);
+        send(clients[threadid], sToSend.c_str() , strlen(sToSend.c_str()) , 0 ); 
+        std::fill_n(buffer, 4096, 0);
         mtx.unlock();
     }
     ThreadID--;
 }
 
-void CountDown(int threadid){
-    std::cout << "Operating on Threadid " << (long)threadid << std::endl;
-    while(true){
-        mtx.lock();
-        std::fill_n(buffer, 1024, 0);
-        valread = read( clients[threadid].socket , buffer, 1024); 
-        std::cout << threadid << ":" << buffer << std::endl;
-        std::string s = buffer;
-        int value = std::stoi(s);
-        if(value == 2){
-            mtx.unlock();
-            break;
-        }
-        value--;
-        std::string sToSend = std::to_string(value);
-        send(clients[threadid].socket , sToSend.c_str() , strlen(sToSend.c_str()) , 0 ); 
-        std::fill_n(buffer, 1024, 0);
-        mtx.unlock();
-    }
-    ThreadID--;
-}
+// void CountDown(int threadid){
+//     std::cout << "Operating on Threadid " << (long)threadid << std::endl;
+//     while(true){
+//         mtx.lock();
+//         std::fill_n(buffer, 1024, 0);
+//         valread = read( clients[threadid].socket , buffer, 1024); 
+//         std::cout << threadid << ":" << buffer << std::endl;
+//         std::string s = buffer;
+//         int value = std::stoi(s);
+//         if(value == 2){
+//             mtx.unlock();
+//             break;
+//         }
+//         value--;
+//         std::string sToSend = std::to_string(value);
+//         send(clients[threadid].socket , sToSend.c_str() , strlen(sToSend.c_str()) , 0 ); 
+//         std::fill_n(buffer, 1024, 0);
+//         mtx.unlock();
+//     }
+//     ThreadID--;
+// }
