@@ -28,7 +28,6 @@ namespace network_util {
 
     int server::setup_server() {
         std::cout << "Running..." << std::endl;
-
         // Creating socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
             perror("socket failed");
@@ -78,18 +77,19 @@ namespace network_util {
             // }
 
             threads[thread_id] = std::thread([this] { CountUp(thread_id); });
+//            threads[thread_id] = std::thread(network_util::server::CountUp, thread_id);
             clients[thread_id].socket = c.socket;
             thread_id++;
         }
     }
 
-    void server::CountUp(int threadid) {
-        std::cout << "Operating on Threadid " << (long) threadid << std::endl;
+    void server::CountUp(int thread_id) {
+        std::cout << "Operating on Threadid " << (long) thread_id << std::endl;
         while (true) {
             mtx.lock();
             std::fill_n(buffer, 4096, 0);
-            valread = read(clients[threadid].socket, buffer, 4096);
-            std::cout << threadid << ":" << buffer << std::endl;
+            valread = read(clients[thread_id].socket, buffer, 4096);
+            std::cout << thread_id << ":" << buffer << std::endl;
             std::string s = buffer;
             int value = std::stoi(s);
             if (value == -1) {
@@ -98,7 +98,7 @@ namespace network_util {
             }
             value++;
             std::string sToSend = std::to_string(value);
-            send(clients[threadid].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
+            send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
             std::fill_n(buffer, 4096, 0);
             mtx.unlock();
         }
