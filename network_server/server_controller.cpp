@@ -25,7 +25,7 @@ namespace spreadsheet_server {
 /// when a new client connects (see line 43)
 /// </summary>
 /// <param name="state">The SocketState representing the new client</param>
-    void server_controller::first_contact (socket_state state) {
+    void server_controller::first_contact(socket_state state) {
 //        if (state.ErrorOccured)
 //            return;
 

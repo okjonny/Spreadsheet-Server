@@ -4,13 +4,13 @@
 #include "server_controller.h"
 #ifndef SOCKSTATE_H
 #define SOCKSTATE_H
-
+using namespace spreadsheet_server;
 namespace network_util {
     // ! Fix comments
     class socket_state {
 
         friend class networking;
-        friend class spreadsheet_server::server_controller;
+        friend class server_controller;
 
         std::function<socket_state(socket_state)> on_network_action;
         std::string data;
