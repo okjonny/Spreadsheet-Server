@@ -146,22 +146,39 @@ namespace spreadsheet_server
 
         std::string total_data = state.get_data();
         std::vector<std::string> parts;
-        std::regex rgx("\\(?<=[\n]\\)");
-        std::sregex_token_iterator iter(state.get_data().begin(),
-                                        state.get_data().end(),
-                                        rgx,
-                                        -1);
+
+        // SPLIT:
+        std::regex rgx(R"(\(?<=[\n]\))");
+        std::sregex_token_iterator iter(total_data.begin(), total_data.end(), rgx, -1);
         std::sregex_token_iterator end;
         for (; iter != end; ++iter)
         {
             parts.push_back(iter->str());
             std::cout << *iter << '\n';
         }
+        // END SPLIT
+
 
         // Loop until we have processed all messages.
 //        // We may have received more than one.
 //        List <string> newMessages = new List<string>();
-//
+        std::vector<std::string> new_messages;
+        for (std::string p:parts)
+        {
+            if (p.length() == 0)
+                continue;
+            // The regex splitter will include the last string even if it doesn't end with a '\n',
+            // So we need to ignore it if this happens.
+            if (p[p.length() - 1] != '\n')
+                break;
+
+            // build a list of messages to send to the view
+            new_messages.push_back(p);
+            // Then remove it from the SocketState's growable buffer
+            state.remove_data(0, p.length());
+        }
+        return parts;
+    }
 //        foreach(string
 //        p
 //                in
@@ -182,6 +199,4 @@ namespace spreadsheet_server
 //            state.RemoveData(0, p.Length);
 //        }
 //        return newMessages;
-        return parts;
-    }
 }
