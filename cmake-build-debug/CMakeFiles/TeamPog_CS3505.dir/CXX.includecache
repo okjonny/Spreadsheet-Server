@@ -6,30 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/networking.cpp
-iostream
--
-functional
--
-socket_state.h
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.h
-networking.h
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/networking.h
-unistd.h
--
-stdio.h
--
-sys/socket.h
--
-netinet/in.h
--
-string
--
-cstdlib
--
-thread
--
-
 /home/hibban/CLionProjects/TeamPog-CS3505/network_server/networking.h
 sys/socket.h
 -
@@ -41,14 +17,6 @@ thread
 -
 socket_state.h
 /home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.h
-
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/server.cpp
-networking.h
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/networking.h
-socket_state.h
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.h
-server_controller.h
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/server_controller.h
 
 /home/hibban/CLionProjects/TeamPog-CS3505/network_server/server_controller.cpp
 server_controller.h
@@ -68,14 +36,6 @@ sys/socket.h
 socket_state.h
 /home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.h
 vector
--
-
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.cpp
-socket_state.h
-/home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.h
-mutex
--
-codecvt
 -
 
 /home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.h

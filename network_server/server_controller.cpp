@@ -37,8 +37,10 @@ namespace spreadsheet_server
         std::cout << "User connected and sent username: " << state.get_username() << std::endl;
 
         std::string list = "checkitbro.xml\nhomie.xml\nnub.xml\njonny.xml\n";
-        send(state.get_socket(), list.c_str(), strlen(list.c_str()), 0);
 
+        //Send keys separated by /n as "List"
+
+        send(state.get_socket(), list.c_str(), strlen(list.c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_selection;
         state.on_network_action = callback;
@@ -56,20 +58,21 @@ namespace spreadsheet_server
     {
 //        if (state.ErrorOccured)
 //            return;
-
+        std::string selection = state.get_data();
         //state.username = state.get_data();
-        //std::cout << "User connected and selected this damn spreadsheet homie: " << state.get_data() << std::endl;
+        std::cout << "User connected and selected this damn spreadsheet homie: " << selection << std::endl;
 
+        //---------------CANNOT PROCESS EDIT REQUESTS HERE, MAKE SURE TO FIND SOLUTION, LOCK??------------
+        //if spreadsheetlist.contains(selection)
+        //  Spreadsheet s = spreadsheetList[selection];
 
+        //For(cell c in s.getCells)
+        //  string j = Json.serialize(c)
+        //  send(j)
 
-        //send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
-       // std::cout << "Socket" << state.get_socket_id() << std::endl;
-        //send(4, list.c_str(), strlen(list.c_str()), 0);
+        //Send(state.get_id());
 
         std::function<void(socket_state &)> callback = receive_selection;
-
-
-
         state.on_network_action = callback;
 //        Networking.GetData(state);
     }

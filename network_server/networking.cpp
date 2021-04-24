@@ -94,7 +94,7 @@ namespace network_util
         std::cout << "Operating on Threadid " << (long) thread_id << std::endl;
         while (true)
         {
-            mtx.lock();
+           // mtx.lock();
             std::fill_n(clients[thread_id].buffer, 4096, 0);
             valread = read(clients[thread_id].socket, clients[thread_id].buffer, 4096);
             std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
@@ -103,7 +103,7 @@ namespace network_util
 //            int value = std::stoi(s);
             if (s == "Disconnect")
             {
-                mtx.unlock();
+           //     mtx.unlock();
                 break;
             }
             clients[thread_id].on_network_action(clients[thread_id]);
@@ -111,7 +111,7 @@ namespace network_util
 //            std::string sToSend = std::to_string(value);
 //            send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
             std::fill_n(clients[thread_id].buffer, 4096, 0);
-            mtx.unlock();
+         //   mtx.unlock();
         }
         networking::thread_id--;
     }
