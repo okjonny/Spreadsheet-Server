@@ -23,9 +23,9 @@ namespace network_util
         return error_occured;
     }
 
-    int socket_state::get_socket_id() const
+    int socket_state::get_socket() const
     {
-        return id;
+        return socket;
     }
 
     std::string socket_state::get_data()

@@ -41,7 +41,7 @@ namespace network_util
         std::string get_data();
         std::string get_username();
 
-        int get_socket_id() const;
+        int get_socket() const;
 
         void remove_data(int start, int length);
 

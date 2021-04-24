@@ -3,6 +3,7 @@
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include <regex>
+#include <sys/socket.h>
 
 using namespace network_util;
 namespace spreadsheet_server
@@ -35,11 +36,57 @@ namespace spreadsheet_server
         state.username = state.get_data();
         std::cout << "User connected and sent username: " << state.get_username() << std::endl;
 
-        std::function<void(socket_state &)> callback = receive_name;
+        std::string list = "checkitbro.xml\nhomie.xml\nnub.xml\njonny.xml\n";
+        send(state.get_socket(), list.c_str(), strlen(list.c_str()), 0);
+
+
+        std::function<void(socket_state &)> callback = receive_selection;
         state.on_network_action = callback;
 //        Networking.GetData(state);
     }
 
+
+
+    /// <summary>
+/// Method to be invoked by the networking library
+/// when a new client connects (see line 43)
+/// </summary>
+/// <param name="state">The SocketState representing the new client</param>
+    void server_controller::receive_selection(network_util::socket_state &state)
+    {
+//        if (state.ErrorOccured)
+//            return;
+
+        //state.username = state.get_data();
+        //std::cout << "User connected and selected this damn spreadsheet homie: " << state.get_data() << std::endl;
+
+
+
+        //send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
+       // std::cout << "Socket" << state.get_socket_id() << std::endl;
+        //send(4, list.c_str(), strlen(list.c_str()), 0);
+
+        std::function<void(socket_state &)> callback = receive_selection;
+
+
+
+        state.on_network_action = callback;
+//        Networking.GetData(state);
+    }
+
+
+    void server_controller::send_selection(network_util::socket_state &state)
+    {
+//        if (state.ErrorOccured)
+//            return;
+
+        state.username = state.get_data();
+        std::cout << "User connected and selected this damn spreadsheet homie: " << state.get_data() << std::endl;
+
+        std::function<void(socket_state &)> callback = receive_selection;
+        state.on_network_action = callback;
+//        Networking.GetData(state);
+    }
 /// <summary>
 /// Method to be invoked by the networking library
 /// when a new client connects (see line 43)

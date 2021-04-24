@@ -77,6 +77,7 @@ namespace network_util
                 threads[thread_id].join();
             }
             std::cout << c.socket << std::endl;
+
             clients[thread_id].socket = c.socket;
 
             clients[thread_id].id = thread_id;

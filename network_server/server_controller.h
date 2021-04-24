@@ -16,9 +16,13 @@ namespace spreadsheet_server
 
         void start_server();
 
-        static void first_contact(network_util::socket_state &socket);
+        //static void first_contact(network_util::socket_state &socket);
 
         static void receive_name(network_util::socket_state &state);
+
+        static void receive_selection(network_util::socket_state &state);
+
+        static void send_selection(network_util::socket_state &state);
 
         static std::vector<std::string> process_data(network_util::socket_state &state);
     };
