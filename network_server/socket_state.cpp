@@ -7,10 +7,10 @@ namespace network_util
     socket_state::socket_state()
     {}
 
-    socket_state::socket_state(std::function<void(socket_state &)> &to_call, int _socket)
+    socket_state::socket_state(std::function<void(socket_state &)> &to_call, int id)
     {
         on_network_action = to_call;
-        socket = _socket;
+        state_id = id;
     }
 
     std::string socket_state::get_error_message() const
@@ -26,6 +26,11 @@ namespace network_util
     int socket_state::get_socket() const
     {
         return socket;
+    }
+
+    int socket_state::get_id() const
+    {
+        return state_id;
     }
 
     std::string socket_state::get_data()

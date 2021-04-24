@@ -16,7 +16,7 @@ namespace network_util
 
         std::string data;
         int socket;
-        int id;
+        int state_id;
         std::string error_message;
         bool error_occured;
         std::mutex data_lock;
@@ -32,7 +32,7 @@ namespace network_util
 
         socket_state &operator=(const socket_state &other);
 
-        socket_state(std::function<void(socket_state &)> &to_call, int socket);
+        socket_state(std::function<void(socket_state &)> &to_call, int state_id);
 
         std::string get_error_message() const;
 
@@ -41,6 +41,7 @@ namespace network_util
         std::string get_data();
         std::string get_username();
 
+        int get_id() const;
         int get_socket() const;
 
         void remove_data(int start, int length);

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <regex>
 #include <sys/socket.h>
+#include <unordered_map>
 
 using namespace network_util;
 namespace spreadsheet_server
@@ -42,7 +43,7 @@ namespace spreadsheet_server
 
         send(state.get_socket(), list.c_str(), strlen(list.c_str()), 0);
 
-        std::function<void(socket_state &)> callback = receive_selection;
+        std::function<void(socket_state &)> callback = receive_spreadsheet_selection;
         state.on_network_action = callback;
 //        Networking.GetData(state);
     }
@@ -54,31 +55,59 @@ namespace spreadsheet_server
 /// when a new client connects (see line 43)
 /// </summary>
 /// <param name="state">The SocketState representing the new client</param>
-    void server_controller::receive_selection(network_util::socket_state &state)
+    void server_controller::receive_spreadsheet_selection(network_util::socket_state &state)
     {
+        std::string id = std::to_string(state.get_id()) + "\n";
+        std::unordered_map<std::string, std::string> cells; //= {{"A1","1+3"}};
+        cells.insert(std::make_pair<std::string, std::string>("A1", "1+3"));
+        cells.insert(std::make_pair<std::string, std::string>("B6", "1+3"));
+
+        //std::string name = "A";
+        //std::pair<std::string, std::string> p;
+        //cells.insert(p);
+        /*for(int i = 0; i <= 10; i++)
+        {
+            name += std::to_string(i);
+            cells.insert(std::pair<std::string, std::string>("name", std::to_string(i)));
+            name = "A";
+        }*/
 //        if (state.ErrorOccured)
 //            return;
         std::string selection = state.get_data();
+
+        //std::string cells[] = {"A1", "A2", "B3", "B6"};
+
+
         //state.username = state.get_data();
         std::cout << "User connected and selected this damn spreadsheet homie: " << selection << std::endl;
 
         //---------------CANNOT PROCESS EDIT REQUESTS HERE, MAKE SURE TO FIND SOLUTION, LOCK??------------
         //if spreadsheetlist.contains(selection)
         //  Spreadsheet s = spreadsheetList[selection];
+        //{messageType:"cellUpdated", cellName: “<cell name>”,contents: “<contents>”}
 
+        for(auto& c : cells)
+        {
+            std::string cell_update = std::string("{messageType:\"cellUpdated\",cellName:") + "\"" + c.first + "\"" + ",contents: \"" + c.second + "\"}";
+            send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
+        }
+
+        send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
+
+        //for()
         //For(cell c in s.getCells)
         //  string j = Json.serialize(c)
         //  send(j)
 
         //Send(state.get_id());
 
-        std::function<void(socket_state &)> callback = receive_selection;
+        std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
 //        Networking.GetData(state);
     }
 
 
-    void server_controller::send_selection(network_util::socket_state &state)
+    void server_controller::receive_cell_selection(network_util::socket_state &state)
     {
 //        if (state.ErrorOccured)
 //            return;
@@ -86,7 +115,20 @@ namespace spreadsheet_server
         state.username = state.get_data();
         std::cout << "User connected and selected this damn spreadsheet homie: " << state.get_data() << std::endl;
 
-        std::function<void(socket_state &)> callback = receive_selection;
+        std::function<void(socket_state &)> callback = receive_edit_request;
+        state.on_network_action = callback;
+//        Networking.GetData(state);
+    }
+
+    void server_controller::receive_edit_request(network_util::socket_state &state)
+    {
+//        if (state.ErrorOccured)
+//            return;
+
+        state.username = state.get_data();
+        std::cout << "User connected and selected this damn spreadsheet homie: " << state.get_data() << std::endl;
+
+        std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
 //        Networking.GetData(state);
     }

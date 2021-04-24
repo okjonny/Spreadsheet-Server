@@ -61,6 +61,7 @@ namespace network_util
         while (true)
         {
             socket_state c(to_call, thread_id);
+
             if (listen(server_fd, 3) < 0)
             {
                 perror("listen");
@@ -80,7 +81,7 @@ namespace network_util
 
             clients[thread_id].socket = c.socket;
 
-            clients[thread_id].id = thread_id;
+            clients[thread_id].state_id = thread_id;
             clients[thread_id].on_network_action = to_call;
             threads[thread_id] = std::thread(&networking::receive_callback, thread_id);
 //            clients[thread_id] = c;
