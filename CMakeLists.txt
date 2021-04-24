@@ -22,7 +22,11 @@ project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)
 
 find_package(Threads)
-find_package(nlohmann_json 3.2.0)
+#find_package(nlohmann_json 3.2.0 REQUIRED)
+find_package(nlohmann_json REQUIRED
+        CONFIG
+        PATHS "/usr/lib/cmake/"
+        )
 
 add_executable(TeamPog_CS3505
         ${SOURCE_FILES}

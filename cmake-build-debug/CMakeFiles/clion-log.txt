@@ -1,19 +1,14 @@
 /home/jonny/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/211.6693.114/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jonny/CLionProjects/TeamPog-CS3505
-CMake Warning at CMakeLists.txt:25 (find_package):
-  By not providing "Findnlohmann_json.cmake" in CMAKE_MODULE_PATH this
-  project has asked CMake to find a package configuration file provided by
-  "nlohmann_json", but CMake did not find one.
+CMake Deprecation Warning at /usr/lib/cmake/nlohmann_jsonConfig.cmake:39 (cmake_policy):
+  The OLD behavior for policy CMP0024 will be removed from a future version
+  of CMake.
 
-  Could not find a package configuration file provided by "nlohmann_json"
-  (requested version 3.2.0) with any of the following names:
-
-    nlohmann_jsonConfig.cmake
-    nlohmann_json-config.cmake
-
-  Add the installation prefix of "nlohmann_json" to CMAKE_PREFIX_PATH or set
-  "nlohmann_json_DIR" to a directory containing one of the above files.  If
-  "nlohmann_json" provides a separate development package or SDK, be sure it
-  has been installed.
+  The cmake-policies(7) manual explains that the OLD behaviors of all
+  policies are deprecated and that a policy should be set to OLD only under
+  specific short-term circumstances.  Projects should be ported to the NEW
+  behavior and not rely on setting a policy to OLD.
+Call Stack (most recent call first):
+  CMakeLists.txt:26 (find_package)
 
 
 -- Configuring done

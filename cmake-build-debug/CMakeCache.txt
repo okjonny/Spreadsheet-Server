@@ -233,7 +233,7 @@ TeamPog_CS3505_BINARY_DIR:STATIC=/home/jonny/CLionProjects/TeamPog-CS3505/cmake-
 TeamPog_CS3505_SOURCE_DIR:STATIC=/home/jonny/CLionProjects/TeamPog-CS3505
 
 //The directory containing a CMake configuration file for nlohmann_json.
-nlohmann_json_DIR:PATH=nlohmann_json_DIR-NOTFOUND
+nlohmann_json_DIR:PATH=/usr/lib/cmake
 
 
 ########################

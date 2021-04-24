@@ -16,9 +16,7 @@ namespace spreadsheet_server
     void server_controller::start_server()
     {
         // This begins an "event loop"
-
-//        StartServer(first_contact, 11000);
-        std::function<void(socket_state &)> callback = first_contact;
+        std::function<void(socket_state &)> callback = receive_name;
         networking::start_server(callback);
         std::cout << "Server is running. Accepting new Players:" << std::endl;
     }
@@ -29,12 +27,13 @@ namespace spreadsheet_server
 /// when a new client connects (see line 43)
 /// </summary>
 /// <param name="state">The SocketState representing the new client</param>
-    void server_controller::first_contact(socket_state &state)
+    void server_controller::receive_name(network_util::socket_state &state)
     {
 //        if (state.ErrorOccured)
 //            return;
 
-        std::cout << "Client " << state.get_socket_id() << " connected" << std::endl;
+        state.username = state.get_data();
+        std::cout << "User connected and sent username: " << state.get_username() << std::endl;
 
         std::function<void(socket_state &)> callback = receive_name;
         state.on_network_action = callback;
@@ -46,10 +45,9 @@ namespace spreadsheet_server
 /// when a new client connects (see line 43)
 /// </summary>
 /// <param name="state">The SocketState representing the new client</param>
-    void server_controller::receive_name(socket_state &state)
-    {
-        std::cout << "receive_name" << std::endl;
-        process_data(state);
+//    void server_controller::receive_name(socket_state &state)
+//    {
+
 //        auto j3 = nlohmann::json::parse(R"({"happy": true, "pi": 3.141})");
 //        // Remove the client if they aren't still connected
 ////        if (state.ErrorOccured) {
@@ -91,7 +89,7 @@ namespace spreadsheet_server
 //        GameWorld.Tanks.Add((int) state.ID, clientTank);
 //
 //        Networking.GetData(state);
-    }
+//    }
 
 //
 //
@@ -142,26 +140,23 @@ namespace spreadsheet_server
 //
     std::vector<std::string> server_controller::process_data(socket_state &state)
     {
-        std::cout << "SERVER CONTROLLER: " << state.get_data() << std::endl;
-
         std::string total_data = state.get_data();
+        std::cout << "SERVER CONTROLLER: " << total_data << std::endl;
+
         std::vector<std::string> parts;
 
         // SPLIT:
-        std::regex rgx(R"(\(?<=[\n]\))");
+        std::regex rgx(R"(\\n)");
         std::sregex_token_iterator iter(total_data.begin(), total_data.end(), rgx, -1);
         std::sregex_token_iterator end;
-        for (; iter != end; ++iter)
+        while (iter != end)
         {
-            parts.push_back(iter->str());
-            std::cout << *iter << '\n';
+            parts.push_back(*iter);
+            ++iter;
         }
-        // END SPLIT
-
 
         // Loop until we have processed all messages.
-//        // We may have received more than one.
-//        List <string> newMessages = new List<string>();
+        // We may have received more than one.
         std::vector<std::string> new_messages;
         for (std::string p:parts)
         {
@@ -177,26 +172,6 @@ namespace spreadsheet_server
             // Then remove it from the SocketState's growable buffer
             state.remove_data(0, p.length());
         }
-        return parts;
+        return new_messages;
     }
-//        foreach(string
-//        p
-//                in
-//        parts)
-//        {
-//            // Ignore empty strings added by the regex splitter
-//            if (p.Length == 0)
-//                continue;
-//            // The regex splitter will include the last string even if it doesn't end with a '\n',
-//            // So we need to ignore it if this happens.
-//            if (p[p.Length - 1] != '\n')
-//                break;
-//
-//            // build a list of messages to send to the view
-//            newMessages.Add(p);
-//
-//            // Then remove it from the SocketState's growable buffer
-//            state.RemoveData(0, p.Length);
-//        }
-//        return newMessages;
 }

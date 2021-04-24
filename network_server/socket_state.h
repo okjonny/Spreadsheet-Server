@@ -23,6 +23,7 @@ namespace network_util
 
     public:
         char buffer[4096];
+        std::string username;
         std::function<void(socket_state &)> on_network_action;
 
         socket_state();
@@ -38,6 +39,7 @@ namespace network_util
         bool get_error_occured() const;
 
         std::string get_data();
+        std::string get_username();
 
         int get_socket_id() const;
 

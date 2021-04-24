@@ -38,6 +38,9 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.19.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.19.2/CMakeSystem.cmake"
+  "/usr/lib/cmake/nlohmann_jsonConfig.cmake"
+  "/usr/lib/cmake/nlohmann_jsonConfigVersion.cmake"
+  "/usr/lib/cmake/nlohmann_jsonTargets.cmake"
   )
 
 # The corresponding makefile is:

@@ -38,6 +38,17 @@ namespace network_util
         return retval;
     }
 
+
+    std::string socket_state::get_username()
+    {
+        std::string retval;
+        {
+            std::lock_guard<std::mutex> guard(data_lock);
+            retval = username;
+        }
+        return retval;
+    }
+
     void socket_state::remove_data(int start, int length)
     {
         {

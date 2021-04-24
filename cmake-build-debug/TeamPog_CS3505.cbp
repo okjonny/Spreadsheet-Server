@@ -5,7 +5,7 @@
 		<Option title="TeamPog_CS3505"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\lib\;CMake Files\..\..\..\..\usr\lib\cmake\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug"/>
@@ -109,6 +109,15 @@
 		</Unit>
 		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/../../../../usr/lib/cmake/nlohmann_jsonConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib\cmake\"/>
+		</Unit>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/../../../../usr/lib/cmake/nlohmann_jsonConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib\cmake\"/>
+		</Unit>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/../../../../usr/lib/cmake/nlohmann_jsonTargets.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\usr\lib\cmake\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>
