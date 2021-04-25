@@ -105,6 +105,12 @@
 		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.h">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
+		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/dependency_graph.cpp">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/dependency_graph.h">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
 		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

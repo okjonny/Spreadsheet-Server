@@ -17,7 +17,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(SOURCE_FILES network_server/networking.cpp network_server/socket_state.cpp
         network_server/networking.h network_server/server.cpp
-        network_server/server_controller.cpp network_server/server_controller.h)
+        network_server/server_controller.cpp network_server/server_controller.h spreadsheet/dependency_graph.cpp spreadsheet/dependency_graph.h)
 project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)
 

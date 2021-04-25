@@ -250,6 +250,33 @@ network_server/socket_state.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.s
 .PHONY : network_server/socket_state.cpp.s
 
+spreadsheet/dependency_graph.o: spreadsheet/dependency_graph.cpp.o
+
+.PHONY : spreadsheet/dependency_graph.o
+
+# target to build an object file
+spreadsheet/dependency_graph.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o
+.PHONY : spreadsheet/dependency_graph.cpp.o
+
+spreadsheet/dependency_graph.i: spreadsheet/dependency_graph.cpp.i
+
+.PHONY : spreadsheet/dependency_graph.i
+
+# target to preprocess a source file
+spreadsheet/dependency_graph.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.i
+.PHONY : spreadsheet/dependency_graph.cpp.i
+
+spreadsheet/dependency_graph.s: spreadsheet/dependency_graph.cpp.s
+
+.PHONY : spreadsheet/dependency_graph.s
+
+# target to generate assembly for a file
+spreadsheet/dependency_graph.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.s
+.PHONY : spreadsheet/dependency_graph.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -271,6 +298,9 @@ help:
 	@echo "... network_server/socket_state.o"
 	@echo "... network_server/socket_state.i"
 	@echo "... network_server/socket_state.s"
+	@echo "... spreadsheet/dependency_graph.o"
+	@echo "... spreadsheet/dependency_graph.i"
+	@echo "... spreadsheet/dependency_graph.s"
 .PHONY : help
 
 
