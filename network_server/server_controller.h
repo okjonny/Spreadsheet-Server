@@ -24,7 +24,7 @@ namespace spreadsheet_server
 
         static void receive_cell_selection(network_util::socket_state &state);
 
-        static void receive_edit_request(network_util::socket_state &state);
+        //static void receive_edit_request(network_util::socket_state &state);
 
 
         static std::vector<std::string> process_data(network_util::socket_state &state);

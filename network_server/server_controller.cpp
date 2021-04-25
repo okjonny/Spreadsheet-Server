@@ -9,6 +9,15 @@
 using namespace network_util;
 namespace spreadsheet_server
 {
+
+    struct test
+    {
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(test, x, y)
+
+        int x;
+        int y;
+    };
+
 /// <summary>
 /// Start accepting Tcp sockets connections from clients
 /// </summary>
@@ -49,7 +58,6 @@ namespace spreadsheet_server
     }
 
 
-
     /// <summary>
 /// Method to be invoked by the networking library
 /// when a new client connects (see line 43)
@@ -86,9 +94,11 @@ namespace spreadsheet_server
         //  Spreadsheet s = spreadsheetList[selection];
         //{messageType:"cellUpdated", cellName: “<cell name>”,contents: “<contents>”}
 
-        for(auto& c : cells)
+        for (auto &c : cells)
         {
-            std::string cell_update = std::string("{messageType:\"cellUpdated\",cellName:") + "\"" + c.first + "\"" + ",contents: \"" + c.second + "\"}";
+            std::string cell_update =
+                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + c.first + "\"" + ",\"contents\": \"" +
+                    c.second + "\"}\n";
             send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
         }
 
@@ -111,16 +121,43 @@ namespace spreadsheet_server
     {
 //        if (state.ErrorOccured)
 //            return;
+        std::vector<std::string> commands = process_data(state);
 
-        state.username = state.get_data();
-        std::cout << "User connected and selected this damn spreadsheet homie: " << state.get_data() << std::endl;
 
-        std::function<void(socket_state &)> callback = receive_edit_request;
-        state.on_network_action = callback;
-//        Networking.GetData(state);
+        nlohmann::json tester = nlohmann::json::parse(commands[0]);
+
+
+
+        std::cout << tester["requestType"] << std::endl;
+
+
+        if(tester["requestType"] == "editCell")
+        {
+            std::cout << "editing bro" << std::endl;
+            std::string cell_update =
+                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + std::string(tester["cellName"]) + "\"" + ",\"contents\": \"" +
+                            std::string(tester["contents"]) + "\"}\n";
+            send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
+        }
+        else if(tester["requestType"] == "selectCell")
+        {
+            std::cout << "revert/select bro" << std::endl;
+            //send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
+        }
+        else if(tester["requestType"] == "revertCell")
+        {
+
+        }
+        else if(tester["requestType"] == "undo")
+        {
+            std::cout << "undo bro" << std::endl;
+        }
+
+        //test t{tester["x"].get<int>(), tester["y"].get<int>()};
+        //auto t = tester.get<test>();
     }
 
-    void server_controller::receive_edit_request(network_util::socket_state &state)
+/*    void server_controller::receive_edit_request(network_util::socket_state &state)
     {
 //        if (state.ErrorOccured)
 //            return;
@@ -132,7 +169,7 @@ namespace spreadsheet_server
         state.on_network_action = callback;
 //        Networking.GetData(state);
     }
-/// <summary>
+/// <summary>*/
 /// Method to be invoked by the networking library
 /// when a new client connects (see line 43)
 /// </summary>
@@ -232,38 +269,59 @@ namespace spreadsheet_server
 //
     std::vector<std::string> server_controller::process_data(socket_state &state)
     {
-        std::string total_data = state.get_data();
-        std::cout << "SERVER CONTROLLER: " << total_data << std::endl;
+        std::string s = state.get_data();
+        //std::stringstream s(boomer);
+        std::cout << "SERVER CONTROLLER: " << s << std::endl;
 
         std::vector<std::string> parts;
 
-        // SPLIT:
-        std::regex rgx(R"(\\n)");
-        std::sregex_token_iterator iter(total_data.begin(), total_data.end(), rgx, -1);
-        std::sregex_token_iterator end;
-        while (iter != end)
-        {
-            parts.push_back(*iter);
-            ++iter;
-        }
+        /*    // SPLIT:
+            std::regex rgx(R"(\\n)");
+            std::sregex_token_iterator iter(total_data.begin(), total_data.end(), rgx, -1);
+            std::sregex_token_iterator end;
+            while (iter != end)
+            {
+                parts.push_back(*iter);
+                ++iter;
+            }
 
-        // Loop until we have processed all messages.
-        // We may have received more than one.
-        std::vector<std::string> new_messages;
-        for (std::string p:parts)
-        {
-            if (p.length() == 0)
-                continue;
-            // The regex splitter will include the last string even if it doesn't end with a '\n',
-            // So we need to ignore it if this happens.
-            if (p[p.length() - 1] != '\n')
-                break;
+            // Loop until we have processed all messages.
+            // We may have received more than one.
+            std::vector<std::string> new_messages;
+            for (std::string p:parts)
+            {
+                if (p.length() == 0)
+                    continue;
+                // The regex splitter will include the last string even if it doesn't end with a '\n',
+                // So we need to ignore it if this happens.
+                if (p[p.length() - 1] != '\n')
+                    break;
 
-            // build a list of messages to send to the view
-            new_messages.push_back(p);
-            // Then remove it from the SocketState's growable buffer
-            state.remove_data(0, p.length());
+                // build a list of messages to send to the view
+                new_messages.push_back(p);
+                // Then remove it from the SocketState's growable buffer
+                state.remove_data(0, p.length());
+            }*/
+
+        std::string delimiter = "\\n";
+
+        size_t pos = 0;
+        std::string token;
+        while ((pos = s.find(delimiter)) != std::string::npos)
+        {
+            //token = s.substr(0, pos);
+            //std::cout << token << std::endl;
+            parts.push_back(s.substr(0, pos));
+            s.erase(0, pos + delimiter.length());
         }
-        return new_messages;
+        // std::cout << s << std::endl;
+
+        /*     std::string test;
+             while(std::getline(s,test,' ')){
+                 std::cout << test << std::endl;
+             }*/
+
+
+        return parts;
     }
 }
