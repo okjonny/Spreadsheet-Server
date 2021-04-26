@@ -21,7 +21,10 @@
 #include "formula.h"
 #include <list>
 #include <string>
+#include <regex>
 #include <locale>
+#include <stdexcept>
+#include <unordered_set>
 
 namespace ss
 {
@@ -46,18 +49,6 @@ namespace ss
         //Class-wide variables that store the tokens and variables belonging to the Formula object.
 
 
-        /// <summary>
-        /// Creates a Formula from a string that consists of an infix expression written as
-        /// described in the class comment.  If the expression is syntactically invalid,
-        /// throws a FormulaFormatException with an explanatory Message.
-        ///
-        /// The associated normalizer is the identity function, and the associated validator
-        /// maps every string to true.
-        /// </summary>
-    public Formula(String formula) :
-        this(formula, s => s, s => true)
-        {
-        }
 
         /// <summary>
         /// Creates a Formula from a string that consists of an infix expression written as
@@ -86,25 +77,28 @@ namespace ss
         {
             std::regex valid("^[A-Z]+[0-9]?[0-9]$");
             tokens = get_tokens(formula);
-            variables = std::list<std::string>();
+            variables = std::vector<std::string>();
 
             //Go through the tokens and ensure that every double is properly truncated
             //and that every variable is legal. Throw exceptions for illegal variables.
             for (int i = 0; i < tokens.size(); i++)
             {
-                if (tokens[i].is_double())
+                if (is_double(tokens[i]))
                 {
-                    tokens[i] = double.Parse(tokens[i]).to_string();
+                    tokens[i] = std::to_string(std::stod(tokens[i]));
+                    //double.Parse(tokens[i]).to_string();
                 }
-                else if (tokens[i].is_variable())
+                else if (is_variable(tokens[i]))
                 {
                     tokens[i] = normalize(tokens[i]);
-                    variables.insert(tokens[i]);
+                    variables.push_back(tokens[i]);
 
-                    if (!tokens[i].is_variable())
-                        throw new FormulaFormatException(tokens[i] + " is an illegal variable. Change it to be legal.");
-                    if (!std::regex_match(tokens[i], p))
-                        throw new FormulaFormatException(tokens[i] + " is an invalid variable. Change it to be valid.");
+                    if (!is_variable(tokens[i]))
+                        throw std::exception();
+                    //throw new FormulaFormatException(tokens[i] + " is an illegal variable. Change it to be legal.");
+                    if (!std::regex_match(tokens[i], valid))
+                        throw std::exception();
+                        //throw new FormulaFormatException(tokens[i] + " is an invalid variable. Change it to be valid.");
                 }
             }
 
@@ -122,9 +116,9 @@ namespace ss
         /// new Formula("x+X*z", N, s => true).get_variables() should enumerate "X" and "Z".
         /// new Formula("x+X*z").get_variables() should enumerate "x", "X", and "z".
         /// </summary>
-    public IEnumerable<String> get_variables()
+        std::unordered_set<std::string> formula::get_variables()
         {
-            return new HashSet<string>(variables);
+            return std::unordered_set<std::string>(variables.begin(), variables.end());
         }
 
         /// <summary>
@@ -137,7 +131,7 @@ namespace ss
         /// new Formula("x + y", N, s => true).to_string() should return "X+Y"
         /// new Formula("x + Y").to_string() should return "x+Y"
         /// </summary>
-    public override string to_string()
+        public override string to_string()
         {
             //Combine all tokens into one string without any spaces
             return string.Join(" ", tokens);
@@ -210,19 +204,24 @@ namespace ss
         /// followed by zero or more letters, digits, or underscores; a double literal; and anything that doesn't
         /// match one of those patterns.  There are no empty tokens, and no token contains white space.
         /// </summary>
-    std::list<std::string> formula::get_tokens(std::string formula)
+        std::vector<std::string> formula::get_tokens(std::string formula)
         {
             // Patterns for individual tokens
-            String lpPattern = @"\(";
-            String rpPattern = @"\)";
-            String opPattern = @"[\+\-*/]";
-            String varPattern = @"[a-zA-Z_](?: [a-zA-Z_]|\d)*";
-            String doublePattern = @"(?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?";
-            String spacePattern = @"\s+";
+            std::string left_par = R"(\()";
+            std::string right_par = R"(\))";
+            std::string op = R"([\+\-*/])";
+            std::string var = R"([a-zA-Z_](?: [a-zA-Z_]|\d)*)";
+            std::string number = R"((?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?)";
+            std::string space = R"(\s+)";
 
             // Overall pattern
-            String pattern = String.Format("({0}) | ({1}) | ({2}) | ({3}) | ({4}) | ({5})",
-                                           lpPattern, rpPattern, opPattern, varPattern, doublePattern, spacePattern);
+            char* temp_pattern = new char[left_par.length() + right_par.length() + op.length() +
+                                            var.length() + number.length() + space.length()];
+
+            std::sprintf(temp_pattern,"(%s) | (%s) | (%s) | (%s) | (%s) | (%s)",
+                         left_par.c_str(), right_par.c_str(), op.c_str(), var.c_str(), number.c_str(), space.c_str());
+
+            std::string pattern = temp_pattern;
 
             // Enumerate matching tokens that don't consist solely of white space.
             foreach (String s in Regex.Split(formula, pattern, RegexOptions.IgnorePatternWhitespace))
@@ -239,107 +238,82 @@ namespace ss
         /// Checks to see if basic infix and variable syntax as outlined by the API is being followed. Throws exceptions for specific scenarios.
         /// </summary>
         /// <param name="tokens">The enumeration of tokens to iterate through and ensure that there are no invalid tokens.</param>
-    private static void syntax_check(IEnumerable<String> tokens)
+        void formula::syntax_check(std::vector<std::string> tokens)
         {
             //variables to keep track of opening and closed paranthesis
             int opening_par_count = 0;
             int closing_par_count = 0;
 
             //Variable to store the previous string in the iteration for comparison to the current one
-            string lastString = "";
+            std::string last_string;
 
             //An empty formula is not a formula and an exception must be thrown.
-            if (!(tokens.Count() > 0))
-                throw new FormulaFormatException("The formula provided contains no tokens. Provide at least one token.");
+            if (tokens.empty()) //!(tokens.size() > 0)
+                throw std::runtime_error("The formula provided contains no tokens. Provide at least one token.");
 
-            if (!(tokens.First().is_double() || tokens.First().is_variable()|| tokens.First().equals("(")))
-                throw new FormulaFormatException("The first token is not a valid number, variable, or opening paranthesis. Change it to be as such.");
+            if (!(is_double(tokens.front()) || is_variable(tokens.front())|| tokens.front() == "("))
+                throw std::runtime_error("The first token is not a valid number, variable, or opening paranthesis. Change it to be as such.");
 
 
-            if (!(tokens.Last().is_double() || tokens.Last().is_variable()|| tokens.Last().equals(")")))
-                throw new FormulaFormatException("The last token is not a valid number, variable, or closing paranthesis. Change it to be as such.");
+            if (!(is_double(tokens.back()) || is_variable(tokens.back())|| tokens.back() == ")"))
+                throw std::runtime_error("The last token is not a valid number, variable, or closing paranthesis. Change it to be as such.");
 
             //Iterate through every token to ensure it is valid. These tests, unlike the ones above, are sensitive in that any token at any point could trigger these exceptions.
-            foreach (string t in tokens)
+            for (const std::string& t : tokens)
             {
-                if (!t.is_legal())
-                    throw new FormulaFormatException(t + " is an invalid token. Use a valid token instead.");
+                if (!is_legal(t))
+                    throw std::runtime_error(t + " is an invalid token. Use a valid token instead.");
 
                 if (closing_par_count > opening_par_count)
-                    throw new FormulaFormatException("The number of opening paranthesis exceeds the number of closing paranthesis. Balance the paranthesis in the formula.");
+                    throw std::runtime_error("The number of opening paranthesis exceeds the number of closing paranthesis. Balance the paranthesis in the formula.");
 
-                if (lastString.equals("(") || lastString.is_operator())
+                if (last_string == "(" || is_operator(last_string))
                 {
-                    if (!(t.is_double() || t.is_variable() || t.equals("(")))
-                        throw new FormulaFormatException(t + " is not a valid number, variable, or opening paranthesis. Change it to be as such.");
+                    if (!(is_double(t) || is_variable(t) || t == "("))
+                        throw std::runtime_error(t + " is not a valid number, variable, or opening paranthesis. Change it to be as such.");
+                }
+                if (is_double(last_string) || is_variable(last_string) || last_string == ")")
+                {
+                    if (!(is_operator(t) || t == ")"))
+                        throw std::runtime_error(t + " is not a valid operator or closing paranthesis. Change it to be as such.");
                 }
 
-                if (lastString.is_double() || lastString.is_variable() || lastString.equals(")"))
-                {
-                    if (!(t.is_operator() || t.equals(")")))
-                        throw new FormulaFormatException(t + " is not a valid operator or closing paranthesis. Change it to be as such.");
-                }
 
-                if (t.equals("("))
+                if (t == "(")
                     opening_par_count++;
 
-                if (t.equals(")"))
+                if (t == ")")
                     closing_par_count++;
 
-                lastString = t;
+                last_string = t;
             }
 
 
             if (opening_par_count != closing_par_count)
-                throw new FormulaFormatException("The number of opening paranthesis and closing parenthesis are different. Balance the paranthesis in the formula.");
+                throw std::runtime_error("The number of opening paranthesis and closing parenthesis are different. Balance the paranthesis in the formula.");
         }
 
 
 
-    std::string formula::normalize(std::string token)
-    {
-        std::locale loc;
-        std::string normalized = token;
-
-        for(char c : normalized)
-            std::toupper(c, loc);
-
-        return normalized;
-    }
-
-
-    /// <summary>
-    /// Used to report syntactic errors in the argument to the Formula constructor.
-    /// </summary>
-    public class FormulaFormatException : Exception
-    {
-        /// <summary>
-        /// Constructs a FormulaFormatException containing the explanatory message.
-        /// </summary>
-    public FormulaFormatException(String message)
-                : base(message)
+        std::string formula::normalize(std::string token)
         {
+            std::locale loc;
+            std::string normalized = token;
+
+            for(char c : normalized)
+                std::toupper(c, loc);
+
+            return normalized;
         }
-    }
 
 
-    /// <summary>
-    /// A class full of extensions to the string class that will be useful in ensuring that Formula Objects contain correct tokens.
-    /// </summary>
-    internal static class StringExtensions
-    {
-        /// <summary>
-        /// Checks if a string is a legal operator, variable, number, or paranthesis.
-        /// </summary>
-        /// <param name="token">The token in question.</param>
-        /// <returns></returns>
-    public static bool is_legal(this string token)
+        bool formula::is_legal(std::string token)
         {
-            return (token.equals("(")  ||
-                    token.equals(")")  ||
-                    token.is_operator() ||
-                    token.is_variable() ||
-                    Double.TryParse(token, out _));
+            return (token == "("  ||
+                    token == ")"  ||
+                    is_operator(token) ||
+                    is_variable(token) ||
+                    is_double(token));
         }
 
         /// <summary>
@@ -347,9 +321,10 @@ namespace ss
         /// </summary>
         /// <param name="token">The token in question.</param>
         /// <returns></returns>
-    public static bool is_variable(this string token)
+        bool formula::is_variable(std::string token)
         {
-            return Regex.IsMatch(token, @"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
+            std::regex variable(R"([a-zA-Z_](?: [a-zA-Z_]|\d)*)");
+            return std::regex_match(token, variable);
         }
 
         /// <summary>
@@ -357,12 +332,12 @@ namespace ss
         /// </summary>
         /// <param name="token">The token in question.</param>
         /// <returns></returns>
-    public static bool is_operator(this string token)
+        bool formula::is_operator(std::string token)
         {
-            return (token.equals("*") ||
-                    token.equals("/") ||
-                    token.equals("+") ||
-                    token.equals("-"));
+            return (token == "*" ||
+                    token == "/" ||
+                    token == "+" ||
+                    token == "-");
         }
 
         /// <summary>
@@ -370,10 +345,17 @@ namespace ss
         /// </summary>
         /// <param name="token">The token in question.</param>
         /// <returns></returns>
-    public static bool is_double(this string token)
+        bool formula::is_double(std::string token)
         {
-            return Double.TryParse(token, out _);
+            try
+            {
+                std::stod(token);
+            }
+            catch(...)
+            {
+                return false;
+            }
+            return true;
         }
+
     }
-}
-}

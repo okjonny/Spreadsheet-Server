@@ -5,23 +5,34 @@
 #ifndef TEAMPOG_CS3505_FORMULA_H
 #define TEAMPOG_CS3505_FORMULA_H
 
-#include <list>
 #include <string>
 #include <locale>
+#include <vector>
+#include <unordered_set>
 
 namespace ss
 {
     class formula
     {
-        std::list<std::string> tokens;
-        std::list<std::string> variables;
+        std::vector<std::string> tokens;
+        std::vector<std::string> variables;
 
     public:
         formula(std::string formula);
+        std::unordered_set<std::string> get_variables();
 
     private:
-        std::string normalize(std::string token);
-        static std::list<std::string> get_tokens(std::string formula);
+        static std::string normalize(std::string token);
+        static std::vector<std::string> get_tokens(std::string formula);
+
+        std::vector<std::string> get_tokens(std::string formula);
+
+        static void syntax_check(std::vector<std::string> tokens);
+
+        static bool is_legal(std::string token);
+        static bool is_variable(std::string token);
+        static bool is_operator(std::string token);
+        static bool is_double(std::string token);
     };
 
 }

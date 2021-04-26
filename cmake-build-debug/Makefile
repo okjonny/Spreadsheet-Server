@@ -250,32 +250,59 @@ spreadsheet/dependency_graph.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.s
 .PHONY : spreadsheet/dependency_graph.cpp.s
 
-tests/test.o: tests/test.cpp.o
+spreadsheet/formula.o: spreadsheet/formula.cpp.o
 
-.PHONY : tests/test.o
+.PHONY : spreadsheet/formula.o
 
 # target to build an object file
-tests/test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/tests/test.cpp.o
-.PHONY : tests/test.cpp.o
+spreadsheet/formula.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o
+.PHONY : spreadsheet/formula.cpp.o
 
-tests/test.i: tests/test.cpp.i
+spreadsheet/formula.i: spreadsheet/formula.cpp.i
 
-.PHONY : tests/test.i
+.PHONY : spreadsheet/formula.i
 
 # target to preprocess a source file
-tests/test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/tests/test.cpp.i
-.PHONY : tests/test.cpp.i
+spreadsheet/formula.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.i
+.PHONY : spreadsheet/formula.cpp.i
 
-tests/test.s: tests/test.cpp.s
+spreadsheet/formula.s: spreadsheet/formula.cpp.s
 
-.PHONY : tests/test.s
+.PHONY : spreadsheet/formula.s
 
 # target to generate assembly for a file
-tests/test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/tests/test.cpp.s
-.PHONY : tests/test.cpp.s
+spreadsheet/formula.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.s
+.PHONY : spreadsheet/formula.cpp.s
+
+spreadsheet/spreadsheet.o: spreadsheet/spreadsheet.cpp.o
+
+.PHONY : spreadsheet/spreadsheet.o
+
+# target to build an object file
+spreadsheet/spreadsheet.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o
+.PHONY : spreadsheet/spreadsheet.cpp.o
+
+spreadsheet/spreadsheet.i: spreadsheet/spreadsheet.cpp.i
+
+.PHONY : spreadsheet/spreadsheet.i
+
+# target to preprocess a source file
+spreadsheet/spreadsheet.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.i
+.PHONY : spreadsheet/spreadsheet.cpp.i
+
+spreadsheet/spreadsheet.s: spreadsheet/spreadsheet.cpp.s
+
+.PHONY : spreadsheet/spreadsheet.s
+
+# target to generate assembly for a file
+spreadsheet/spreadsheet.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.s
+.PHONY : spreadsheet/spreadsheet.cpp.s
 
 # Help Target
 help:
@@ -298,9 +325,12 @@ help:
 	@echo "... spreadsheet/dependency_graph.o"
 	@echo "... spreadsheet/dependency_graph.i"
 	@echo "... spreadsheet/dependency_graph.s"
-	@echo "... tests/test.o"
-	@echo "... tests/test.i"
-	@echo "... tests/test.s"
+	@echo "... spreadsheet/formula.o"
+	@echo "... spreadsheet/formula.i"
+	@echo "... spreadsheet/formula.s"
+	@echo "... spreadsheet/spreadsheet.o"
+	@echo "... spreadsheet/spreadsheet.i"
+	@echo "... spreadsheet/spreadsheet.s"
 .PHONY : help
 
 

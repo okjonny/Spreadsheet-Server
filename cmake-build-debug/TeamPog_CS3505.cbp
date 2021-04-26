@@ -108,7 +108,16 @@
 		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/dependency_graph.h">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
-		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/tests/test.cpp">
+		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/formula.cpp">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/formula.h">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/spreadsheet.cpp">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/spreadsheet.h">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
 		<Unit filename="/home/hibban/CLionProjects/TeamPog-CS3505/CMakeLists.txt">

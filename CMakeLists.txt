@@ -14,8 +14,8 @@ set(SOURCE_FILES
         spreadsheet/dependency_graph.cpp
         spreadsheet/dependency_graph.h
         #spreadsheet/dependency_graph_tester.cpp
-        #spreadsheet/spreadsheet.cpp spreadsheet/spreadsheet.h spreadsheet/formula.cpp spreadsheet/formula.h
-        tests/test.cpp)
+        spreadsheet/spreadsheet.cpp spreadsheet/spreadsheet.h spreadsheet/formula.cpp spreadsheet/formula.h
+        )
 project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)
 
