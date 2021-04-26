@@ -10,10 +10,8 @@ using namespace network_util;
 namespace spreadsheet_server
 {
 
-    struct test
-    {
+    struct test {
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(test, x, y)
-
         int x;
         int y;
     };
@@ -97,7 +95,8 @@ namespace spreadsheet_server
         for (auto &c : cells)
         {
             std::string cell_update =
-                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + c.first + "\"" + ",\"contents\": \"" +
+                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + c.first + "\"" +
+                    ",\"contents\": \"" +
                     c.second + "\"}\n";
             send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
         }
@@ -127,28 +126,25 @@ namespace spreadsheet_server
         nlohmann::json tester = nlohmann::json::parse(commands[0]);
 
 
-
         std::cout << tester["requestType"] << std::endl;
 
 
-        if(tester["requestType"] == "editCell")
+        if (tester["requestType"] == "editCell")
         {
             std::cout << "editing bro" << std::endl;
             std::string cell_update =
-                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + std::string(tester["cellName"]) + "\"" + ",\"contents\": \"" +
-                            std::string(tester["contents"]) + "\"}\n";
+                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + std::string(tester["cellName"]) +
+                    "\"" + ",\"contents\": \"" +
+                    std::string(tester["contents"]) + "\"}\n";
             send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
-        }
-        else if(tester["requestType"] == "selectCell")
+        } else if (tester["requestType"] == "selectCell")
         {
             std::cout << "revert/select bro" << std::endl;
             //send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
-        }
-        else if(tester["requestType"] == "revertCell")
+        } else if (tester["requestType"] == "revertCell")
         {
 
-        }
-        else if(tester["requestType"] == "undo")
+        } else if (tester["requestType"] == "undo")
         {
             std::cout << "undo bro" << std::endl;
         }

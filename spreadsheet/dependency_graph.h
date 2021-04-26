@@ -7,9 +7,7 @@
 #include <vector>
 #include <unordered_set>
 #include <bits/stdc++.h>
-#include <functional>
 
-using namespace std;
 namespace ss
 {
     class dependency_graph
