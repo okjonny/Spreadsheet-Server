@@ -6,11 +6,6 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../network_server
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../network_server/server_controller.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../network_server/socket_state.h
 
-CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/networking.h
-CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/server.cpp
-CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/server_controller.h
-CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/socket_state.h
-
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/networking.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/server_controller.cpp
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/server_controller.h
@@ -22,4 +17,6 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o: ../network_serv
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o: ../spreadsheet/dependency_graph.cpp
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o: ../spreadsheet/dependency_graph.h
+
+CMakeFiles/TeamPog_CS3505.dir/tests/test.cpp.o: ../tests/test.cpp
 

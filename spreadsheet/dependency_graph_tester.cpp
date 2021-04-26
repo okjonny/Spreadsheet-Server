@@ -1,10 +1,10 @@
 #include <iostream>
 #include "dependency_graph.h"
-
+#include <regex>
 
 int main()
 {
-    ss::dependency_graph graph1;
+/*    ss::dependency_graph graph1;
     graph1.add_dependency("zyad", "ally");
     graph1.add_dependency("zyad", "zyad");
     graph1.add_dependency("zyad", "andrew");
@@ -25,6 +25,13 @@ int main()
     for (std::string s : set2)
     {
         std::cout << s << std::endl;
-    }
+    }*/
+
+    std::regex p("^[A-Z]+[0-9]?[0-9]$");
+    if(std::regex_match("A1", p))
+        std::cout << "A1 matched" << std::endl;
+
+
+
     return 0;
 }

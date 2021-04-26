@@ -20,7 +20,7 @@ namespace spreadsheet_server
 /// Start accepting Tcp sockets connections from clients
 /// </summary>
     server_controller::server_controller()
-    {};
+    = default;;
 
     void server_controller::start_server()
     {

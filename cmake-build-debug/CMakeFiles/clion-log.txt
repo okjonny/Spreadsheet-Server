@@ -1,16 +1,4 @@
-/home/jonny/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/211.6693.114/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jonny/CLionProjects/TeamPog-CS3505
-CMake Deprecation Warning at /usr/lib/cmake/nlohmann_jsonConfig.cmake:39 (cmake_policy):
-  The OLD behavior for policy CMP0024 will be removed from a future version
-  of CMake.
-
-  The cmake-policies(7) manual explains that the OLD behaviors of all
-  policies are deprecated and that a policy should be set to OLD only under
-  specific short-term circumstances.  Projects should be ported to the NEW
-  behavior and not rely on setting a policy to OLD.
-Call Stack (most recent call first):
-  CMakeLists.txt:29 (find_package)
-
-
+/var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/bin/make -DCMAKE_C_COMPILER=/bin/cc -DCMAKE_CXX_COMPILER=/bin/c++ -G "CodeBlocks - Unix Makefiles" /home/hibban/CLionProjects/TeamPog-CS3505
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug
+-- Build files have been written to: /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug
