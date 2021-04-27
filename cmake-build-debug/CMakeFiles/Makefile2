@@ -54,19 +54,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
 
 # The command to remove a file.
-RM = /var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake -E rm -f
+RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/hibban/CLionProjects/TeamPog-CS3505
+CMAKE_SOURCE_DIR = /Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/cmake-build-debug
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -93,14 +93,14 @@ clean: CMakeFiles/TeamPog_CS3505.dir/clean
 CMakeFiles/TeamPog_CS3505.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target TeamPog_CS3505"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target TeamPog_CS3505"
 .PHONY : CMakeFiles/TeamPog_CS3505.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/TeamPog_CS3505.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/cmake-build-debug/CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/TeamPog_CS3505.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/TeamPog_CS3505.dir/rule
 
 # Convenience name for target.

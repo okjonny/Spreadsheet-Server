@@ -6,9 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/home/hibban/CLionProjects/TeamPog-CS3505/tests/test.cpp
+/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/Test/test.cpp
 regex
 -
 iostream
+-
+string
+-
+cctype
 -
 
