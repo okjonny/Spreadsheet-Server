@@ -1,7 +1,7 @@
 #include <mutex>
 #include <string>
 #include <functional>
-#include "server_controller.h"
+//#include "server_controller.h"
 //#include "server_controller.h"
 
 #ifndef SOCKSTATE_H
@@ -12,8 +12,6 @@ namespace network_util
     class socket_state {
 
         friend class networking;
-        friend class server_controller;
-
         std::string data;
         int socket;
         int state_id;
@@ -22,6 +20,7 @@ namespace network_util
         std::mutex data_lock;
 
     public:
+        std::string spreadsheet;
         char buffer[4096];
         std::string username;
         std::function<void(socket_state &)> on_network_action;

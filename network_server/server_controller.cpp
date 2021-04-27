@@ -5,25 +5,42 @@
 #include <regex>
 #include <sys/socket.h>
 #include <unordered_map>
+#include <string>
+//#include "utf8.h"
 
 using namespace network_util;
 namespace spreadsheet_server
 {
 
-    struct test {
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(test, x, y)
-        int x;
-        int y;
+    std::unordered_map<std::string, spreadsheet> server_controller::current_spreadsheets;
+
+    // CLIENT STRUCTS
+    struct select_cell {
+        std::string requestType;
+        std::string cellName;
+
+        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(select_cell, requestType, cellName)
+    };
+
+    // SERVER TO CLIENT STRUCTS
+    struct cell_selected {
+        std::string messageType;
+        std::string cellName;
+        std::string selector;
+        std::string selectorName;
+
+        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(cell_selected, messageType, cellName, selector, selectorName)
     };
 
 /// <summary>
 /// Start accepting Tcp sockets connections from clients
 /// </summary>
     server_controller::server_controller()
-    = default;;
+    = default;
 
     void server_controller::start_server()
     {
+
         // This begins an "event loop"
         std::function<void(socket_state &)> callback = receive_name;
         networking::start_server(callback);
@@ -31,61 +48,76 @@ namespace spreadsheet_server
     }
 
 
-/// <summary>
-/// Method to be invoked by the networking library
-/// when a new client connects (see line 43)
-/// </summary>
-/// <param name="state">The SocketState representing the new client</param>
+    /**
+     *
+     * @param state - The socket_state representing the new client
+     */
     void server_controller::receive_name(network_util::socket_state &state)
     {
 //        if (state.ErrorOccured)
 //            return;
 
+// {"requestType":"selectCell", "cellName":"A1"}\n
         state.username = state.get_data();
-        std::cout << "User connected and sent username: " << state.get_username() << std::endl;
+        std::cout << "User Connected: " << state.get_username() << std::endl;
 
-        std::string list = "checkitbro.xml\nhomie.xml\nnub.xml\njonny.xml\n";
+        //Send current spreadsheet separated by /n or \n\n if no spreadsheets are available
+        std::string list;
+        int i = 0;
 
-        //Send keys separated by /n as "List"
+
+        for (auto const &element : current_spreadsheets)
+        {
+            if (i == current_spreadsheets.size() - 1)
+                list.append(element.first + "\n\n");
+            else list.append(element.first + "\n");
+            i++;
+        }
+
+        if (list.empty())
+            list = "\n\n";
 
         send(state.get_socket(), list.c_str(), strlen(list.c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_spreadsheet_selection;
         state.on_network_action = callback;
-//        Networking.GetData(state);
     }
 
-
-    /// <summary>
-/// Method to be invoked by the networking library
-/// when a new client connects (see line 43)
-/// </summary>
-/// <param name="state">The SocketState representing the new client</param>
+    /**
+     *
+     * @param state
+     */
     void server_controller::receive_spreadsheet_selection(network_util::socket_state &state)
     {
-        std::string id = std::to_string(state.get_id()) + "\n";
         std::unordered_map<std::string, std::string> cells; //= {{"A1","1+3"}};
-        cells.insert(std::make_pair<std::string, std::string>("A1", "1+3"));
-        cells.insert(std::make_pair<std::string, std::string>("B6", "1+3"));
 
-        //std::string name = "A";
-        //std::pair<std::string, std::string> p;
-        //cells.insert(p);
-        /*for(int i = 0; i <= 10; i++)
-        {
-            name += std::to_string(i);
-            cells.insert(std::pair<std::string, std::string>("name", std::to_string(i)));
-            name = "A";
-        }*/
 //        if (state.ErrorOccured)
 //            return;
+
         std::string selection = state.get_data();
+        state.spreadsheet = selection;
 
-        //std::string cells[] = {"A1", "A2", "B3", "B6"};
+        std::cout << "Spreadsheet selected: " << selection << std::endl;
+
+        //check if spreadsheet exists, create otherwise
+        if (current_spreadsheets.find(selection) != current_spreadsheets.end())
+        {
+            std::cout << "map contains spreadsheet!\n";
+            current_spreadsheets[selection].add_user_to_spreadsheet(state.get_socket());
+        }
+            // fix spreadsheet() we need to give it a name
+        else
+        {
+            spreadsheet new_spreadsheet;
+            new_spreadsheet.add_user_to_spreadsheet(state.get_socket());
+//            if (selection.find('\n'))
+//                return;
+//            else
+            current_spreadsheets.insert({selection, new_spreadsheet});
 
 
-        //state.username = state.get_data();
-        std::cout << "User connected and selected this damn spreadsheet homie: " << selection << std::endl;
+            std::cout << "New spreadsheet made: " << selection << std::endl;
+        }
 
         //---------------CANNOT PROCESS EDIT REQUESTS HERE, MAKE SURE TO FIND SOLUTION, LOCK??------------
         //if spreadsheetlist.contains(selection)
@@ -101,18 +133,8 @@ namespace spreadsheet_server
             send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
         }
 
-        send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
-
-        //for()
-        //For(cell c in s.getCells)
-        //  string j = Json.serialize(c)
-        //  send(j)
-
-        //Send(state.get_id());
-
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
-//        Networking.GetData(state);
     }
 
 
@@ -120,18 +142,17 @@ namespace spreadsheet_server
     {
 //        if (state.ErrorOccured)
 //            return;
-        std::vector<std::string> commands = process_data(state);
+        std::cout << "IN RECEIVE+++++++ " << std::endl;
 
+        std::vector<std::string> commands = process_data(state);
+        current_spreadsheets[state.spreadsheet].add_command(state.get_data());
 
         nlohmann::json tester = nlohmann::json::parse(commands[0]);
 
-
-        std::cout << tester["requestType"] << std::endl;
-
+        std::cout << "REQUEST TYPE: " << tester["requestType"] << std::endl;
 
         if (tester["requestType"] == "editCell")
         {
-            std::cout << "editing bro" << std::endl;
             std::string cell_update =
                     std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + std::string(tester["cellName"]) +
                     "\"" + ",\"contents\": \"" +
@@ -139,134 +160,38 @@ namespace spreadsheet_server
             send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
         } else if (tester["requestType"] == "selectCell")
         {
-            std::cout << "revert/select bro" << std::endl;
-            //send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
+            nlohmann::json j;
+            select_cell c;
+            c.to_json(j, c);
+            std::cout << "JSOOOOOON: " << j << std::endl;
+
         } else if (tester["requestType"] == "revertCell")
         {
-
+            std::cout << "revert revert skrtttt" << std::endl;
         } else if (tester["requestType"] == "undo")
         {
             std::cout << "undo bro" << std::endl;
         }
 
-        //test t{tester["x"].get<int>(), tester["y"].get<int>()};
-        //auto t = tester.get<test>();
+
+        // {"requestType": "selectCell", "cellName": “A1”, "contents":“42”}\n
+        // User receives their own
+        std::string new_id = std::to_string(state.get_id()) + " made edit\n";
+        for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
+        {
+            for (std::string &m : get_spreadsheets()[state.spreadsheet].get_commands_received())
+            {
+                if (s != state.get_id())
+                    send(s, m.c_str(), strlen(m.c_str()), 0);
+            }
+        }
     }
 
-/*    void server_controller::receive_edit_request(network_util::socket_state &state)
-    {
-//        if (state.ErrorOccured)
-//            return;
 
-        state.username = state.get_data();
-        std::cout << "User connected and selected this damn spreadsheet homie: " << state.get_data() << std::endl;
-
-        std::function<void(socket_state &)> callback = receive_cell_selection;
-        state.on_network_action = callback;
-//        Networking.GetData(state);
-    }
-/// <summary>*/
-/// Method to be invoked by the networking library
-/// when a new client connects (see line 43)
-/// </summary>
-/// <param name="state">The SocketState representing the new client</param>
-//    void server_controller::receive_name(socket_state &state)
-//    {
-
-//        auto j3 = nlohmann::json::parse(R"({"happy": true, "pi": 3.141})");
-//        // Remove the client if they aren't still connected
-////        if (state.ErrorOccured) {
-////            RemoveClient(state.ID);
-////            return;
-////        }
-//
-//        List <string> clientData = ProcessData(state);
-//
-//        Tank clientTank = new Tank((int) state.ID, clientData[0].TrimEnd('\n'), new Vector2D(0, 0));
-//
-//        // change the state's network action to the
-//        // receive handler so we can process data when something
-//        // happens on the network
-//        state.OnNetworkAction = ReceiveCommands;
-//
-//        // Then send the startup info to the client.Then add the client's socket to a list of all clients.
-//        Networking.Send(state.TheSocket, state.ID.ToString() + "\n" + GameWorld.Size + "\n");
-//
-//        // Send walls
-//        lock(GameWorld.Walls)
-//        {
-//            foreach(Wall
-//            w
-//                    in
-//            GameWorld.Walls.Values)
-//            Networking.Send(state.TheSocket, JsonConvert.SerializeObject(w) + "\n");
-//        }
-//
-//        Console.WriteLine("Player ID: " + state.ID.ToString() + "\n" + "World Size: " + GameWorld.Size + "\n" + "SENT");
-//
-//
-//        // Save the client state
-//        // Need to lock here because clients can disconnect at any time
-//        lock(Clients)
-//        Clients[state.ID] = state;
-//
-//        lock(GameWorld.Tanks)
-//        GameWorld.Tanks.Add((int) state.ID, clientTank);
-//
-//        Networking.GetData(state);
-//    }
-
-//
-//
-///// <summary>
-///// Method to be invoked by the networking library
-///// when a network action occurs (see lines 68-70)
-///// </summary>
-///// <param name="state"></param>
-//    private
-//
-//    void ReceiveCommands(SocketState state)
-//    {
-//        // Remove the client if they aren't still connected
-//        if (state.ErrorOccured)
-//        {
-//            RemoveClient(state.ID);
-//            return;
-//        }
-//
-//        List <string> worldData = ProcessData(state);
-//
-//        foreach(string
-//        s
-//                in
-//        worldData)
-//        {
-//
-//            ControlCommand c = JsonConvert.DeserializeObject<ControlCommand>(s);
-//            lock(Commands)
-//            {
-//                Commands[state.ID] = c;
-//            }
-//        }
-//
-//        // Continue the event loop that receives messages from this client
-//        Networking.GetData(state);
-//    }
-//
-//
-//
-///// <summary>
-///// Process any buffered data separated by '\n'.
-//
-///// </summary>
-///// <param name="state">The SocketState holding the data to be processed.</param>
-///// <returns>A list of data that has been processed (separated by '\n').</returns>
-//    private
-//
     std::vector<std::string> server_controller::process_data(socket_state &state)
     {
         std::string s = state.get_data();
-        //std::stringstream s(boomer);
+//        std::stringstream s(boomer);
         std::cout << "SERVER CONTROLLER: " << s << std::endl;
 
         std::vector<std::string> parts;
@@ -310,14 +235,11 @@ namespace spreadsheet_server
             parts.push_back(s.substr(0, pos));
             s.erase(0, pos + delimiter.length());
         }
-        // std::cout << s << std::endl;
-
-        /*     std::string test;
-             while(std::getline(s,test,' ')){
-                 std::cout << test << std::endl;
-             }*/
-
 
         return parts;
     }
+
+    std::unordered_map<std::string, spreadsheet> server_controller::get_spreadsheets()
+    { return current_spreadsheets; }
+
 }
