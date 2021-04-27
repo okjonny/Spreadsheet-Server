@@ -13,6 +13,7 @@ int main()
 //
 //        std::function<void (socket_state & )> boom = boomer;
 //        network_util::networking::start_server(boom);
+
     while (true)
     {}
 }

@@ -9,6 +9,8 @@
 #include <string>
 #include <cstdlib>
 #include <thread>
+#include <unordered_map>
+#include <server_controller.h>
 
 #define PORT 1100
 
@@ -36,7 +38,7 @@ namespace network_util
             exit(EXIT_FAILURE);
         }
 //if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
-        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR , &opt, sizeof(opt)))
+        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
         {
             perror("setsockopt");
             exit(EXIT_FAILURE);
@@ -85,7 +87,7 @@ namespace network_util
             clients[thread_id].on_network_action = to_call;
             threads[thread_id] = std::thread(&networking::receive_callback, thread_id);
 //            clients[thread_id] = c;
-
+//            broadcast_spreadsheets();
             thread_id++;
         }
     }
@@ -95,7 +97,9 @@ namespace network_util
         std::cout << "Operating on Threadid " << (long) thread_id << std::endl;
         while (true)
         {
-           // mtx.lock();
+//            for(spreadsheet s: spreadsheet_server::server_controller::get_spreadsheets())
+
+            // mtx.lock();
             std::fill_n(clients[thread_id].buffer, 4096, 0);
             valread = read(clients[thread_id].socket, clients[thread_id].buffer, 4096);
             std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
@@ -104,7 +108,7 @@ namespace network_util
 //            int value = std::stoi(s);
             if (s == "Disconnect")
             {
-           //     mtx.unlock();
+                //     mtx.unlock();
                 break;
             }
             clients[thread_id].on_network_action(clients[thread_id]);
@@ -112,8 +116,10 @@ namespace network_util
 //            std::string sToSend = std::to_string(value);
 //            send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
             std::fill_n(clients[thread_id].buffer, 4096, 0);
-         //   mtx.unlock();
+            //   mtx.unlock();
         }
         networking::thread_id--;
     }
+
+
 }
