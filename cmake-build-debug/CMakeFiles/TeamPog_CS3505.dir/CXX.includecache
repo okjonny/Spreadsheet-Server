@@ -6,9 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/hibban/CLionProjects/TeamPog-CS3505/tests/test.cpp
+/home/hibban/CLionProjects/TeamPog-CS3505/Test/test.cpp
 regex
 -
 iostream
+-
+string
 -
 
