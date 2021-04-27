@@ -6,13 +6,25 @@
 
 #IncludeRegexTransform: 
 
-/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/Test/test.cpp
+/home/hibban/CLionProjects/TeamPog-CS3505/Test/test.cpp
 regex
 -
 iostream
 -
 string
 -
-cctype
+../spreadsheet/formula.h
+/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/formula.h
+algorithm
+-
+
+/home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/formula.h
+string
+-
+locale
+-
+vector
+-
+unordered_set
 -
 

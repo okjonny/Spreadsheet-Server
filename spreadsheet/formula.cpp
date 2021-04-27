@@ -94,11 +94,9 @@ namespace ss
                     variables.push_back(tokens[i]);
 
                     if (!is_variable(tokens[i]))
-                        throw std::exception();
-                    //throw new FormulaFormatException(tokens[i] + " is an illegal variable. Change it to be legal.");
+                        throw std::runtime_error(tokens[i] + " is an illegal variable. Change it to be legal.");
                     if (!std::regex_match(tokens[i], valid))
-                        throw std::exception();
-                        //throw new FormulaFormatException(tokens[i] + " is an invalid variable. Change it to be valid.");
+                        throw std::runtime_error(tokens[i] + " is an invalid variable. Change it to be valid.");
                 }
             }
 
@@ -131,10 +129,12 @@ namespace ss
         /// new Formula("x + y", N, s => true).to_string() should return "X+Y"
         /// new Formula("x + Y").to_string() should return "x+Y"
         /// </summary>
-        public override string to_string()
+        std::string formula::to_string()
         {
-            //Combine all tokens into one string without any spaces
-            return string.Join(" ", tokens);
+            std::string to_string = tokens[0];
+            for(int i = 1; i < tokens.size(); i++)
+                to_string += (" " + tokens[i]);
+            return to_string;
         }
 
         /// <summary>
@@ -157,11 +157,11 @@ namespace ss
         /// new Formula("x1+y2").equals(new Formula("y2+x1")) is false
         /// new Formula("2.0 + x7").equals(new Formula("2.000 + x7")) is true
         /// </summary>
-    public override bool equals(object obj)
+        bool formula::equals(formula f)
         {
-            if(&obj == null) || !(obj is Formula))
-                return false;
-            return this.to_string().equals(obj.to_string());
+           /* if(&f == NULL)
+                return false;*/
+            return to_string() == f.to_string();
         }
 
         /// <summary>
@@ -169,11 +169,11 @@ namespace ss
         /// Note that if both f1 and f2 are null, this method should return true.  If one is
         /// null and one is not, this method should return false.
         /// </summary>
-    public static bool operator ==(Formula f1, Formula f2)
+        bool formula::operator==(const formula& other)
         {
-            if (&f1 == null)
-                return (&f2 == null);
-            return f1.equals(f2);
+          /*  if (&f1 == null)
+                return (&f2 == null);*/
+            return this->equals(other);
         }
 
         /// <summary>
@@ -181,11 +181,11 @@ namespace ss
         /// Note that if both f1 and f2 are null, this method should return false.  If one is
         /// null and one is not, this method should return true.
         /// </summary>
-    public static bool operator !=(Formula f1, Formula f2)
+        bool formula::operator!=(const formula& other)
         {
-            if (&f1 == null)
-                return !(&f2 == null);
-            return !f1.equals(f2);
+/*            if (&f1 == null)
+                return !(&f2 == null);*/
+            return !this->equals(other);
         }
 
         /// <summary>
@@ -193,10 +193,10 @@ namespace ss
         /// case that f1.GetHashCode() == f2.GetHashCode().  Ideally, the probability that two
         /// randomly-generated unequal Formulae have the same hash code should be extremely small.
         /// </summary>
-    public override int get_hash_code()
+        int formula::get_hash_code()
         {
             std::hash<std::string> hash_string;
-            return hash_string(this.to_string());
+            return hash_string(this->to_string());
 
             //return this.to_string().GetHashCode();
         }
@@ -221,7 +221,8 @@ namespace ss
                 char last_token = formula[i - 1];
 
                 // We're checking if the last character is either a double or valid variable AND if the current character is as well
-                if (((is_double(token)) || token == '.' || is_variable((token))) && (is_double(last_token) || last_token == '.' || is_variable((last_token))))
+                if (((is_double(std::string(1, token))) || token == '.' || is_variable((std::string(1, token)))) &&\
+                (is_double(std::string(1, last_token)) || last_token == '.' || is_variable((std::string(1, last_token)))))
                 {
                     // If so, add the current character to the last token.
                     int last_index = (tokens.size() - 1);
@@ -303,8 +304,8 @@ namespace ss
             std::locale loc;
             std::string normalized = token;
 
-            for(char c : normalized)
-                std::toupper(c, loc);
+            for(int i = 0; i < normalized.length(); i++)
+                normalized[i] = std::toupper(normalized[i], loc);
 
             return normalized;
         }

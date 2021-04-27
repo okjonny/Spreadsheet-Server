@@ -20,11 +20,14 @@ namespace ss
     public:
         formula(std::string formula);
         std::unordered_set<std::string> get_variables();
+        std::string to_string();
+        bool equals(formula f);
+        int get_hash_code();
+        bool operator==(const formula& other);
+        bool operator!=(const formula& other);
 
     private:
         static std::string normalize(std::string token);
-        static std::vector<std::string> get_tokens(std::string formula);
-
         std::vector<std::string> get_tokens(std::string formula);
 
         static void syntax_check(std::vector<std::string> tokens);
