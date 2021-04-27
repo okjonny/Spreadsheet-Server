@@ -159,8 +159,8 @@ namespace ss
         /// </summary>
     public override bool equals(object obj)
         {
-            if(Referenceequals(obj, null) || !(obj is Formula))
-            return false;
+            if(&obj == null) || !(obj is Formula))
+                return false;
             return this.to_string().equals(obj.to_string());
         }
 
@@ -171,8 +171,8 @@ namespace ss
         /// </summary>
     public static bool operator ==(Formula f1, Formula f2)
         {
-            if (Referenceequals(f1, null))
-                return Referenceequals(f2, null);
+            if (&f1 == null)
+                return (&f2 == null);
             return f1.equals(f2);
         }
 
@@ -183,8 +183,8 @@ namespace ss
         /// </summary>
     public static bool operator !=(Formula f1, Formula f2)
         {
-            if (Referenceequals(f1, null))
-                return !Referenceequals(f2, null);
+            if (&f1 == null)
+                return !(&f2 == null);
             return !f1.equals(f2);
         }
 
@@ -193,9 +193,12 @@ namespace ss
         /// case that f1.GetHashCode() == f2.GetHashCode().  Ideally, the probability that two
         /// randomly-generated unequal Formulae have the same hash code should be extremely small.
         /// </summary>
-    public override int GetHashCode()
+    public override int get_hash_code()
         {
-            return this.to_string().GetHashCode();
+            std::hash<std::string> hash_string;
+            return hash_string(this.to_string());
+
+            //return this.to_string().GetHashCode();
         }
 
         /// <summary>
@@ -203,34 +206,34 @@ namespace ss
         /// right paren; one of the four operator symbols; a string consisting of a letter or underscore
         /// followed by zero or more letters, digits, or underscores; a double literal; and anything that doesn't
         /// match one of those patterns.  There are no empty tokens, and no token contains white space.
+        /// Referenced from https://stackoverflow.com/questions/35042087/split-a-infix-string-to-an-array-of-string-in-java
         /// </summary>
         std::vector<std::string> formula::get_tokens(std::string formula)
         {
-            // Patterns for individual tokens
-            std::string left_par = R"(\()";
-            std::string right_par = R"(\))";
-            std::string op = R"([\+\-*/])";
-            std::string var = R"([a-zA-Z_](?: [a-zA-Z_]|\d)*)";
-            std::string number = R"((?: \d+\.\d* | \d*\.\d+ | \d+ ) (?: [eE][\+-]?\d+)?)";
-            std::string space = R"(\s+)";
+            std::vector<std::string> tokens;
+            // add first element to the first token
+            tokens.push_back(std::string(1, formula[0]));
 
-            // Overall pattern
-            char* temp_pattern = new char[left_par.length() + right_par.length() + op.length() +
-                                            var.length() + number.length() + space.length()];
-
-            std::sprintf(temp_pattern,"(%s) | (%s) | (%s) | (%s) | (%s) | (%s)",
-                         left_par.c_str(), right_par.c_str(), op.c_str(), var.c_str(), number.c_str(), space.c_str());
-
-            std::string pattern = temp_pattern;
-
-            // Enumerate matching tokens that don't consist solely of white space.
-            foreach (String s in Regex.Split(formula, pattern, RegexOptions.IgnorePatternWhitespace))
+            for (int i = 1; i < formula.length(); i++)
             {
-                if (!Regex.IsMatch(s, @"^\s*$", RegexOptions.Singleline))
+                // store the current and previous character
+                char token = formula[i];
+                char last_token = formula[i - 1];
+
+                // We're checking if the last character is either a double or valid variable AND if the current character is as well
+                if (((is_double(token)) || token == '.' || is_variable((token))) && (is_double(last_token) || last_token == '.' || is_variable((last_token))))
                 {
-                    yield return s;
+                    // If so, add the current character to the last token.
+                    int last_index = (tokens.size() - 1);
+                    tokens[last_index] = tokens[last_index] + token;
                 }
+
+                else if (token != ' ')
+                    tokens.push_back(std::string(1, token));
+
             }
+
+            return tokens;
 
         }
 

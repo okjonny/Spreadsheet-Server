@@ -1,7 +1,7 @@
-set(CMAKE_CXX_COMPILER "/bin/c++")
+set(CMAKE_CXX_COMPILER "/Library/Developer/CommandLineTools/usr/bin/c++")
 set(CMAKE_CXX_COMPILER_ARG1 "")
-set(CMAKE_CXX_COMPILER_ID "GNU")
-set(CMAKE_CXX_COMPILER_VERSION "10.2.0")
+set(CMAKE_CXX_COMPILER_ID "AppleClang")
+set(CMAKE_CXX_COMPILER_VERSION "10.0.1.10010046")
 set(CMAKE_CXX_COMPILER_VERSION_INTERNAL "")
 set(CMAKE_CXX_COMPILER_WRAPPER "")
 set(CMAKE_CXX_STANDARD_COMPUTED_DEFAULT "17")
@@ -12,7 +12,7 @@ set(CMAKE_CXX14_COMPILE_FEATURES "cxx_std_14;cxx_aggregate_default_initializers;
 set(CMAKE_CXX17_COMPILE_FEATURES "cxx_std_17")
 set(CMAKE_CXX20_COMPILE_FEATURES "cxx_std_20")
 
-set(CMAKE_CXX_PLATFORM_ID "Linux")
+set(CMAKE_CXX_PLATFORM_ID "Darwin")
 set(CMAKE_CXX_SIMULATE_ID "")
 set(CMAKE_CXX_COMPILER_FRONTEND_VARIANT "")
 set(CMAKE_CXX_SIMULATE_VERSION "")
@@ -20,13 +20,13 @@ set(CMAKE_CXX_SIMULATE_VERSION "")
 
 
 
-set(CMAKE_AR "/bin/ar")
-set(CMAKE_CXX_COMPILER_AR "/bin/gcc-ar")
-set(CMAKE_RANLIB "/bin/ranlib")
-set(CMAKE_CXX_COMPILER_RANLIB "/bin/gcc-ranlib")
-set(CMAKE_LINKER "/bin/ld")
+set(CMAKE_AR "/Library/Developer/CommandLineTools/usr/bin/ar")
+set(CMAKE_CXX_COMPILER_AR "")
+set(CMAKE_RANLIB "/Library/Developer/CommandLineTools/usr/bin/ranlib")
+set(CMAKE_CXX_COMPILER_RANLIB "")
+set(CMAKE_LINKER "/Library/Developer/CommandLineTools/usr/bin/ld")
 set(CMAKE_MT "")
-set(CMAKE_COMPILER_IS_GNUCXX 1)
+set(CMAKE_COMPILER_IS_GNUCXX )
 set(CMAKE_CXX_COMPILER_LOADED 1)
 set(CMAKE_CXX_COMPILER_WORKS TRUE)
 set(CMAKE_CXX_ABI_COMPILED TRUE)
@@ -59,7 +59,7 @@ set(CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES 1)
 
 # Save compiler ABI information.
 set(CMAKE_CXX_SIZEOF_DATA_PTR "8")
-set(CMAKE_CXX_COMPILER_ABI "ELF")
+set(CMAKE_CXX_COMPILER_ABI "")
 set(CMAKE_CXX_LIBRARY_ARCHITECTURE "")
 
 if(CMAKE_CXX_SIZEOF_DATA_PTR)
@@ -83,7 +83,7 @@ endif()
 
 
 
-set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/usr/include/c++/10.2.0;/usr/include/c++/10.2.0/x86_64-pc-linux-gnu;/usr/include/c++/10.2.0/backward;/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include;/usr/local/include;/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include-fixed;/usr/include")
-set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "stdc++;m;gcc_s;gcc;c;gcc_s;gcc")
-set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0;/usr/lib;/lib")
-set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "")
+set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "/Library/Developer/CommandLineTools/usr/include/c++/v1;/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include;/Library/Developer/CommandLineTools/usr/include;/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include")
+set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "c++")
+set(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/lib")
+set(CMAKE_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/System/Library/Frameworks")

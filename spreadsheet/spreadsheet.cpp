@@ -5,6 +5,7 @@
 #include "spreadsheet.h"
 #include <string>
 
+/*
 struct cell
 {
     std::string contents;
@@ -18,4 +19,4 @@ string GetCellContents(string name)
     if(NonemptyCells.TryGetValue(name, out Cell c))
     return c.Contents;
     return "";
-}
+}*/
