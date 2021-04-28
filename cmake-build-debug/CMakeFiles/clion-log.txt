@@ -1,4 +1,22 @@
-/home/jonny/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/211.6693.114/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jonny/CLionProjects/TeamPog-CS3505
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505
+-- The C compiler identification is AppleClang 10.0.1.10010046
+-- The CXX compiler identification is AppleClang 10.0.1.10010046
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /Library/Developer/CommandLineTools/usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Found nlohmann_json: /usr/local/lib/cmake/nlohmann_json/nlohmann_jsonConfig.cmake (found version "3.9.1") 
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug
+-- Build files have been written to: /Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/cmake-build-debug

@@ -207,7 +207,7 @@ namespace spreadsheet_server
                 new_list.push_back(data["contents"]);
 //                s.get_cell_list().insert({data["cellName"], new_list});
                 std::cout << "ADDED CELL" << std::endl;
-                current_spreadsheets[state.spreadsheet].cells.insert({data["cellName"], new_list});
+                current_spreadsheets[state.spreadsheet].nonempty_cells.insert({data["cellName"], new_list});
 //                std::cout << "SIZE: " << s.get_cell_list().at(data["cellName"]).size() << std::endl;
             }
             current_spreadsheets[state.spreadsheet].add_command(to_string(j) + "\n");
@@ -248,42 +248,12 @@ namespace spreadsheet_server
 
         std::vector<std::string> parts;
 
-        /*    // SPLIT:
-            std::regex rgx(R"(\\n)");
-            std::sregex_token_iterator iter(total_data.begin(), total_data.end(), rgx, -1);
-            std::sregex_token_iterator end;
-            while (iter != end)
-            {
-                parts.push_back(*iter);
-                ++iter;
-            }
-
-            // Loop until we have processed all messages.
-            // We may have received more than one.
-            std::vector<std::string> new_messages;
-            for (std::string p:parts)
-            {
-                if (p.length() == 0)
-                    continue;
-                // The regex splitter will include the last string even if it doesn't end with a '\n',
-                // So we need to ignore it if this happens.
-                if (p[p.length() - 1] != '\n')
-                    break;
-
-                // build a list of messages to send to the view
-                new_messages.push_back(p);
-                // Then remove it from the SocketState's growable buffer
-                state.remove_data(0, p.length());
-            }*/
-
         std::string delimiter = "\\n";
 
         size_t pos = 0;
         std::string token;
         while ((pos = s.find(delimiter)) != std::string::npos)
         {
-            //token = s.substr(0, pos);
-            //std::cout << token << std::endl;
             parts.push_back(s.substr(0, pos));
             s.erase(0, pos + delimiter.length());
         }
