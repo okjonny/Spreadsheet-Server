@@ -11,16 +11,23 @@
 #include <unordered_map>
 #include "server_controller.h"
 #include "dependency_graph.h"
+#include "formula.h"
+#include <stack>
+#include <list>
+
+class server_controller;
 
 namespace ss
 {
     class spreadsheet {
-        friend class spreadsheet_server::server_controller;
+
+        friend class server_controller;
+
         std::string name;
         std::vector<long> users_connected;
         std::vector<std::string> commands_received;
 
-        std::unordered_map<std::string, std::vector<std::string>> nonempty_cells;
+        std::unordered_map<std::string, std::stack<std::string>> nonempty_cells;
 
 
     public:
@@ -31,7 +38,8 @@ namespace ss
 
         std::vector<long> get_users_connected();
 
-        std::unordered_map<std::string, std::vector<std::string>> get_cell_list();
+        //std::unordered_map<std::string, std::vector<std::string>> get_cell_list();
+        std::unordered_map<std::string, std::stack<std::string>> get_cell_list();
 
         void add_cell(std::string name, cell c);
 
@@ -40,23 +48,54 @@ namespace ss
         void add_command(std::string);
 
         // SHOULD THESE BE PRIVATE HMMM
+
+        /// Returns the most recent contents of this cell
         std::string get_cell_contents(std::string cell);
 
+        /// Returns true if name starts with a letter or underscore, followed by any number
+        /// of letters, numbers, or underscores. False otherwise.
         static bool is_valid_name(std::string name);
 
         std::vector<std::string> get_nonempty_cells();
 
+        /// Checks to see if the contents are a formula or not, then sets the contents of a cell accordingly.
         std::vector<std::string> set_contents_of_cell(std::string name, std::string contents);
 
+        /// Sets the contents of this cell to a formula. Returns the list of this cell's direct and indirect dependents.
+        /// If the input Formula created a CircularException, all changes to the spreadsheet (and dependencies) are reverted
+        std::vector<std::string> set_cell_contents(std::string name, formula contents);
+
+        /// Sets the contents of this cell to input text (can be regular text or a double).
+        /// Returns the list of the given cell's directs and indirect dependents.
         std::vector<std::string> set_cell_contents(std::string name, std::string contents);
 
 
     private:
+
         bool changed;
 
         dependency_graph dependencies;
 
+        /// Keeps track of edits made to this spreadsheet in a stack.
+        std::stack<std::pair<std::string, std::string>> undo_stack;
 
+        /// Returns a set of the given cell's direct dependents.
+        std::unordered_set<std::string> get_direct_dependents(std::string name);
+
+        /// If any of the named cells are involved in a circular dependency, throws a runtime error.
+        /// Otherwise, returns an enumeration of the names of all cells whose values must
+        /// be recalculated, assuming that the contents of each cell named in names has changed.
+        /// Names are enumerated in the order in which the calculations should be done.
+        std::vector<std::string> get_cells_to_recalculate(std::unordered_set<std::string> names);
+
+        /// Convenience method for the other get_cells_to_recalculate taking in a set as param.
+        /// Returns a vector of the name of the cells that must to be recalculated.
+        std::vector<std::string> get_cells_to_recalculate(std::string name);
+
+        /// Helper method for get_cells_to_recalculate method
+        // TODO: do we want a list for changed?
+        void visit(std::string start, std::string name, std::unordered_set<std::string> visited,
+                   std::list<std::string> changed);
     };
 }
 

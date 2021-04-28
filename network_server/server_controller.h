@@ -6,7 +6,7 @@
 #define TEAMPOG_CS3505_SERVER_CONTROLLER_H
 
 
-class spreadsheet;
+//class spreadsheet;
 
 #include <string>
 #include <vector>
@@ -14,7 +14,9 @@ class spreadsheet;
 #include "../spreadsheet/spreadsheet.h"
 #include "socket_state.h"
 
-namespace spreadsheet_server
+class spreadsheet;
+
+namespace ss
 {
     class server_controller {
         friend class spreadsheet;

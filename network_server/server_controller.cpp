@@ -10,10 +10,10 @@
 //#include "utf8.h"
 
 using namespace network_util;
-namespace spreadsheet_server
+namespace ss
 {
 
-    std::unordered_map<std::string, spreadsheet> server_controller::current_spreadsheets;
+    std::unordered_map<std::string, ss::spreadsheet> server_controller::current_spreadsheets;
 
     // CLIENT STRUCTS
     struct select_cell {
@@ -181,7 +181,7 @@ namespace spreadsheet_server
         nlohmann::json data = nlohmann::json::parse(commands[0]);
 
         nlohmann::json j;
-        spreadsheet s = current_spreadsheets[state.spreadsheet];
+        ss::spreadsheet s = current_spreadsheets[state.spreadsheet];
         std::string command_to_send;
 
         std::cout << "REQUEST TYPE: " << data["requestType"] << std::endl;
@@ -197,15 +197,14 @@ namespace spreadsheet_server
             //check if cell exists, create otherwise
             if (s.get_cell_list().find(data["cellName"]) != s.get_cell_list().end())
             {
-                s.get_cell_list().at(data["cellName"]).push_back(data["contents"]);
+                s.get_cell_list().at(data["cellName"]).push(data["contents"]);
             }
-                // fix spreadsheet() we need to give it a name
             else
             {
                 std::vector<std::string> new_list;
                 new_list.push_back(data["contents"]);
                 std::cout << "ADDED CELL" << std::endl;
-                current_spreadsheets[state.spreadsheet].cells.insert({data["cellName"], new_list});
+//                current_spreadsheets[state.spreadsheet].cells.insert({data["cellName"], new_list});
             }
             current_spreadsheets[state.spreadsheet].add_command(to_string(j) + "\n");
             command_to_send = to_string(j) + "\n";
@@ -230,12 +229,8 @@ namespace spreadsheet_server
         std::string new_id = std::to_string(state.get_id()) + " made edit\n";
         for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
         {
-//            for (std::string &m : get_spreadsheets()[state.spreadsheet].get_commands_received())
-//            {
             if (s != state.get_socket())
                 send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0);
-//            }
-//        }
         }
     }
 
@@ -243,43 +238,13 @@ namespace spreadsheet_server
     std::vector<std::string> server_controller::process_data(socket_state &state)
     {
         std::string s = state.get_data();
-//        std::stringstream s(boomer);
         std::cout << "SERVER CONTROLLER: " << s << std::endl;
 
         std::vector<std::string> parts;
-
-        /*    // SPLIT:
-            std::regex rgx(R"(\\n)");
-            std::sregex_token_iterator iter(total_data.begin(), total_data.end(), rgx, -1);
-            std::sregex_token_iterator end;
-            while (iter != end)
-            {
-                parts.push_back(*iter);
-                ++iter;
-            }
-
-            // Loop until we have processed all messages.
-            // We may have received more than one.
-            std::vector<std::string> new_messages;
-            for (std::string p:parts)
-            {
-                if (p.length() == 0)
-                    continue;
-                // The regex splitter will include the last string even if it doesn't end with a '\n',
-                // So we need to ignore it if this happens.
-                if (p[p.length() - 1] != '\n')
-                    break;
-
-                // build a list of messages to send to the view
-                new_messages.push_back(p);
-                // Then remove it from the SocketState's growable buffer
-                state.remove_data(0, p.length());
-            }*/
-
         std::string delimiter = "\\n";
-
         size_t pos = 0;
         std::string token;
+
         while ((pos = s.find(delimiter)) != std::string::npos)
         {
             //token = s.substr(0, pos);

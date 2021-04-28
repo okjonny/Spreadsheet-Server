@@ -8,7 +8,7 @@
 #include "string"
 #include "nlohmann/json.hpp"
 
-namespace spreadsheet_server
+namespace ss
 {
     class cell {
         std::string messageType;

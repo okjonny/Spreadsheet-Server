@@ -8,7 +8,7 @@ using namespace network_util;
 //{
 int main()
 {
-    spreadsheet_server::server_controller spreadsheet;
+    ss::server_controller spreadsheet;
     spreadsheet.start_server();
 //
 //        std::function<void (socket_state & )> boom = boomer;

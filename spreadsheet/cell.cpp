@@ -4,7 +4,7 @@
 
 #include "cell.h"
 
-namespace spreadsheet_server
+namespace ss
 {
     cell::cell(std::string name, std::string cell_contents)
     {
