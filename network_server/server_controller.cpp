@@ -182,6 +182,7 @@ namespace spreadsheet_server
 
         nlohmann::json j;
         spreadsheet s = current_spreadsheets[state.spreadsheet];
+        std::string command_to_send;
 
         std::cout << "REQUEST TYPE: " << data["requestType"] << std::endl;
         std::string cell_name = data["cellName"];
@@ -196,8 +197,6 @@ namespace spreadsheet_server
             //check if cell exists, create otherwise
             if (s.get_cell_list().find(data["cellName"]) != s.get_cell_list().end())
             {
-                std::cout << "spreadsheet contains cell!\n";
-                std::cout << "UPDATED CELL" << std::endl;
                 s.get_cell_list().at(data["cellName"]).push_back(data["contents"]);
             }
                 // fix spreadsheet() we need to give it a name
@@ -205,12 +204,11 @@ namespace spreadsheet_server
             {
                 std::vector<std::string> new_list;
                 new_list.push_back(data["contents"]);
-//                s.get_cell_list().insert({data["cellName"], new_list});
                 std::cout << "ADDED CELL" << std::endl;
                 current_spreadsheets[state.spreadsheet].cells.insert({data["cellName"], new_list});
-//                std::cout << "SIZE: " << s.get_cell_list().at(data["cellName"]).size() << std::endl;
             }
             current_spreadsheets[state.spreadsheet].add_command(to_string(j) + "\n");
+            command_to_send = to_string(j) + "\n";
         } else if (data["requestType"] == "selectCell")
         {
             // Selects a cell from the user and sends the information to all users in the current spreadsheet.
@@ -219,6 +217,7 @@ namespace spreadsheet_server
             selected_cell c(data["cellName"], state.get_id(), state.get_username());
             c.to_json(j, c);
             current_spreadsheets[state.spreadsheet].add_command((to_string(j) + "\n"));
+            command_to_send = to_string(j) + "\n";
         } else if (data["requestType"] == "revertCell")
         {
             std::cout << "revert revert skrtttt" << std::endl;
@@ -231,11 +230,12 @@ namespace spreadsheet_server
         std::string new_id = std::to_string(state.get_id()) + " made edit\n";
         for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
         {
-            for (std::string &m : get_spreadsheets()[state.spreadsheet].get_commands_received())
-            {
-                if (s != state.get_socket())
-                    send(s, m.c_str(), strlen(m.c_str()), 0);
-            }
+//            for (std::string &m : get_spreadsheets()[state.spreadsheet].get_commands_received())
+//            {
+            if (s != state.get_socket())
+                send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0);
+//            }
+//        }
         }
     }
 
