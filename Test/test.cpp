@@ -9,7 +9,7 @@
 
 int main()
 {
-    ss::formula f("(1  /2 +A3 * 6 - Z99)");
+    ss::formula f("(1  /2 +A_3 * 6 - Z99)");
     ss::formula f1("(1  /         2    + a3 * 6 - z99)");
 
     std::cout << f.to_string() << std::endl << f1.to_string() << std::endl;

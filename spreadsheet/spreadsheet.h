@@ -10,17 +10,20 @@
 #include "cell.h"
 #include <unordered_map>
 #include "server_controller.h"
+#include "dependency_graph.h"
 
-namespace spreadsheet_server
+namespace ss
 {
     class spreadsheet {
-//        friend class spreadsheet_server::server_controller;
+        friend class spreadsheet_server::server_controller;
         std::string name;
         std::vector<long> users_connected;
         std::vector<std::string> commands_received;
 
+        std::unordered_map<std::string, std::vector<std::string>> nonempty_cells;
+
+
     public:
-        std::unordered_map<std::string, std::vector<std::string>> cells;
 
         spreadsheet();
 
@@ -35,6 +38,25 @@ namespace spreadsheet_server
         std::vector<std::string> get_commands_received();
 
         void add_command(std::string);
+
+        // SHOULD THESE BE PRIVATE HMMM
+        std::string get_cell_contents(std::string cell);
+
+        static bool is_valid_name(std::string name);
+
+        std::vector<std::string> get_nonempty_cells();
+
+        std::vector<std::string> set_contents_of_cell(std::string name, std::string contents);
+
+        std::vector<std::string> set_cell_contents(std::string name, std::string contents);
+
+
+    private:
+        bool changed;
+
+        dependency_graph dependencies;
+
+
     };
 }
 

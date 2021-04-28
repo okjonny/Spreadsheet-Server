@@ -19,9 +19,9 @@ namespace spreadsheet_server
         cell_history.push_back(update);
     }
 
-    std::vector<std::string> cell::get_cell_history()
+    /*std::vector<std::string> cell::get_cell_history()
     {
         return cell_history;
-    }
+    }*/
 
 }

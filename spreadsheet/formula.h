@@ -14,6 +14,8 @@ namespace ss
 {
     class formula
     {
+        friend class spreadsheet;
+
         std::vector<std::string> tokens;
         std::vector<std::string> variables;
 
