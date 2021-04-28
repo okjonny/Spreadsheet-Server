@@ -79,9 +79,9 @@ namespace ss
             dependency_list = set_cell_contents(name, std::stod(contents));*/
         if (contents[0] == '=')
         {
-            dependency_list = set_cell_contents(name, formula(contents.substr(1, contents.size() - 1)));
+            dependency_list = spreadsheet::set_cell_contents(name, formula(contents.substr(1, contents.size() - 1)));
         } else
-            dependency_list = set_cell_contents(name, contents);
+            dependency_list = spreadsheet::set_cell_contents(name, contents);
 
         //    foreach (string s in dependency_list)
         //{
@@ -165,27 +165,22 @@ namespace ss
         return dependencies.get_dependents(name);
     }
 
-    std::unordered_set<std::string> get_direct_dependents(std::string name)
-    {
-        std::unordered_set<std::string> result;
-        return result;
-    }
 
-    std::vector<std::string> get_cells_to_recalculate(std::unordered_set<std::string> names)
+    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::unordered_set<std::string> names)
     {
         std::vector<std::string> result;
         return result;
     }
 
-    std::vector<std::string> get_cells_to_recalculate(std::string name)
+    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::string name)
     {
         std::vector<std::string> result;
         return result;
     }
 
     // TODO: do we want a list for changed?
-    void
-    visit(std::string start, std::string name, std::unordered_set<std::string> visited, std::list<std::string> changed)
+    void spreadsheet::visit(std::string start, std::string name, std::unordered_set<std::string> visited,
+                            std::list<std::string> changed)
     {
 
     }

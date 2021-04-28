@@ -41,6 +41,9 @@ CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.o
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o
  /home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/dependency_graph.cpp
  /home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/dependency_graph.h
+CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o
+ /home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/formula.cpp
+ /home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/formula.h
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o
  ../network_server/nlohmann/json.hpp
  ../network_server/server_controller.h
