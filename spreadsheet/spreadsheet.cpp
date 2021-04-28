@@ -7,9 +7,9 @@
 
 namespace spreadsheet_server
 {
-    struct cell {
-        std::string contents;
-    };
+//    struct cell {
+//        std::string contents;
+//    };
 
     spreadsheet::spreadsheet()
     {
@@ -29,6 +29,12 @@ namespace spreadsheet_server
     std::vector<std::string> spreadsheet::get_commands_received()
     {
         return commands_received;
+    }
+
+
+    std::unordered_map<std::string, std::vector<std::string>> spreadsheet::get_cell_list()
+    {
+        return cells;
     }
 
     void spreadsheet::add_command(std::string s)

@@ -17,6 +17,8 @@ class spreadsheet;
 namespace spreadsheet_server
 {
     class server_controller {
+        friend class spreadsheet;
+
         static std::unordered_map<std::string, spreadsheet> current_spreadsheets;
 
     public:
@@ -35,7 +37,6 @@ namespace spreadsheet_server
         static std::unordered_map<std::string, spreadsheet> get_spreadsheets();
 
         //static void receive_edit_request(network_util::socket_state &state);
-
 
         static std::vector<std::string> process_data(network_util::socket_state &state);
     };
