@@ -181,7 +181,6 @@ namespace ss
         nlohmann::json data = nlohmann::json::parse(commands[0]);
 
         nlohmann::json j;
-        ss::spreadsheet s = current_spreadsheets[state.spreadsheet];
         std::string command_to_send;
 
         std::cout << "REQUEST TYPE: " << data["requestType"] << std::endl;
@@ -189,34 +188,26 @@ namespace ss
 
         if (data["requestType"] == "editCell")
         {
-            // CHECK FOR FORMULA STUFF HERE:
-//            cell_updated c(data["cellName"], data["contents"]);
-            cell c(data["cellName"], data["contents"]);
+            cell c(data["cellName"], data["contents"]); // cell updated class
             c.to_json(j, c);
 
-            //check if cell exists, create otherwise
-            if (s.get_cell_list().find(data["cellName"]) != s.get_cell_list().end())
-            {
-                s.get_cell_list().at(data["cellName"]).push(data["contents"]);
-            }
-            else
-            {
-                std::vector<std::string> new_list;
-                new_list.push_back(data["contents"]);
-                std::cout << "ADDED CELL" << std::endl;
-//                current_spreadsheets[state.spreadsheet].cells.insert({data["cellName"], new_list});
-            }
-            current_spreadsheets[state.spreadsheet].add_command(to_string(j) + "\n");
+            // Check here if cell content would cause a circular dependency
+            // if it does, send error message
+            // otherwise, server makes the change and sends "cellUpdated" to all users including itself
+            current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
+            current_spreadsheets[state.spreadsheet].add_to_history(to_string(j) + "\n");
             command_to_send = to_string(j) + "\n";
         } else if (data["requestType"] == "selectCell")
         {
+
             // Selects a cell from the user and sends the information to all users in the current spreadsheet.
             //{"requestType":"selectCell","cellName":"A1"}\n
 
             selected_cell c(data["cellName"], state.get_id(), state.get_username());
             c.to_json(j, c);
-            current_spreadsheets[state.spreadsheet].add_command((to_string(j) + "\n"));
+            current_spreadsheets[state.spreadsheet].add_to_history((to_string(j) + "\n"));
             command_to_send = to_string(j) + "\n";
+
         } else if (data["requestType"] == "revertCell")
         {
             std::cout << "revert revert skrtttt" << std::endl;

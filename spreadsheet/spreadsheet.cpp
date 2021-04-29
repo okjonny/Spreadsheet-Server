@@ -25,7 +25,7 @@ namespace ss
     }
 
 
-    std::vector<std::string> spreadsheet::get_commands_received()
+    std::stack<std::string> spreadsheet::get_history()
     {
         return commands_received;
     }
@@ -35,9 +35,9 @@ namespace ss
         return nonempty_cells;
     }
 
-    void spreadsheet::add_command(std::string s)
+    void spreadsheet::add_to_history(std::string s)
     {
-        commands_received.push_back(s);
+        commands_received.push(s);
     }
 
     std::string spreadsheet::get_cell_contents(std::string cell)
@@ -63,7 +63,7 @@ namespace ss
         return cell_names;
     }
 
-    std::vector<std::string> spreadsheet::set_contents_of_cell(std::string name, std::string contents)
+    std::list<std::string> spreadsheet::set_contents_of_cell(std::string name, std::string contents)
     {
 
         //name = Normalize(name);
@@ -73,7 +73,7 @@ namespace ss
 
         //    NameCheck(name);
 
-        std::vector<std::string> dependency_list;
+        std::list<std::string> dependency_list;
 
         /*if (formula::is_double(contents))
             dependency_list = set_cell_contents(name, std::stod(contents));*/
@@ -94,36 +94,39 @@ namespace ss
         return dependency_list;
     }
 
-    std::vector<std::string> spreadsheet::set_cell_contents(std::string name, std::string contents)
+    std::list<std::string> spreadsheet::set_cell_contents(std::string cell_name, std::string contents)
     {
-
+        std::cout << &nonempty_cells << std::endl;
+        std::cout << nonempty_cells.size() << std::endl;
         // If a cell exists, we replace its contents, otherwise we create it.
-        if (nonempty_cells.find(name) != nonempty_cells.end())
+        if (nonempty_cells.find(cell_name) != nonempty_cells.end())
         {
+            std::cout << "UPDATED\n";
+            undo_stack.push({cell_name, get_cell_contents(cell_name)});
 
-            undo_stack.push({name, get_cell_contents(name)});
-
-            nonempty_cells[name].push(contents);
-            dependencies.replace_dependees(name, std::unordered_set<std::string>());
+            nonempty_cells[cell_name].push(contents);
+            dependencies.replace_dependees(cell_name, std::unordered_set<std::string>());
         } else
         {
 
-            undo_stack.push({name, get_cell_contents(name)});
+            std::cout << "ADDED\n";
+            undo_stack.push({cell_name, get_cell_contents(cell_name)});
 
+            // create a new cell
             std::stack<std::string> contents_history;
             contents_history.push((contents));
-            nonempty_cells.insert({name, contents_history});
+            nonempty_cells.insert({cell_name, contents_history});
+            std::cout << nonempty_cells.size() << std::endl;
         }
 
-        if (get_cell_contents(name) == "")
-            nonempty_cells.erase(name);
+        if (get_cell_contents(cell_name) == "")
+            nonempty_cells.erase(cell_name);
 
-        return spreadsheet::get_cells_to_recalculate(name);
-        //return new List<string>(GetCellsToRecalculate(name).ToList());
+        return spreadsheet::get_cells_to_recalculate(cell_name);
     }
 
 
-    std::vector<std::string> spreadsheet::set_cell_contents(std::string name, formula expression)
+    std::list<std::string> spreadsheet::set_cell_contents(std::string name, formula expression)
     {
 
         //Storing the contents in case we need to revert back
@@ -133,9 +136,11 @@ namespace ss
         //If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(name) != nonempty_cells.end())
         {
+            std::cout << "UPDATED FORMULA\n";
             nonempty_cells[name].push("=" + expression.to_string());
         } else
         {
+            std::cout << "ADDED FORMULA\n";
             std::stack<std::string> contents_history;
             contents_history.push("=" + expression.to_string());
             nonempty_cells.insert({name, contents_history});
@@ -166,26 +171,103 @@ namespace ss
     }
 
 
-    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::unordered_set<std::string> names)
+//    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::unordered_set<std::string> names)
+//    {
+//        std::vector<std::string> result;
+//        return result;
+//    }
+//
+//    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::string name)
+//    {
+//        std::vector<std::string> result;
+//        return result;
+//    }
+//
+//    // TODO: do we want a list for changed?
+//    void spreadsheet::visit(std::string start, std::string name, std::unordered_set<std::string> visited,
+//                            std::list<std::string> changed)
+//    {
+//
+//    }
+
+    /// <summary>
+    /// Requires that names be non-null.  Also requires that if names contains s,
+    /// then s must be a valid non-null cell name.
+    ///
+    /// If any of the named cells are involved in a circular dependency,
+    /// throws a CircularException.
+    ///
+    /// Otherwise, returns an enumeration of the names of all cells whose values must
+    /// be recalculated, assuming that the contents of each cell named in names has changed.
+    /// The names are enumerated in the order in which the calculations should be done.
+    ///
+    /// For example, suppose that
+    /// A1 contains 5
+    /// B1 contains 7
+    /// C1 contains the formula A1 + B1
+    /// D1 contains the formula A1 * C1
+    /// E1 contains 15
+    ///
+    /// If A1 and B1 have changed, then A1, B1, and C1, and D1 must be recalculated,
+    /// and they must be recalculated in either the order A1,B1,C1,D1 or B1,A1,C1,D1.
+    /// The method will produce one of those enumerations.
+    ///
+    /// PLEASE NOTE THAT THIS METHOD DEPENDS ON THE ABSTRACT METHOD GetDirectDependents.
+    /// IT WON'T WORK UNTIL GetDirectDependents IS IMPLEMENTED CORRECTLY.
+    /// </summary>
+    std::list<std::string> spreadsheet::get_cells_to_recalculate(std::unordered_set<std::string> names)
     {
-        std::vector<std::string> result;
-        return result;
+        std::list<std::string> changed;
+        std::unordered_set<std::string> visited;
+        for (std::string name : names)
+        {
+            if (visited.find(name) == visited.end())
+            {
+                visit(name, name, visited, changed);
+            }
+        }
+        return changed;
     }
 
-    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::string name)
+
+    /// <summary>
+    /// A convenience method for invoking the other version of GetCellsToRecalculate
+    /// with a singleton set of names.  See the other version for details.
+    /// </summary>
+    std::list<std::string> spreadsheet::get_cells_to_recalculate(std::string name)
     {
-        std::vector<std::string> result;
-        return result;
+        return get_cells_to_recalculate(std::unordered_set<std::string>{name});
     }
 
-    // TODO: do we want a list for changed?
+
+    /// <summary>
+    /// A helper for the GetCellsToRecalculate method.
+    /// </summary>
     void spreadsheet::visit(std::string start, std::string name, std::unordered_set<std::string> visited,
                             std::list<std::string> changed)
     {
+        visited.insert(name);
 
+        // iterate through the current name's list of direct dependents
+        for (std::string n : get_direct_dependents(name))
+        {
+            // during recursion, the start point should not be listed as a dependent
+            if (n == (start))
+            {
+                std::cout << "ERROR" << std::endl;
+//                throw std::runtime_error e;
+            }
+                // if this name's dependents have not been searched yet, enter another frame of recursion
+            else if (visited.find(name) == visited.end())
+            {
+                visit(start, n, visited, changed);
+            }
+        }
+
+        // once every cell's (direct and indirect dependents of name) dependents have been searched,
+        // add them to the changed list as the method frames begin returning.
+        changed.push_front(name);
     }
-
-
 
 
 

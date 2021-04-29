@@ -14,6 +14,7 @@
 #include "formula.h"
 #include <stack>
 #include <list>
+#include <unordered_set>
 
 class server_controller;
 
@@ -25,15 +26,12 @@ namespace ss
 
         std::string name;
         std::vector<long> users_connected;
-        std::vector<std::string> commands_received;
-
-        std::unordered_map<std::string, std::stack<std::string>> nonempty_cells;
-
+        std::stack<std::string> commands_received;
 
     public:
 
+        std::unordered_map<std::string, std::stack<std::string>> nonempty_cells;
         spreadsheet();
-
         void add_user_to_spreadsheet(long s);
 
         std::vector<long> get_users_connected();
@@ -43,9 +41,9 @@ namespace ss
 
         void add_cell(std::string name, cell c);
 
-        std::vector<std::string> get_commands_received();
+        std::stack<std::string> get_history();
 
-        void add_command(std::string);
+        void add_to_history(std::string);
 
         // SHOULD THESE BE PRIVATE HMMM
 
@@ -59,16 +57,15 @@ namespace ss
         std::vector<std::string> get_nonempty_cells();
 
         /// Checks to see if the contents are a formula or not, then sets the contents of a cell accordingly.
-        std::vector<std::string> set_contents_of_cell(std::string name, std::string contents);
+        std::list<std::string> set_contents_of_cell(std::string name, std::string contents);
 
         /// Sets the contents of this cell to a formula. Returns the list of this cell's direct and indirect dependents.
         /// If the input Formula created a CircularException, all changes to the spreadsheet (and dependencies) are reverted
-        std::vector<std::string> set_cell_contents(std::string name, formula contents);
+        std::list<std::string> set_cell_contents(std::string name, formula contents);
 
         /// Sets the contents of this cell to input text (can be regular text or a double).
         /// Returns the list of the given cell's directs and indirect dependents.
-        std::vector<std::string> set_cell_contents(std::string name, std::string contents);
-
+        std::list<std::string> set_cell_contents(std::string cell_name, std::string contents);
 
     private:
 
@@ -86,14 +83,15 @@ namespace ss
         /// Otherwise, returns an enumeration of the names of all cells whose values must
         /// be recalculated, assuming that the contents of each cell named in names has changed.
         /// Names are enumerated in the order in which the calculations should be done.
-        std::vector<std::string> get_cells_to_recalculate(std::unordered_set<std::string> names);
+        std::list<std::string> get_cells_to_recalculate(std::unordered_set<std::string> names);
 
         /// Convenience method for the other get_cells_to_recalculate taking in a set as param.
         /// Returns a vector of the name of the cells that must to be recalculated.
-        std::vector<std::string> get_cells_to_recalculate(std::string name);
+        std::list<std::string> get_cells_to_recalculate(std::string name);
 
         /// Helper method for get_cells_to_recalculate method
         // TODO: do we want a list for changed?
+
         void visit(std::string start, std::string name, std::unordered_set<std::string> visited,
                    std::list<std::string> changed);
     };
