@@ -71,7 +71,7 @@ namespace ss
         //    if (content is null)
         //    throw new ArgumentNullException();
 
-            name_check(name);
+        name_check(name);
 
         std::list<std::string> dependency_list;
 
@@ -120,7 +120,6 @@ namespace ss
         return spreadsheet::get_cells_to_recalculate(cell_name);
     }
 
-//A1 used to be 69
     std::list<std::string> spreadsheet::set_cell_contents(std::string name, formula expression)
     {
 
@@ -162,28 +161,6 @@ namespace ss
     {
         return dependencies.get_dependents(name);
     }
-
-
-//    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::unordered_set<std::string> names)
-//    {
-//        std::vector<std::string> result;
-//        return result;
-//    }
-//
-//    std::vector<std::string> spreadsheet::get_cells_to_recalculate(std::string name)
-//    {
-//        std::vector<std::string> result;
-//        return result;
-//    }
-//
-//    // TODO: do we want a list for changed?
-//    void spreadsheet::visit(std::string start, std::string name, std::unordered_set<std::string> visited,
-//                            std::list<std::string> changed)
-//    {
-//
-//    }
-
-
 
     /// <summary>
     /// A convenience method for invoking the other version of GetCellsToRecalculate
@@ -249,7 +226,7 @@ namespace ss
             // during recursion, the start point should not be listed as a dependent
             if (n == (start))
             {
-                   throw std::runtime_error("Circular dependencies found.");
+                throw std::runtime_error("Circular dependencies found.");
             }
                 // if this name's dependents have not been searched yet, enter another frame of recursion
             else if (visited.find(name) == visited.end())
@@ -265,28 +242,32 @@ namespace ss
 
     void spreadsheet::name_check(std::string name)
     {
-        if (!(std::regex_match(name, std::regex("^[a-zA-Z]+[0-9]+$"))) || !(regex_match(name, std::regex("^[A-Z]+[0-9]?[0-9]$"))))
+        if (!(std::regex_match(name, std::regex("^[a-zA-Z]+[0-9]+$"))) ||
+            !(regex_match(name, std::regex("^[A-Z]+[0-9]?[0-9]$"))))
             throw std::runtime_error(name + " is an invalid cell name.");
     }
 
     void spreadsheet::revert_cell_contents(std::string name)
     {
-        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
-        std::string previous_contents = get_cell_contents(name);
+//        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
+//        std::string previous_contents = get_cell_contents(name);
+//        nonempty_cells[name].pop();
+//
+//        try
+//        { get_cells_to_recalculate(name); }
+//        catch(std::runtime_error){
+//            if (previous_contents != "")
+//            {
+//                nonempty_cells[name].push(previous_contents); // TODO: check pushing onto the stackkk!!!!!!
+//                dependencies.replace_dependees(name, previous_dependees);
+//            } else
+//                nonempty_cells.erase(name);
+//
+//            throw std::runtime_error("Circular dependencies found.");
+//        }
+        set_contents_of_cell(name, nonempty_cells[name].top());
         nonempty_cells[name].pop();
 
-        try
-        { get_cells_to_recalculate(name); }
-        catch(std::runtime_error){
-            if (previous_contents != "")
-            {
-                nonempty_cells[name].push(previous_contents); // TODO: check pushing onto the stackkk!!!!!!
-                dependencies.replace_dependees(name, previous_dependees);
-            } else
-                nonempty_cells.erase(name);
-
-            throw std::runtime_error("Circular dependencies found.");
-        }
     }
 
 
