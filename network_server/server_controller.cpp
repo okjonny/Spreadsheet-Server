@@ -210,7 +210,8 @@ namespace ss
 
         } else if (data["requestType"] == "revertCell")
         {
-            std::cout << "revert revert skrtttt" << std::endl;
+            current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
+            std::cout << "revert revert_cell_contents skrtttt" << std::endl;
         } else if (data["requestType"] == "undo")
         {
             //undo

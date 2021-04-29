@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/TeamPog_CS3505.dir/Test/test.cpp.o"
   "CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o"
-  "CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o"
   "CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o"
   "CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o"
   "CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.o"

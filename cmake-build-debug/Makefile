@@ -58,19 +58,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/jonny/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/211.6693.114/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /home/jonny/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/211.6693.114/bin/cmake/linux/bin/cmake -E rm -f
+RM = /var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jonny/CLionProjects/TeamPog-CS3505
+CMAKE_SOURCE_DIR = /home/hibban/CLionProjects/TeamPog-CS3505
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug
+CMAKE_BINARY_DIR = /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -78,7 +78,7 @@ CMAKE_BINARY_DIR = /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/jonny/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/211.6693.114/bin/cmake/linux/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -89,7 +89,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/jonny/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/211.6693.114/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -99,9 +99,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -142,6 +142,33 @@ TeamPog_CS3505/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/build
 .PHONY : TeamPog_CS3505/fast
 
+Test/test.o: Test/test.cpp.o
+
+.PHONY : Test/test.o
+
+# target to build an object file
+Test/test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/Test/test.cpp.o
+.PHONY : Test/test.cpp.o
+
+Test/test.i: Test/test.cpp.i
+
+.PHONY : Test/test.i
+
+# target to preprocess a source file
+Test/test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/Test/test.cpp.i
+.PHONY : Test/test.cpp.i
+
+Test/test.s: Test/test.cpp.s
+
+.PHONY : Test/test.s
+
+# target to generate assembly for a file
+Test/test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/Test/test.cpp.s
+.PHONY : Test/test.cpp.s
+
 network_server/networking.o: network_server/networking.cpp.o
 
 .PHONY : network_server/networking.o
@@ -168,33 +195,6 @@ network_server/networking.s: network_server/networking.cpp.s
 network_server/networking.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.s
 .PHONY : network_server/networking.cpp.s
-
-network_server/server.o: network_server/server.cpp.o
-
-.PHONY : network_server/server.o
-
-# target to build an object file
-network_server/server.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o
-.PHONY : network_server/server.cpp.o
-
-network_server/server.i: network_server/server.cpp.i
-
-.PHONY : network_server/server.i
-
-# target to preprocess a source file
-network_server/server.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.i
-.PHONY : network_server/server.cpp.i
-
-network_server/server.s: network_server/server.cpp.s
-
-.PHONY : network_server/server.s
-
-# target to generate assembly for a file
-network_server/server.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.s
-.PHONY : network_server/server.cpp.s
 
 network_server/server_controller.o: network_server/server_controller.cpp.o
 
@@ -367,12 +367,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... TeamPog_CS3505"
+	@echo "... Test/test.o"
+	@echo "... Test/test.i"
+	@echo "... Test/test.s"
 	@echo "... network_server/networking.o"
 	@echo "... network_server/networking.i"
 	@echo "... network_server/networking.s"
-	@echo "... network_server/server.o"
-	@echo "... network_server/server.i"
-	@echo "... network_server/server.s"
 	@echo "... network_server/server_controller.o"
 	@echo "... network_server/server_controller.i"
 	@echo "... network_server/server_controller.s"

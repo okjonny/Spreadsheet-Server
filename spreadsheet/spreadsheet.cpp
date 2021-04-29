@@ -66,12 +66,12 @@ namespace ss
     std::list<std::string> spreadsheet::set_contents_of_cell(std::string name, std::string contents)
     {
 
-        //name = Normalize(name);
+        name = formula::normalize(name);
         //
         //    if (content is null)
         //    throw new ArgumentNullException();
 
-        //    NameCheck(name);
+            name_check(name);
 
         std::list<std::string> dependency_list;
 
@@ -96,12 +96,9 @@ namespace ss
 
     std::list<std::string> spreadsheet::set_cell_contents(std::string cell_name, std::string contents)
     {
-        std::cout << &nonempty_cells << std::endl;
-        std::cout << nonempty_cells.size() << std::endl;
         // If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(cell_name) != nonempty_cells.end())
         {
-            std::cout << "UPDATED\n";
             undo_stack.push({cell_name, get_cell_contents(cell_name)});
 
             nonempty_cells[cell_name].push(contents);
@@ -109,14 +106,12 @@ namespace ss
         } else
         {
 
-            std::cout << "ADDED\n";
             undo_stack.push({cell_name, get_cell_contents(cell_name)});
 
             // create a new cell
             std::stack<std::string> contents_history;
             contents_history.push((contents));
             nonempty_cells.insert({cell_name, contents_history});
-            std::cout << nonempty_cells.size() << std::endl;
         }
 
         if (get_cell_contents(cell_name) == "")
@@ -125,22 +120,20 @@ namespace ss
         return spreadsheet::get_cells_to_recalculate(cell_name);
     }
 
-
+//A1 used to be 69
     std::list<std::string> spreadsheet::set_cell_contents(std::string name, formula expression)
     {
 
-        //Storing the contents in case we need to revert back
+        //Storing the contents in case we need to revert_cell_contents back
         std::string previous_contents = get_cell_contents(name);
         std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
 
         //If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(name) != nonempty_cells.end())
         {
-            std::cout << "UPDATED FORMULA\n";
             nonempty_cells[name].push("=" + expression.to_string());
         } else
         {
-            std::cout << "ADDED FORMULA\n";
             std::stack<std::string> contents_history;
             contents_history.push("=" + expression.to_string());
             nonempty_cells.insert({name, contents_history});
@@ -148,7 +141,7 @@ namespace ss
 
         dependencies.replace_dependees(name, expression.get_variables());
 
-        //Try and catch to revert to the previous state before throwing
+        //Try and catch to revert_cell_contents to the previous state before throwing
         try
         { return get_cells_to_recalculate(name); }
 
@@ -156,7 +149,7 @@ namespace ss
         {
             if (previous_contents != "")
             {
-                nonempty_cells[name].push(previous_contents); // TODO: check pushing onto the stackkk!!!!!!
+                nonempty_cells[name].pop(); // TODO: check pushing onto the stackkk!!!!!!
                 dependencies.replace_dependees(name, previous_dependees);
             } else
                 nonempty_cells.erase(name);
@@ -189,6 +182,18 @@ namespace ss
 //    {
 //
 //    }
+
+
+
+    /// <summary>
+    /// A convenience method for invoking the other version of GetCellsToRecalculate
+    /// with a singleton set of names.  See the other version for details.
+    /// </summary>
+    std::list<std::string> spreadsheet::get_cells_to_recalculate(std::string name)
+    {
+        return get_cells_to_recalculate(std::unordered_set<std::string>{name});
+    }
+
 
     /// <summary>
     /// Requires that names be non-null.  Also requires that if names contains s,
@@ -231,16 +236,6 @@ namespace ss
 
 
     /// <summary>
-    /// A convenience method for invoking the other version of GetCellsToRecalculate
-    /// with a singleton set of names.  See the other version for details.
-    /// </summary>
-    std::list<std::string> spreadsheet::get_cells_to_recalculate(std::string name)
-    {
-        return get_cells_to_recalculate(std::unordered_set<std::string>{name});
-    }
-
-
-    /// <summary>
     /// A helper for the GetCellsToRecalculate method.
     /// </summary>
     void spreadsheet::visit(std::string start, std::string name, std::unordered_set<std::string> visited,
@@ -254,8 +249,7 @@ namespace ss
             // during recursion, the start point should not be listed as a dependent
             if (n == (start))
             {
-                std::cout << "ERROR" << std::endl;
-//                throw std::runtime_error e;
+                   throw std::runtime_error("Circular dependencies found.");
             }
                 // if this name's dependents have not been searched yet, enter another frame of recursion
             else if (visited.find(name) == visited.end())
@@ -269,8 +263,31 @@ namespace ss
         changed.push_front(name);
     }
 
+    void spreadsheet::name_check(std::string name)
+    {
+        if (!(std::regex_match(name, std::regex("^[a-zA-Z]+[0-9]+$"))) || !(regex_match(name, std::regex("^[A-Z]+[0-9]?[0-9]$"))))
+            throw std::runtime_error(name + " is an invalid cell name.");
+    }
 
+    void spreadsheet::revert_cell_contents(std::string name)
+    {
+        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
+        std::string previous_contents = get_cell_contents(name);
+        nonempty_cells[name].pop();
 
+        try
+        { get_cells_to_recalculate(name); }
+        catch(std::runtime_error){
+            if (previous_contents != "")
+            {
+                nonempty_cells[name].push(previous_contents); // TODO: check pushing onto the stackkk!!!!!!
+                dependencies.replace_dependees(name, previous_dependees);
+            } else
+                nonempty_cells.erase(name);
+
+            throw std::runtime_error("Circular dependencies found.");
+        }
+    }
 
 
 //{}(network_util::socket_state s);

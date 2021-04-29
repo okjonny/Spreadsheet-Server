@@ -28,6 +28,10 @@ namespace ss
         std::vector<long> users_connected;
         std::stack<std::string> commands_received;
 
+        /// Keeps track of edits made to this spreadsheet in a stack.
+        std::stack<std::pair<std::string, std::string>> undo_stack;
+
+
     public:
 
         std::unordered_map<std::string, std::stack<std::string>> nonempty_cells;
@@ -67,14 +71,15 @@ namespace ss
         /// Returns the list of the given cell's directs and indirect dependents.
         std::list<std::string> set_cell_contents(std::string cell_name, std::string contents);
 
+        void revert_cell_contents(std::string name);
+
     private:
 
         bool changed;
 
-        dependency_graph dependencies;
+        void name_check(std::string name);
 
-        /// Keeps track of edits made to this spreadsheet in a stack.
-        std::stack<std::pair<std::string, std::string>> undo_stack;
+        dependency_graph dependencies;
 
         /// Returns a set of the given cell's direct dependents.
         std::unordered_set<std::string> get_direct_dependents(std::string name);
