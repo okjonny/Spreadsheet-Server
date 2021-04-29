@@ -22,34 +22,48 @@ int main()
     if(f == f1)
         std::cout << normalized << std::endl;*/
 //
-    ss::spreadsheet ss;
+   ss::spreadsheet ss;
 //    ss.set_contents_of_cell("A1", "641658456");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
+//
 //    ss.set_contents_of_cell("A1", "234");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
+//
 //    ss.set_contents_of_cell("A1", "2");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
+//
 //    ss.set_contents_of_cell("A1", "=A5");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
 //
 //   ss.revert_cell_contents("A1");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
+//
 //    ss.revert_cell_contents("A1");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
+//
 //    ss.revert_cell_contents("A1");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
+//
 //    ss.revert_cell_contents("A1");
+//    std::cout << ss.get_cell_contents("A1") << std::endl;
 
     // No circular dependency
-    ss.set_contents_of_cell("A1", "=A2");
-    ss.set_contents_of_cell("A2", "=A3");
-    ss.set_contents_of_cell("A3", "=A4");
+//    ss.set_contents_of_cell("A1", "=A2");
+//    ss.set_contents_of_cell("A2", "=A3");
+//    ss.set_contents_of_cell("A3", "=A4");
 
     // Normal circular dependency error:
 //    ss.set_contents_of_cell("A1", "=A1");
 
+    // Circular Dependency test
+//    ss.set_contents_of_cell("A1", "=A2");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+//    ss.set_contents_of_cell("A2", "=A1");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
 
-    // Revert cell test
+
+
+//    // Revert cell test
     ss.set_contents_of_cell("A1", "=A2");
     std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 
@@ -57,17 +71,23 @@ int main()
     std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 
     ss.set_contents_of_cell("A2", "=A1");
-    std::cout << "A1: " << ss.get_cell_contents("A2") << std::endl;
-
-    ss.set_contents_of_cell("A2", "=A1");
     std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
-
-    ss.set_contents_of_cell("A2", "A1");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
-
     ss.revert_cell_contents("A1");
-
     std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+
+//     Revert empty cell
+//    ss.set_contents_of_cell("A1", "=A2");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+//    ss.revert_cell_contents("A1");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+//    ss.revert_cell_contents("A1");
+
+//
+//    std::stack<std::string> test;
+//    test.push("on");
+//    test.pop();
+//    test.top();
+//    test.top();
 
     return 0;
 }

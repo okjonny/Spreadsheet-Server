@@ -44,7 +44,8 @@ namespace ss
     {
         // return the last added contents
         if (nonempty_cells.find(cell) != nonempty_cells.end())
-            return nonempty_cells.at(cell).top();
+            if (nonempty_cells.at(cell).size() > 0)
+                return nonempty_cells.at(cell).top();
         return "";
     }
 
@@ -229,7 +230,7 @@ namespace ss
                 throw std::runtime_error("Circular dependencies found.");
             }
                 // if this name's dependents have not been searched yet, enter another frame of recursion
-            else if (visited.find(name) == visited.end())
+            else if (visited.find(n) == visited.end())
             {
                 visit(start, n, visited, changed);
             }
@@ -249,25 +250,53 @@ namespace ss
 
     void spreadsheet::revert_cell_contents(std::string name)
     {
-//        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
-//        std::string previous_contents = get_cell_contents(name);
-//        nonempty_cells[name].pop();
-//
-//        try
-//        { get_cells_to_recalculate(name); }
-//        catch(std::runtime_error){
-//            if (previous_contents != "")
-//            {
-//                nonempty_cells[name].push(previous_contents); // TODO: check pushing onto the stackkk!!!!!!
-//                dependencies.replace_dependees(name, previous_dependees);
-//            } else
-//                nonempty_cells.erase(name);
-//
-//            throw std::runtime_error("Circular dependencies found.");
-//        }
-        set_contents_of_cell(name, nonempty_cells[name].top());
+
+
+        name = formula::normalize(name);
+
+        name_check(name);
+
+        // Throw error here to tell user
+        if (nonempty_cells.find(name) == nonempty_cells.end())
+            return;
+
+        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
+        std::string previous_contents = get_cell_contents(name);
         nonempty_cells[name].pop();
 
+        try
+        { get_cells_to_recalculate(name); }
+        catch (std::runtime_error)
+        {
+            // if there's cells to recalculate
+            if (previous_contents != "")
+            {
+                nonempty_cells[name].push(previous_contents); // TODO: check pushing onto the stackkk!!!!!!
+                dependencies.replace_dependees(name, previous_dependees);
+            } else
+                nonempty_cells.erase(name);
+
+//            throw std::runtime_error("Circular dependencies found.");
+        }
+
+//
+//        std::string previous_content = nonempty_cells[name].top();
+//        nonempty_cells[name].pop();
+//        if (nonempty_cells[name].size() <= 0)
+//        {
+//            set_contents_of_cell(name, "");
+//            return;
+//        }
+//
+//        try
+//        {
+//            set_contents_of_cell(name, nonempty_cells[name].top());
+//        }
+//        catch (std::runtime_error)
+//        {
+//            set_contents_of_cell(name, previous_content);
+////            throw std::runtime_error("Circular dependencies found.");
+//        }
     }
 
 
