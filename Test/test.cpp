@@ -10,6 +10,7 @@
 
 int main()
 {
+   ss::spreadsheet ss;
     /*ss::formula f("(1  /2 +A3 * 6 - Z99)");
     ss::formula f1("(1  /         2    + a3 * 6 - z99)");
 
@@ -22,7 +23,6 @@ int main()
     if(f == f1)
         std::cout << normalized << std::endl;*/
 //
-   ss::spreadsheet ss;
 //    ss.set_contents_of_cell("A1", "641658456");
 //    std::cout << ss.get_cell_contents("A1") << std::endl;
 //
@@ -61,9 +61,7 @@ int main()
 //    ss.set_contents_of_cell("A2", "=A1");
 //    std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
 
-
-
-//    // Revert cell test
+    // Revert cell test
     ss.set_contents_of_cell("A1", "=A2");
     std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 
@@ -73,21 +71,19 @@ int main()
     ss.set_contents_of_cell("A2", "=A1");
     std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
     ss.revert_cell_contents("A1");
+    ss.revert_cell_contents("A1");
+    ss.revert_cell_contents("A1");
+    ss.revert_cell_contents("A1");
+    ss.revert_cell_contents("A1");
     std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 
-//     Revert empty cell
+//  Revert empty cell
 //    ss.set_contents_of_cell("A1", "=A2");
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 //    ss.revert_cell_contents("A1");
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 //    ss.revert_cell_contents("A1");
-
-//
-//    std::stack<std::string> test;
-//    test.push("on");
-//    test.pop();
-//    test.top();
-//    test.top();
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 
     return 0;
 }
