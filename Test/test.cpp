@@ -61,21 +61,21 @@ int main()
 //    ss.set_contents_of_cell("A2", "=A1");
 //    std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
 
-    // Revert cell test
-    ss.set_contents_of_cell("A1", "=A2");
-    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
-
-    ss.set_contents_of_cell("A1", "Big Chungus");
-    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
-
-    ss.set_contents_of_cell("A2", "=A1");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
-    ss.revert_cell_contents("A1");
-    ss.revert_cell_contents("A1");
-    ss.revert_cell_contents("A1");
-    ss.revert_cell_contents("A1");
-    ss.revert_cell_contents("A1");
-    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+//    // Revert cell test
+//    ss.set_contents_of_cell("A1", "=A2");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+//
+//    ss.set_contents_of_cell("A1", "Big Chungus");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+//
+//    ss.set_contents_of_cell("A2", "=A1");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << std::endl;
+//    ss.revert_cell_contents("A1");
+//    ss.revert_cell_contents("A1");
+//    ss.revert_cell_contents("A1");
+//    ss.revert_cell_contents("A1");
+//    ss.revert_cell_contents("A1");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 
 //  Revert empty cell
 //    ss.set_contents_of_cell("A1", "=A2");
@@ -84,6 +84,24 @@ int main()
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
 //    ss.revert_cell_contents("A1");
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << std::endl;
+
+// UNDO/REVERT TEST
+    ss.set_contents_of_cell("A2", "Table");
+    ss.set_contents_of_cell("A3", "=A2");
+    ss.set_contents_of_cell("A2", "Text");
+    ss.revert_cell_contents("A3");
+    ss.set_contents_of_cell("A2", "Data");
+    ss.undo();
+    ss.undo();
+    ss.undo();
+    ss.revert_cell_contents("A2");
+    ss.undo();
+    ss.revert_cell_contents("A2");
+    ss.undo();
+    ss.revert_cell_contents("A2");
+    ss.undo();
+    ss.undo();
+    ss.undo();
 
     return 0;
 }

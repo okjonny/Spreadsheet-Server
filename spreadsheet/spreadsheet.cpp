@@ -100,22 +100,29 @@ namespace ss
         // If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(cell_name) != nonempty_cells.end())
         {
+//            if (!is_Undo)
+//            {
             undo_stack.push({cell_name, get_cell_contents(cell_name)});
-
             nonempty_cells[cell_name].push(contents);
+//            }
             dependencies.replace_dependees(cell_name, std::unordered_set<std::string>());
         } else
         {
+//            if (!is_Undo)
             undo_stack.push({cell_name, get_cell_contents(cell_name)});
 
             // create a new cell
             std::stack<std::string> contents_history;
             contents_history.push((contents));
+//            if (!is_Undo)
             nonempty_cells.insert({cell_name, contents_history});
         }
 
         if (get_cell_contents(cell_name) == "")
+        {
+//            undo_stack.pop();
             nonempty_cells.erase(cell_name);
+        }
 
         return spreadsheet::get_cells_to_recalculate(cell_name);
     }
@@ -130,9 +137,15 @@ namespace ss
         //If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(name) != nonempty_cells.end())
         {
+//            if (!is_Undo)
+//            {
+            undo_stack.push({name, get_cell_contents(name)});
             nonempty_cells[name].push("=" + expression.to_string());
+//            }
         } else
         {
+//            if (!is_Undo)
+            undo_stack.push({name, get_cell_contents(name)});
             std::stack<std::string> contents_history;
             contents_history.push("=" + expression.to_string());
             nonempty_cells.insert({name, contents_history});
@@ -247,67 +260,106 @@ namespace ss
             throw std::runtime_error(name + " is an invalid cell name.");
     }
 
-    void spreadsheet::revert_cell_contents(std::string name)
+    void spreadsheet::revert_cell_contents(std::string cell_name)
     {
-        name = formula::normalize(name);
+        cell_name = formula::normalize(cell_name);
 
-        name_check(name);
+        name_check(cell_name);
 
-//        // Throw error here to tell user
-//        if (nonempty_cells.find(name) == nonempty_cells.end())
-//            return;
+        // Throw error here to tell user
+        if (nonempty_cells.find(cell_name) == nonempty_cells.end())
+            return;
 //
-//        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
-//        std::string top_content = get_cell_contents(name);
-//        nonempty_cells[name].pop();
+//        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(cell_name);
+//        std::string top_content = get_cell_contents(cell_name);
+//        nonempty_cells[cell_name].pop();
 //
 //        try
-//        { get_cells_to_recalculate(name); }
+//        { get_cells_to_recalculate(cell_name); }
 //        catch (std::runtime_error)
 //        {
 //            // if there's cells to recalculate
 //            if (top_content != "")
 //            {
-//                nonempty_cells[name].push(top_content); // TODO: check pushing onto the stackkk!!!!!!
-//                dependencies.replace_dependees(name, previous_dependees);
+//                nonempty_cells[cell_name].push(top_content); // TODO: check pushing onto the stackkk!!!!!!
+//                dependencies.replace_dependees(cell_name, previous_dependees);
 //            } else
-//                nonempty_cells.erase(name);
+//                nonempty_cells.erase(cell_name);
 //            throw std::runtime_error("Circular dependencies found.");
 //        }
 
+//
+//        if (nonempty_cells.find(cell_name) == nonempty_cells.end())
+//            return;
 
-        if (nonempty_cells.find(name) == nonempty_cells.end())
-            return;
-        std::string previous_content = get_cell_contents(name);
-//        std::string previous_content = nonempty_cells[name].top();
-        nonempty_cells[name].pop();
-        if (nonempty_cells[name].size() <= 0)
+        std::string previous_content = get_cell_contents(cell_name);
+        nonempty_cells[cell_name].pop();
+
+        if (nonempty_cells[cell_name].size() <= 0)
         {
-            set_contents_of_cell(name, "");
+            undo_stack.push({cell_name, previous_content});
+            set_contents_of_cell(cell_name, "");
+            undo_stack.pop();
             return;
         }
 
         try
         {
-            set_contents_of_cell(name, nonempty_cells[name].top());
-            nonempty_cells[name].pop();
+            undo_stack.push({cell_name, previous_content});
+            set_contents_of_cell(cell_name, nonempty_cells[cell_name].top());
+            nonempty_cells[cell_name].pop();
         }
         catch (std::runtime_error)
         {
-            set_contents_of_cell(name, previous_content);
+            set_contents_of_cell(cell_name, previous_content);
             throw std::runtime_error("Circular dependencies found.");
         }
     }
 
+    void spreadsheet::undo()
+    {
+        if (undo_stack.size() <= 0)
+            return;
 
-//{}(network_util::socket_state s);
-//string GetCellContents(string name)
-//{
-//    name = Normalize(name);
-//    NameCheck(name);
+        std::string previous_name = undo_stack.top().first;
+        std::string previous_content = undo_stack.top().second;
+
+        undo_stack.pop();
+        if (undo_stack.size() <= 0)
+        {
+            set_contents_of_cell(previous_name, "");
+//            undo_stack.pop();
+            return;
+        }
+
+//        is_Undo = true;
+        try
+        {
+            set_contents_of_cell(previous_name, previous_content);
+            nonempty_cells[previous_name].pop();
+        }
+        catch (std::runtime_error)
+        {
+            set_contents_of_cell(undo_stack.top().first, previous_content);
+            throw std::runtime_error("Circular dependencies found.");
+        }
+//        is_Undo = false;
+
+
+        //Try and catch to revert_cell_contents to the previous state before throwing
+//        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(previous_name);
+//        try
+//        {std::list<std::string> itr = get_cells_to_recalculate(previous_name); }
+//        catch (std::runtime_error)
+//        {
+//            if (previous_content != "")
+//            {
+//                nonempty_cells[previous_name].pop(); // TODO: check pushing onto the stackkk!!!!!!
+//                dependencies.replace_dependees(previous_name, previous_dependees);
+//            } else
+//                nonempty_cells.erase(previous_name);
 //
-//    if(NonemptyCells.TryGetValue(name, out Cell c))
-//    return c.Contents;
-//    return "";
-//}
+//            throw std::runtime_error("Circular dependencies found.");
+//        }
+    }
 }

@@ -24,6 +24,7 @@ namespace ss
 
         friend class server_controller;
 
+        bool is_Undo;
         std::string name;
         std::vector<long> users_connected;
         std::stack<std::string> commands_received;
@@ -35,10 +36,14 @@ namespace ss
     public:
 
         std::unordered_map<std::string, std::stack<std::string>> nonempty_cells;
+
         spreadsheet();
+
         void add_user_to_spreadsheet(long s);
 
         std::vector<long> get_users_connected();
+
+        void undo();
 
         //std::unordered_map<std::string, std::vector<std::string>> get_cell_list();
         std::unordered_map<std::string, std::stack<std::string>> get_cell_list();
@@ -71,7 +76,7 @@ namespace ss
         /// Returns the list of the given cell's directs and indirect dependents.
         std::list<std::string> set_cell_contents(std::string cell_name, std::string contents);
 
-        void revert_cell_contents(std::string name);
+        void revert_cell_contents(std::string cell_name);
 
     private:
 

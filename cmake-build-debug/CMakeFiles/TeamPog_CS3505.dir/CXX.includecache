@@ -374,20 +374,6 @@ list
 unordered_set
 -
 
-/home/jonny/CLionProjects/TeamPog-CS3505/Test/test.cpp
-regex
--
-iostream
--
-string
--
-../spreadsheet/formula.h
-/home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/formula.h
-algorithm
--
-../spreadsheet/spreadsheet.h
-/home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/spreadsheet.h
-
 /home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/cell.h
 string
 /home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/string
