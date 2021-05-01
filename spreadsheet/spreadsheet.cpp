@@ -100,16 +100,16 @@ namespace ss
         // If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(cell_name) != nonempty_cells.end())
         {
-//            if (!is_Undo)
-//            {
-            undo_stack.push({cell_name, get_cell_contents(cell_name)});
-            nonempty_cells[cell_name].push(contents);
-//            }
+            if (!is_Undo)
+            {
+                undo_stack.push({cell_name, get_cell_contents(cell_name)});
+                nonempty_cells[cell_name].push(contents);
+            }
             dependencies.replace_dependees(cell_name, std::unordered_set<std::string>());
         } else
         {
-//            if (!is_Undo)
-            undo_stack.push({cell_name, get_cell_contents(cell_name)});
+            if (!is_Undo)
+                undo_stack.push({cell_name, get_cell_contents(cell_name)});
 
             // create a new cell
             std::stack<std::string> contents_history;
@@ -118,7 +118,7 @@ namespace ss
             nonempty_cells.insert({cell_name, contents_history});
         }
 
-        if (get_cell_contents(cell_name) == "")
+        if (get_cell_contents(cell_name) == "" || contents == "")
         {
 //            undo_stack.pop();
             nonempty_cells.erase(cell_name);
@@ -137,15 +137,15 @@ namespace ss
         //If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(name) != nonempty_cells.end())
         {
-//            if (!is_Undo)
-//            {
-            undo_stack.push({name, get_cell_contents(name)});
-            nonempty_cells[name].push("=" + expression.to_string());
-//            }
+            if (!is_Undo)
+            {
+                undo_stack.push({name, get_cell_contents(name)});
+                nonempty_cells[name].push("=" + expression.to_string());
+            }
         } else
         {
-//            if (!is_Undo)
-            undo_stack.push({name, get_cell_contents(name)});
+            if (!is_Undo)
+                undo_stack.push({name, get_cell_contents(name)});
             std::stack<std::string> contents_history;
             contents_history.push("=" + expression.to_string());
             nonempty_cells.insert({name, contents_history});
@@ -323,43 +323,28 @@ namespace ss
 
         std::string previous_name = undo_stack.top().first;
         std::string previous_content = undo_stack.top().second;
-
         undo_stack.pop();
+        is_Undo = true;
+
         if (undo_stack.size() <= 0)
         {
             set_contents_of_cell(previous_name, "");
-//            undo_stack.pop();
             return;
         }
 
-//        is_Undo = true;
         try
         {
             set_contents_of_cell(previous_name, previous_content);
-            nonempty_cells[previous_name].pop();
+            if (nonempty_cells.find(previous_name) == nonempty_cells.end())
+                return;
+            if (nonempty_cells[previous_name].size() > 1)
+                nonempty_cells[previous_name].pop();
         }
         catch (std::runtime_error)
         {
             set_contents_of_cell(undo_stack.top().first, previous_content);
             throw std::runtime_error("Circular dependencies found.");
         }
-//        is_Undo = false;
-
-
-        //Try and catch to revert_cell_contents to the previous state before throwing
-//        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(previous_name);
-//        try
-//        {std::list<std::string> itr = get_cells_to_recalculate(previous_name); }
-//        catch (std::runtime_error)
-//        {
-//            if (previous_content != "")
-//            {
-//                nonempty_cells[previous_name].pop(); // TODO: check pushing onto the stackkk!!!!!!
-//                dependencies.replace_dependees(previous_name, previous_dependees);
-//            } else
-//                nonempty_cells.erase(previous_name);
-//
-//            throw std::runtime_error("Circular dependencies found.");
-//        }
+        is_Undo = false;
     }
 }

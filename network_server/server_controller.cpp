@@ -213,7 +213,7 @@ namespace ss
             current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
         } else if (data["requestType"] == "undo")
         {
-            //undo
+            current_spreadsheets[state.spreadsheet].undo();
         }
 
         // BROADCAST CHANGES TO SPREADSHEETS
