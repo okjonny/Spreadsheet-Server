@@ -86,39 +86,39 @@ int main()
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
 
 // UNDO/REVERT TEST
-    ss.set_contents_of_cell("A2", "Table");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.set_contents_of_cell("A3", "=A2");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    //std::cout << "A2: " << ss.nonempty_cells["A2"].top() << "A3: " << ss.nonempty_cells["A3"].top() << std::endl;
-    ss.set_contents_of_cell("A2", "Text");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.revert_cell_contents("A3");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.set_contents_of_cell("A2", "Data");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.revert_cell_contents("A2");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.revert_cell_contents("A2");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.revert_cell_contents("A2");
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
-    ss.undo();
-    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.set_contents_of_cell("A2", "Table");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.set_contents_of_cell("A3", "=A2");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    //std::cout << "A2: " << ss.nonempty_cells["A2"].top() << "A3: " << ss.nonempty_cells["A3"].top() << std::endl;
+//    ss.set_contents_of_cell("A2", "Text");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.revert_cell_contents("A3");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.set_contents_of_cell("A2", "Data");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.revert_cell_contents("A2");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.revert_cell_contents("A2");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.revert_cell_contents("A2");
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
+//    ss.undo();
+//    std::cout << "A2: " << ss.get_cell_contents("A2") << "\t\tA3: " << ss.get_cell_contents("A3") << std::endl;
 
     // Undo and revert have circular dependency
 //    ss.set_contents_of_cell("A1", "=A2");
@@ -133,6 +133,39 @@ int main()
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
 //    ss.undo();
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+
+// Longer circular dependency chain
+//ss.set_contents_of_cell("A1", "=A2");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << "\tA2: " << ss.get_cell_contents("A2") <<
+//    "\tA3: " << ss.get_cell_contents("A3") << "\tA4: " << ss.get_cell_contents("A4") << "\tA5: " << ss.get_cell_contents("A5") << std::endl;
+//
+//ss.set_contents_of_cell("A2", "=A3");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << "\tA2: " << ss.get_cell_contents("A2") <<
+//              "\tA3: " << ss.get_cell_contents("A3") << "\tA4: " << ss.get_cell_contents("A4") << "\tA5: " << ss.get_cell_contents("A5") << std::endl;
+//
+//ss.set_contents_of_cell("A3", "=A4");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << "\tA2: " << ss.get_cell_contents("A2") <<
+//              "\tA3: " << ss.get_cell_contents("A3") << "\tA4: " << ss.get_cell_contents("A4") << "\tA5: " << ss.get_cell_contents("A5") << std::endl;
+//
+//ss.set_contents_of_cell("A4", "=A5");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << "\tA2: " << ss.get_cell_contents("A2") <<
+//              "\tA3: " << ss.get_cell_contents("A3") << "\tA4: " << ss.get_cell_contents("A4") << "\tA5: " << ss.get_cell_contents("A5") << std::endl;
+//
+//ss.set_contents_of_cell("A5", "=A1");
+//    std::cout << "A1: " << ss.get_cell_contents("A1") << "\tA2: " << ss.get_cell_contents("A2") <<
+//              "\tA3: " << ss.get_cell_contents("A3") << "\tA4: " << ss.get_cell_contents("A4") << "\tA5: " << ss.get_cell_contents("A5") << std::endl;
+
+ss.undo();
+std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+ss.set_contents_of_cell("A1", "5.0");
+std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+ss.set_contents_of_cell("A1", "4.0");
+std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+ss.set_contents_of_cell("A1", "3.0");
+std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+ss.set_contents_of_cell("A1", "2.0");
+std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+
 
     return 0;
 }

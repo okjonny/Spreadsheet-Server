@@ -268,7 +268,7 @@ namespace ss
 
         // Throw error here to tell user
         if (nonempty_cells.find(cell_name) == nonempty_cells.end())
-            return;
+            throw std::runtime_error("No reverts available for " + cell_name);
 //
 //        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(cell_name);
 //        std::string top_content = get_cell_contents(cell_name);
@@ -320,7 +320,7 @@ namespace ss
     void spreadsheet::undo()
     {
         if (undo_stack.size() <= 0)
-            return;
+            throw std::runtime_error("No undos available");
 
         std::string previous_name = undo_stack.top().first;
         std::string previous_content = undo_stack.top().second;
@@ -348,5 +348,11 @@ namespace ss
             throw std::runtime_error("Circular dependencies found.");
         }
         is_Undo = false;
+    }
+
+    std::pair<std::string, std::string> spreadsheet::get_undo_contents() {
+        if (undo_stack.size() <= 0)
+            throw std::runtime_error("No undos available");
+        return undo_stack.top();
     }
 }

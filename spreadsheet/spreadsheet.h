@@ -78,6 +78,8 @@ namespace ss
 
         void revert_cell_contents(std::string cell_name);
 
+        std::pair<std::string, std::string> get_undo_contents();
+
     private:
 
         bool changed;

@@ -142,33 +142,6 @@ TeamPog_CS3505/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/build
 .PHONY : TeamPog_CS3505/fast
 
-Test/test.o: Test/test.cpp.o
-
-.PHONY : Test/test.o
-
-# target to build an object file
-Test/test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/Test/test.cpp.o
-.PHONY : Test/test.cpp.o
-
-Test/test.i: Test/test.cpp.i
-
-.PHONY : Test/test.i
-
-# target to preprocess a source file
-Test/test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/Test/test.cpp.i
-.PHONY : Test/test.cpp.i
-
-Test/test.s: Test/test.cpp.s
-
-.PHONY : Test/test.s
-
-# target to generate assembly for a file
-Test/test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/Test/test.cpp.s
-.PHONY : Test/test.cpp.s
-
 network_server/networking.o: network_server/networking.cpp.o
 
 .PHONY : network_server/networking.o
@@ -195,6 +168,33 @@ network_server/networking.s: network_server/networking.cpp.s
 network_server/networking.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.s
 .PHONY : network_server/networking.cpp.s
+
+network_server/server.o: network_server/server.cpp.o
+
+.PHONY : network_server/server.o
+
+# target to build an object file
+network_server/server.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o
+.PHONY : network_server/server.cpp.o
+
+network_server/server.i: network_server/server.cpp.i
+
+.PHONY : network_server/server.i
+
+# target to preprocess a source file
+network_server/server.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.i
+.PHONY : network_server/server.cpp.i
+
+network_server/server.s: network_server/server.cpp.s
+
+.PHONY : network_server/server.s
+
+# target to generate assembly for a file
+network_server/server.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.s
+.PHONY : network_server/server.cpp.s
 
 network_server/server_controller.o: network_server/server_controller.cpp.o
 
@@ -249,6 +249,33 @@ network_server/socket_state.s: network_server/socket_state.cpp.s
 network_server/socket_state.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.s
 .PHONY : network_server/socket_state.cpp.s
+
+network_server/spreadsheet_file.o: network_server/spreadsheet_file.cpp.o
+
+.PHONY : network_server/spreadsheet_file.o
+
+# target to build an object file
+network_server/spreadsheet_file.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.o
+.PHONY : network_server/spreadsheet_file.cpp.o
+
+network_server/spreadsheet_file.i: network_server/spreadsheet_file.cpp.i
+
+.PHONY : network_server/spreadsheet_file.i
+
+# target to preprocess a source file
+network_server/spreadsheet_file.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.i
+.PHONY : network_server/spreadsheet_file.cpp.i
+
+network_server/spreadsheet_file.s: network_server/spreadsheet_file.cpp.s
+
+.PHONY : network_server/spreadsheet_file.s
+
+# target to generate assembly for a file
+network_server/spreadsheet_file.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.s
+.PHONY : network_server/spreadsheet_file.cpp.s
 
 spreadsheet/cell.o: spreadsheet/cell.cpp.o
 
@@ -367,18 +394,21 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... TeamPog_CS3505"
-	@echo "... Test/test.o"
-	@echo "... Test/test.i"
-	@echo "... Test/test.s"
 	@echo "... network_server/networking.o"
 	@echo "... network_server/networking.i"
 	@echo "... network_server/networking.s"
+	@echo "... network_server/server.o"
+	@echo "... network_server/server.i"
+	@echo "... network_server/server.s"
 	@echo "... network_server/server_controller.o"
 	@echo "... network_server/server_controller.i"
 	@echo "... network_server/server_controller.s"
 	@echo "... network_server/socket_state.o"
 	@echo "... network_server/socket_state.i"
 	@echo "... network_server/socket_state.s"
+	@echo "... network_server/spreadsheet_file.o"
+	@echo "... network_server/spreadsheet_file.i"
+	@echo "... network_server/spreadsheet_file.s"
 	@echo "... spreadsheet/cell.o"
 	@echo "... spreadsheet/cell.i"
 	@echo "... spreadsheet/cell.s"

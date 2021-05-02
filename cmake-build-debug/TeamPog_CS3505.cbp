@@ -82,13 +82,13 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/Test/test.cpp">
-			<Option target="TeamPog_CS3505"/>
-		</Unit>
 		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/networking.cpp">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
 		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/networking.h">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/server.cpp">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
 		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/server_controller.cpp">
@@ -101,6 +101,9 @@
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
 		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/socket_state.h">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/spreadsheet_file.cpp">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
 		<Unit filename="/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/spreadsheet/cell.cpp">

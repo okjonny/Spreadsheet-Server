@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <unordered_map>
 #include <string>
+#include <fstream>
 #include "../spreadsheet/cell.h"
 //#include "utf8.h"
 
@@ -14,7 +15,7 @@ namespace ss
 {
 
     std::unordered_map<std::string, ss::spreadsheet> server_controller::current_spreadsheets;
-
+    std::fstream server_controller::file;
     // CLIENT STRUCTS
     struct select_cell {
         std::string requestType;
@@ -219,7 +220,8 @@ namespace ss
 
         if (data["requestType"] == "editCell")
         {
-            cell c(data["cellName"], data["contents"]); // cell updated class
+            cell_updated c(data["cellName"], data["contents"]); // cell updated class
+
             c.to_json(j, c);
 
             // Check here if cell content would cause a circular dependency
@@ -228,9 +230,12 @@ namespace ss
             try {
                 current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
             }
-            catch(std::runtime_error)
+            catch (const std::runtime_error& e)
             {
-                // TODO: send an invalid request error to the user
+                invalid_request c(data["cellName"], e.what());
+                c.to_json(j, c);
+                //current_spreadsheets[state.spreadsheet].add_to_history((to_string(j) + "\n"));
+                //command_to_send = to_string(j) + "\n";
             }
 
             //current_spreadsheets[state.spreadsheet].add_to_history(to_string(j) + "\n");
@@ -248,18 +253,47 @@ namespace ss
 
         } else if (data["requestType"] == "revertCell")
         {
-            current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
+            try {
+                current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
+                cell_updated c(data["cellName"], current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
+                c.to_json(j, c);
+            }
+            catch(std::runtime_error& e)
+            {
+                invalid_request c(data["cellName"], e.what());
+                c.to_json(j, c);
+            }
         } else if (data["requestType"] == "undo")
         {
-            current_spreadsheets[state.spreadsheet].undo();
+            std::pair<std::string, std::string> undo_contents = {"", ""};
+            try {
+               undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
+                current_spreadsheets[state.spreadsheet].undo();
+                cell_updated c(undo_contents.first, undo_contents.second); // cell updated class
+                c.to_json(j, c);
+            }
+            catch(std::runtime_error& e)
+            {
+                invalid_request c(undo_contents.first, e.what());
+                c.to_json(j, c);
+            }
         }
+
+        command_to_send = to_string(j) + "\n";
+        // TODO: have to lock file when writing to it
+        file.open("testtt.txt");
+        file << command_to_send + "\n";
 
         // BROADCAST CHANGES TO SPREADSHEETS
         std::string new_id = std::to_string(state.get_id()) + " made edit\n";
         for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
         {
-            if (s != state.get_socket())
+            //if (s != state.get_socket())
                 send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0);
+        }
+        if (j["messageType"] == "cellUpdated")
+        {
+            //////////////////////
         }
     }
 

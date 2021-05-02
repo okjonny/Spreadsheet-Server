@@ -15,9 +15,9 @@ set(SOURCE_FILES
         spreadsheet/cell.cpp spreadsheet/cell.h
 
         # MAINS:
-        Test/test.cpp
-          #      network_server/server.cpp
-        )
+        #Test/test.cpp
+                network_server/server.cpp
+        network_server/spreadsheet_file.cpp)
 project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)
 

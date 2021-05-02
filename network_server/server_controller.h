@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include "../spreadsheet/spreadsheet.h"
 #include "socket_state.h"
+#include <fstream>
 
 class spreadsheet;
 
@@ -22,6 +23,9 @@ namespace ss
         friend class spreadsheet;
 
         static std::unordered_map<std::string, spreadsheet> current_spreadsheets;
+
+        // TODO probably shouldn't be static
+        static std::fstream file;
 
     public:
         server_controller();
