@@ -52,6 +52,10 @@ int main()
 //    ss.set_contents_of_cell("A2", "=A3");
 //    ss.set_contents_of_cell("A3", "=A4");
 
+//  Circular Dependency
+//    ss.set_contents_of_cell("A1", "=A1");
+//    ss.set_contents_of_cell("A1", "Big Chungus");
+
     // Normal circular dependency error:
 //    ss.set_contents_of_cell("A1", "=A1");
 
@@ -154,18 +158,18 @@ int main()
 //ss.set_contents_of_cell("A5", "=A1");
 //    std::cout << "A1: " << ss.get_cell_contents("A1") << "\tA2: " << ss.get_cell_contents("A2") <<
 //              "\tA3: " << ss.get_cell_contents("A3") << "\tA4: " << ss.get_cell_contents("A4") << "\tA5: " << ss.get_cell_contents("A5") << std::endl;
-
-ss.undo();
-std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
-ss.set_contents_of_cell("A1", "5.0");
-std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
-ss.set_contents_of_cell("A1", "4.0");
-std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
-ss.set_contents_of_cell("A1", "3.0");
-std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
-ss.set_contents_of_cell("A1", "2.0");
-std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
-
+//
+//ss.undo();
+//std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+//ss.set_contents_of_cell("A1", "5.0");
+//std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+//ss.set_contents_of_cell("A1", "4.0");
+//std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+//ss.set_contents_of_cell("A1", "3.0");
+//std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+//ss.set_contents_of_cell("A1", "2.0");
+//std::cout << "A1: " << ss.get_cell_contents("A1") << "\t\tA2: " << ss.get_cell_contents("A2") << std::endl;
+//
 
     return 0;
 }

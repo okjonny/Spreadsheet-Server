@@ -1,18 +1,21 @@
 //
-// Created by Lauren Schwenke on 5/1/21.
+//Created by Lauren Schwenke on 5/1/21.
 //
 #include <string>
 #include <fstream>
+#include <memory>
 
 class spreadsheet_file {
 public:
     std::fstream file;
 
-    spreadsheet_file (const std::string& path) : _path(path) {
+    spreadsheet_file(const std::string &path) : _path(path)
+    {
         file.open(path);
     }
 
-    void write (const std::string& dataToWrite) {
+    void write(const std::string &dataToWrite)
+    {
         file << dataToWrite;
     }
 
@@ -22,12 +25,14 @@ private:
 
 class Writer {
 public:
-    Writer (std::shared_ptr<spreadsheet_file> sf) : _sf(sf) {}
+    Writer(std::shared_ptr<spreadsheet_file> sf) : _sf(sf)
+    {}
 
-    void someFunctionThatWritesToFile () {
-        // Do some work...
-        _sf->write("Some data to write...");
+    void write_to_file(std::string message)
+    {
+        _sf->write(message);
     }
+
 private:
     std::shared_ptr<spreadsheet_file> _sf;
 };

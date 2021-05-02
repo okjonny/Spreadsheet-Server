@@ -6,16 +6,92 @@
 #include <sys/socket.h>
 #include <unordered_map>
 #include <string>
-#include <fstream>
-#include "../spreadsheet/cell.h"
-//#include "utf8.h"
+#include <memory>
+#include <experimental/filesystem>
 
 using namespace network_util;
 namespace ss
 {
 
+    //
+//Created by Lauren Schwenke on 5/1/21.
+//
+
+
+    class spreadsheet_file {
+    public:
+        std::ofstream file;
+        std::ifstream input_file;
+
+        spreadsheet_file(const std::string &path) : _path("spreadsheet_files/" + path)
+        {
+        }
+
+        void write(const std::string &dataToWrite)
+        {
+            file.open(_path, std::ios_base::app);
+            // Never should happen
+//            if (file.bad() || !file.is_open())
+
+            std::lock_guard<std::mutex> lock(_writerMutex);
+            file << dataToWrite;
+            file.close();
+        }
+
+        std::vector<std::string> read()
+        {
+            input_file.open(_path);
+            std::lock_guard<std::mutex> lock(_writerMutex);
+            std::vector<std::string> contents;
+            std::string line;
+
+            while (!file.eof())
+            {
+                input_file >> line;
+                contents.push_back(line);
+            }
+            return contents;
+        }
+
+
+    private:
+        std::string _path;
+        std::mutex _writerMutex;
+    };
+
+    class Writer {
+    public:
+        Writer(std::shared_ptr<spreadsheet_file> sf) : _sf(sf)
+        {}
+
+        void write_to_file(const std::string &message)
+        {
+            _sf->write(message + "\n");
+        }
+
+    private:
+        std::shared_ptr<spreadsheet_file> _sf;
+
+    };
+
+    class Reader {
+    public:
+        Reader(std::shared_ptr<spreadsheet_file> sf) : _sf(sf)
+        {}
+
+        std::vector<std::string> read_from_file()
+        {
+            _sf->read();
+        }
+
+    private:
+        std::shared_ptr<spreadsheet_file> _sf;
+    };
+
+
     std::unordered_map<std::string, ss::spreadsheet> server_controller::current_spreadsheets;
     std::fstream server_controller::file;
+
     // CLIENT STRUCTS
     struct select_cell {
         std::string requestType;
@@ -73,8 +149,7 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(cell_updated, messageType, cellName, contents)
     };
 
-    struct invalid_request
-    {
+    struct invalid_request {
         std::string messageType;
         std::string cellName;
         std::string message;
@@ -89,8 +164,7 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(invalid_request, messageType, cellName, message)
     };
 
-    struct server_shutdown
-    {
+    struct server_shutdown {
         std::string messageType;
         std::string message;
 
@@ -165,11 +239,17 @@ namespace ss
 
 //        if (state.ErrorOccured)
 //            return;
-
-        std::string selection = state.get_data();
+        std::string crap = state.get_data();
+        std::regex newlines_re("\r\n+|\r|\n");
+        auto selection = std::regex_replace(crap, newlines_re, "");
         state.spreadsheet = selection;
+//        std::string selection = state.get_data();
+//        state.spreadsheet = selection;
 
         std::cout << "Spreadsheet selected: " << selection << std::endl;
+
+        // Go through current folder and look for existing files
+//        using std::experimental::filesystem::directory_iterator;
 
         //check if spreadsheet exists, create otherwise
         if (current_spreadsheets.find(selection) != current_spreadsheets.end())
@@ -190,15 +270,22 @@ namespace ss
         //if spreadsheetlist.contains(selection)
         //  Spreadsheet s = spreadsheetList[selection];
         //{messageType:"cellUpdated", cellName: “<cell name>”,contents: “<contents>”}
-
-        for (auto &c : cells)
+//
+        // Read from file if it exists
+        auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
+        Reader reader(synchronizedFile);
+        for (std::string s : reader.read_from_file())
         {
-            std::string cell_update =
-                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + c.first + "\"" +
-                    ",\"contents\": \"" +
-                    c.second + "\"}\n";
-            send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
+            send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0);
         }
+//        for (auto &c : cells)
+//        {
+//            std::string cell_update =
+//                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + c.first + "\"" +
+//                    ",\"contents\": \"" +
+//                    c.second + "\"}\n";
+//            send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
+//        }
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
     }
@@ -209,6 +296,8 @@ namespace ss
 //        if (state.ErrorOccured)
 //            return;
 
+        auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
+        Writer writer1(synchronizedFile);
         std::vector<std::string> commands = process_data(state);
         nlohmann::json data = nlohmann::json::parse(commands[0]);
 
@@ -227,10 +316,12 @@ namespace ss
             // Check here if cell content would cause a circular dependency
             // if it does, send error message
             // otherwise, server makes the change and sends "cellUpdated" to all users including itself
-            try {
+            try
+            {
                 current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
+                writer1.write_to_file(to_string(j));
             }
-            catch (const std::runtime_error& e)
+            catch (const std::runtime_error &e)
             {
                 invalid_request c(data["cellName"], e.what());
                 c.to_json(j, c);
@@ -253,12 +344,15 @@ namespace ss
 
         } else if (data["requestType"] == "revertCell")
         {
-            try {
+            try
+            {
                 current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
-                cell_updated c(data["cellName"], current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
+                cell_updated c(data["cellName"],
+                               current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
                 c.to_json(j, c);
+                writer1.write_to_file(to_string(j));
             }
-            catch(std::runtime_error& e)
+            catch (std::runtime_error &e)
             {
                 invalid_request c(data["cellName"], e.what());
                 c.to_json(j, c);
@@ -266,13 +360,15 @@ namespace ss
         } else if (data["requestType"] == "undo")
         {
             std::pair<std::string, std::string> undo_contents = {"", ""};
-            try {
-               undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
+            try
+            {
+                undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
                 current_spreadsheets[state.spreadsheet].undo();
                 cell_updated c(undo_contents.first, undo_contents.second); // cell updated class
                 c.to_json(j, c);
+                writer1.write_to_file(to_string(j));
             }
-            catch(std::runtime_error& e)
+            catch (std::runtime_error &e)
             {
                 invalid_request c(undo_contents.first, e.what());
                 c.to_json(j, c);
@@ -280,16 +376,18 @@ namespace ss
         }
 
         command_to_send = to_string(j) + "\n";
+
         // TODO: have to lock file when writing to it
-        file.open("testtt.txt");
-        file << command_to_send + "\n";
+        // Create the synchronized file
+        // Create the writers using the same synchronized file
+
 
         // BROADCAST CHANGES TO SPREADSHEETS
         std::string new_id = std::to_string(state.get_id()) + " made edit\n";
         for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
         {
             //if (s != state.get_socket())
-                send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0);
+            send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0);
         }
         if (j["messageType"] == "cellUpdated")
         {

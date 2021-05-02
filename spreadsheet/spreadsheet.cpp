@@ -114,13 +114,11 @@ namespace ss
             // create a new cell
             std::stack<std::string> contents_history;
             contents_history.push((contents));
-//            if (!is_Undo)
             nonempty_cells.insert({cell_name, contents_history});
         }
 
         if (get_cell_contents(cell_name) == "" || contents == "")
         {
-//            undo_stack.pop();
             nonempty_cells.erase(cell_name);
         }
 
@@ -137,15 +135,9 @@ namespace ss
         //If a cell exists, we replace its contents, otherwise we create it.
         if (nonempty_cells.find(name) != nonempty_cells.end())
         {
-            if (!is_Undo)
-            {
-                undo_stack.push({name, get_cell_contents(name)});
-                nonempty_cells[name].push("=" + expression.to_string());
-            }
+            nonempty_cells[name].push("=" + expression.to_string());
         } else
         {
-            if (!is_Undo)
-                undo_stack.push({name, get_cell_contents(name)});
             std::stack<std::string> contents_history;
             contents_history.push("=" + expression.to_string());
             nonempty_cells.insert({name, contents_history});
@@ -155,7 +147,12 @@ namespace ss
 
         //Try and catch to revert_cell_contents to the previous state before throwing
         try
-        { return get_cells_to_recalculate(name); }
+        {
+            std::list<std::string> cells_recalculated = get_cells_to_recalculate(name);
+            if (!is_Undo)
+                undo_stack.push({name, get_cell_contents(name)});
+            return cells_recalculated;
+        }
 
         catch (std::runtime_error)
         {
@@ -164,8 +161,10 @@ namespace ss
                 nonempty_cells[name].pop(); // TODO: check pushing onto the stackkk!!!!!!
                 dependencies.replace_dependees(name, previous_dependees);
             } else
+            {
                 nonempty_cells.erase(name);
-
+                dependencies.replace_dependees(name, previous_dependees);
+            }
             throw std::runtime_error("Circular dependencies found.");
         }
     }
@@ -269,28 +268,6 @@ namespace ss
         // Throw error here to tell user
         if (nonempty_cells.find(cell_name) == nonempty_cells.end())
             throw std::runtime_error("No reverts available for " + cell_name);
-//
-//        std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(cell_name);
-//        std::string top_content = get_cell_contents(cell_name);
-//        nonempty_cells[cell_name].pop();
-//
-//        try
-//        { get_cells_to_recalculate(cell_name); }
-//        catch (std::runtime_error)
-//        {
-//            // if there's cells to recalculate
-//            if (top_content != "")
-//            {
-//                nonempty_cells[cell_name].push(top_content); // TODO: check pushing onto the stackkk!!!!!!
-//                dependencies.replace_dependees(cell_name, previous_dependees);
-//            } else
-//                nonempty_cells.erase(cell_name);
-//            throw std::runtime_error("Circular dependencies found.");
-//        }
-
-//
-//        if (nonempty_cells.find(cell_name) == nonempty_cells.end())
-//            return;
 
         std::string previous_content = get_cell_contents(cell_name);
         nonempty_cells[cell_name].pop();
@@ -350,7 +327,8 @@ namespace ss
         is_Undo = false;
     }
 
-    std::pair<std::string, std::string> spreadsheet::get_undo_contents() {
+    std::pair<std::string, std::string> spreadsheet::get_undo_contents()
+    {
         if (undo_stack.size() <= 0)
             throw std::runtime_error("No undos available");
         return undo_stack.top();
