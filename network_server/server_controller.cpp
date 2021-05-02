@@ -23,7 +23,7 @@ namespace ss
         std::ofstream file;
         std::ifstream input_file;
 
-        spreadsheet_file(const std::string &path) : _path("spreadsheet_files/" + path)
+        spreadsheet_file(const std::string &path) : _path(path)
         {
         }
 
@@ -33,7 +33,7 @@ namespace ss
             // Never should happen
 //            if (file.bad() || !file.is_open())
 
-            std::lock_guard<std::mutex> lock(_writerMutex);
+//            std::lock_guard<std::mutex> lock(_writerMutex);
             file << dataToWrite;
             file.close();
         }
@@ -41,15 +41,19 @@ namespace ss
         std::vector<std::string> read()
         {
             input_file.open(_path);
-            std::lock_guard<std::mutex> lock(_writerMutex);
+//            std::lock_guard<std::mutex> lock(_writerMutex);
             std::vector<std::string> contents;
             std::string line;
+
+            if (input_file.fail())
+                return contents;
 
             while (!file.eof())
             {
                 input_file >> line;
                 contents.push_back(line);
             }
+            input_file.close();
             return contents;
         }
 
@@ -209,6 +213,13 @@ namespace ss
 
         std::cout << "User Connected: " << state.get_username() << std::endl;
 
+        // Read from file and print working spreadsheets
+//        std::string path = "/";
+//
+//        for (const auto & file : std::experimental::filesystem::directory_iterator(path))
+//            std::cout << file.path() << std::endl;
+
+
         //Send current spreadsheet separated by /n or \n\n if no spreadsheets are available
         std::string spreadsheets_list;
         int i = 0;
@@ -274,7 +285,8 @@ namespace ss
         // Read from file if it exists
         auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
         Reader reader(synchronizedFile);
-        for (std::string s : reader.read_from_file())
+        std::vector<std::string> contents = reader.read_from_file();
+        for (std::string s : contents)
         {
             send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0);
         }
