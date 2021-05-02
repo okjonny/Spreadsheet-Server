@@ -97,7 +97,7 @@ namespace network_util
         std::cout << "Operating on Threadid " << (long) thread_id << std::endl;
         while (true)
         {
-//            for(spreadsheet s: spreadsheet_server::server_controller::get_spreadsheets())
+//            for(spreadsheet s: ss::server_controller::get_spreadsheets())
 
             // mtx.lock();
             std::fill_n(clients[thread_id].buffer, 4096, 0);

@@ -16,7 +16,7 @@ set(SOURCE_FILES
 
         # MAINS:
         Test/test.cpp
-        #        network_server/server.cpp
+          #      network_server/server.cpp
         )
 project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)

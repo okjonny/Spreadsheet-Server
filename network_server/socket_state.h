@@ -6,7 +6,7 @@
 
 #ifndef SOCKSTATE_H
 #define SOCKSTATE_H
-//using namespace spreadsheet_server;
+//using namespace ss;
 namespace network_util
 {
     class socket_state {

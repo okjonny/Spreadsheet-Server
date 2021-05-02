@@ -46,7 +46,8 @@ namespace ss
 
         selected_cell(std::string cell, int _selector, std::string name)
         {
-            messageType = "selected";
+            // messageType = "selected";
+            messageType = "cellSelected";
             cellName = cell;
             selector = _selector;
             selectorName = name;
@@ -69,6 +70,36 @@ namespace ss
         }
 
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(cell_updated, messageType, cellName, contents)
+    };
+
+    struct invalid_request
+    {
+        std::string messageType;
+        std::string cellName;
+        std::string message;
+
+        invalid_request(std::string cell, std::string error_message)
+        {
+            messageType = "requestError";
+            cellName = cell;
+            message = error_message;
+        }
+
+        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(invalid_request, messageType, cellName, message)
+    };
+
+    struct server_shutdown
+    {
+        std::string messageType;
+        std::string message;
+
+        server_shutdown(std::string error_message)
+        {
+            messageType = "serverError";
+            message = error_message;
+        }
+
+        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(server_shutdown, messageType, message)
     };
 
 
@@ -184,7 +215,7 @@ namespace ss
         std::string command_to_send;
 
         std::cout << "REQUEST TYPE: " << data["requestType"] << std::endl;
-        std::string cell_name = data["cellName"];
+//        std::string cell_name = data["cellName"];
 
         if (data["requestType"] == "editCell")
         {
@@ -194,8 +225,15 @@ namespace ss
             // Check here if cell content would cause a circular dependency
             // if it does, send error message
             // otherwise, server makes the change and sends "cellUpdated" to all users including itself
-            current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
-            current_spreadsheets[state.spreadsheet].add_to_history(to_string(j) + "\n");
+            try {
+                current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
+            }
+            catch(std::runtime_error)
+            {
+                // TODO: send an invalid request error to the user
+            }
+
+            //current_spreadsheets[state.spreadsheet].add_to_history(to_string(j) + "\n");
             command_to_send = to_string(j) + "\n";
         } else if (data["requestType"] == "selectCell")
         {

@@ -312,6 +312,7 @@ namespace ss
         catch (std::runtime_error)
         {
             set_contents_of_cell(cell_name, previous_content);
+
             throw std::runtime_error("Circular dependencies found.");
         }
     }
@@ -343,6 +344,7 @@ namespace ss
         catch (std::runtime_error)
         {
             set_contents_of_cell(undo_stack.top().first, previous_content);
+
             throw std::runtime_error("Circular dependencies found.");
         }
         is_Undo = false;
