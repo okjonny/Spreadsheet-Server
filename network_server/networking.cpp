@@ -92,6 +92,7 @@ namespace network_util
 
     void networking::receive_callback(int thread_id)
     {
+        //try {
         std::cout << "Operating on Threadid " << (long) thread_id << std::endl;
         while (true)
         {
@@ -100,21 +101,25 @@ namespace network_util
             // mtx.lock();
             std::fill_n(clients[thread_id].buffer, 4096, 0);
 
-            try {
+
                 valread = read(clients[thread_id].socket, clients[thread_id].buffer, 4096);
 
 
                 std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
                 std::string s = clients[thread_id].buffer;
                 clients[thread_id].data = s;
+
+                std::cout << "valread: " << valread << std::endl;
 //            int value = std::stoi(s);
-                if (s == "a") {
-                    std::cout << "disconnecting" << std::endl;
-                    break;
-                }
+
 
 //                try {
                     clients[thread_id].on_network_action(clients[thread_id]);
+
+            if (valread < 1) {
+                std::cout << "disconnecting" << std::endl;
+                break;
+            }
 //                }
 //                catch(...)
 //                {
@@ -126,12 +131,13 @@ namespace network_util
                 std::fill_n(clients[thread_id].buffer, 4096, 0);
                 //   mtx.unlock();
             }
-            catch(...)
-            {
-                std::cout << thread_id << " disconnected" << std::endl;
-                break;
-            }
-        }
+
+  //      }
+/*        catch(...)
+        {
+            std::cout << thread_id << " disconnected" << std::endl;
+        }*/
+
         networking::thread_id--;
     }
 

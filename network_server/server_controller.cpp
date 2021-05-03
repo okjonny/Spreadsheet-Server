@@ -372,7 +372,7 @@ namespace ss
             std::string command_to_send;
             nlohmann::json data;
 
-            try {
+/*            try {
                 if (commands.empty())
                     throw std::runtime_error("Bad Data. Closing Server...");
                 nlohmann::json data = nlohmann::json::parse(commands[0]);
@@ -383,7 +383,7 @@ namespace ss
                 c.to_json(j, c);
                 std::cout << "before broadcast\n";
                 goto Broadcast;
-            }
+            }*/
 
 //        std::string cell_name = data["cellName"];
 
@@ -473,7 +473,7 @@ namespace ss
                     if (retcode == -1)
                         std::cout << "ignored signal??" << std::endl;
                     std::cout << "client disconnected (3) :(" << std::endl;
-                    //return;
+                    throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
                 }
             }
             if (j["messageType"] == "cellUpdated") {
