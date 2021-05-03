@@ -7,7 +7,9 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-#include <experimental/filesystem>
+#include <dirent.h>
+#include <sstream>
+//#include <experimental/filesystem>
 
 using namespace network_util;
 namespace ss
@@ -78,19 +80,19 @@ namespace ss
 
     };
 
-    class Reader {
-    public:
-        Reader(std::shared_ptr<spreadsheet_file> sf) : _sf(sf)
-        {}
-
-        std::vector<std::string> read_from_file()
-        {
-            _sf->read();
-        }
-
-    private:
-        std::shared_ptr<spreadsheet_file> _sf;
-    };
+//    class Reader {
+//    public:
+//        Reader(std::shared_ptr<spreadsheet_file> sf) : _sf(sf)
+//        {}
+//
+//        std::vector<std::string> read_from_file()
+//        {
+//            _sf->read();
+//        }
+//
+//    private:
+//        std::shared_ptr<spreadsheet_file> _sf;
+//    };
 
 
     std::unordered_map<std::string, ss::spreadsheet> server_controller::current_spreadsheets;
@@ -183,8 +185,8 @@ namespace ss
 
 
     /// <summary>
-/// Start accepting Tcp sockets connections from clients
-/// </summary>
+    /// Start accepting Tcp sockets connections from clients
+    /// </summary>
     server_controller::server_controller()
     = default;
 
@@ -219,21 +221,59 @@ namespace ss
 //        for (const auto & file : std::experimental::filesystem::directory_iterator(path))
 //            std::cout << file.path() << std::endl;
 
+        DIR* dir;
+        struct dirent* diread;
+        std::unordered_set<std::string> spreadsheetz;
 
-        //Send current spreadsheet separated by /n or \n\n if no spreadsheets are available
+        // TODO: fix this hardcoding
+        if ((dir = opendir("/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/spreadsheetz")) != nullptr) {
+            while ((diread = readdir(dir)) != nullptr) {
+                if ( !strcmp(diread->d_name, ".") || !strcmp(diread->d_name, "..") )
+                {
+                    // do nothing (straight logic)
+                } else {
+                    spreadsheetz.insert(diread->d_name);
+                }
+
+            }
+            closedir (dir);
+
+        } else {
+            //perror ("opendir");
+            std::cout << "MM PROBABLY THROW AN ERROR HERE" << std::endl;
+        }
+
         std::string spreadsheets_list;
+
+        //for (auto ssz : spreadsheetz)
         int i = 0;
-        for (auto const &element : current_spreadsheets)
+        for (std::string ssz : spreadsheetz)
         {
-            if (i == current_spreadsheets.size() - 1)
-                spreadsheets_list.append(element.first + "\n\n");
-            else spreadsheets_list.append(element.first + "\n");
+            if (i == spreadsheetz.size() - 1)
+                spreadsheets_list.append(ssz) + "\n\n"; // idk why it's not actually printing a new line here
+            else
+                spreadsheets_list.append(ssz) + "\n";
+
             i++;
         }
+
+
+
+        //Send current spreadsheet separated by /n or \n\n if no spreadsheets are available
+        // TODO COMMENTED OUT
+//        int i = 0;
+//        for (auto const &element : current_spreadsheets)
+//        {
+//            if (i == current_spreadsheets.size() - 1)
+//                spreadsheets_list.append(element.first + "\n\n");
+//            else spreadsheets_list.append(element.first + "\n");
+//            i++;
+//        }
 
         if (spreadsheets_list.empty())
             spreadsheets_list = "\n\n";
 
+        // send the list of spreadsheets to the client
         send(state.get_socket(), spreadsheets_list.c_str(), strlen(spreadsheets_list.c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_spreadsheet_selection;
@@ -283,9 +323,31 @@ namespace ss
         //{messageType:"cellUpdated", cellName: “<cell name>”,contents: “<contents>”}
 //
         // Read from file if it exists
-        auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
-        Reader reader(synchronizedFile);
-        std::vector<std::string> contents = reader.read_from_file();
+//        auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
+//        Reader reader(synchronizedFile);
+//        std::vector<std::string> contents = reader.read_from_file();
+
+        // TODO COMMENTED OUT
+
+        // why tf does this not work
+        std::string file_path = "/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/spreadsheetz/" + crap;
+        std::cout << file_path << std::endl;
+        //std::ifstream file(file_path.c_str());
+        std::ifstream file("../spreadsheetz/apple.txt"); // this ain't working unless its the whole path bruh
+        std::vector<std::string> contents;
+
+        //file.open(file_path.c_str());
+        if (file.is_open()) {
+
+            std::string line;
+            while (std::getline(file, line)) {
+                // using printf() in all tests for consistency
+                contents.push_back(line.c_str()); // should it be c_str here???
+            }
+            file.close();
+        }
+
+        // send contents of the file to client
         for (std::string s : contents)
         {
             send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0);
@@ -301,6 +363,13 @@ namespace ss
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
     }
+
+//    std::wstring ExePath() {
+//        TCHAR buffer[MAX_PATH] = { 0 };
+//        GetModuleFileName( NULL, buffer, MAX_PATH );
+//        std::wstring::size_type pos = std::wstring(buffer).find_last_of(L"\\/");
+//        return std::wstring(buffer).substr(0, pos);
+//    }
 
 
     void server_controller::receive_cell_selection(network_util::socket_state &state)

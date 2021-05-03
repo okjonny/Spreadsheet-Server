@@ -22,6 +22,7 @@ namespace ss
     class server_controller {
         friend class spreadsheet;
 
+        /// map of spreadsheet names (keys) to spreadsheet objects (values)
         static std::unordered_map<std::string, spreadsheet> current_spreadsheets;
 
         // TODO probably shouldn't be static
@@ -40,6 +41,7 @@ namespace ss
 
         static void receive_cell_selection(network_util::socket_state &state);
 
+        /// return the map of spreadsheet names and spreadsheets
         static std::unordered_map<std::string, spreadsheet> get_spreadsheets();
 
         //static void receive_edit_request(network_util::socket_state &state);
