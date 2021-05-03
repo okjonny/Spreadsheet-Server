@@ -25,7 +25,7 @@ namespace ss
         std::ofstream file;
         std::ifstream input_file;
 
-        spreadsheet_file(const std::string &path) : _path(path)
+        spreadsheet_file(const std::string &path) : _path("../files/" + path)
         {
         }
 
@@ -221,54 +221,40 @@ namespace ss
 //        for (const auto & file : std::experimental::filesystem::directory_iterator(path))
 //            std::cout << file.path() << std::endl;
 
-        DIR* dir;
-        struct dirent* diread;
-        std::unordered_set<std::string> spreadsheetz;
 
+        // !TODO: LIST SPREADHSHEET NAMES IN ALPHABETICAL ORDER
+        DIR *dir;
+        struct dirent *diread;
+        std::vector<std::string> spreadsheetz;
         // TODO: fix this hardcoding
-        if ((dir = opendir("/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/spreadsheetz")) != nullptr) {
-            while ((diread = readdir(dir)) != nullptr) {
-                if ( !strcmp(diread->d_name, ".") || !strcmp(diread->d_name, "..") )
+        if ((dir = opendir("../files")) != nullptr)
+        {
+            while ((diread = readdir(dir)) != nullptr)
+            {
+                if (!strcmp(diread->d_name, ".") || !strcmp(diread->d_name, ".."))
                 {
-                    // do nothing (straight logic)
-                } else {
-                    spreadsheetz.insert(diread->d_name);
+                } else
+                {
+                    spreadsheetz.push_back(std::string(diread->d_name));
                 }
-
             }
-            closedir (dir);
-
-        } else {
-            //perror ("opendir");
+            closedir(dir);
+        } else
+        {
             std::cout << "MM PROBABLY THROW AN ERROR HERE" << std::endl;
         }
 
         std::string spreadsheets_list;
 
-        //for (auto ssz : spreadsheetz)
+        //Send current spreadsheet separated by /n or \n\n if no spreadsheets are available
         int i = 0;
-        for (std::string ssz : spreadsheetz)
+        for (auto const &element : spreadsheetz)
         {
             if (i == spreadsheetz.size() - 1)
-                spreadsheets_list.append(ssz) + "\n\n"; // idk why it's not actually printing a new line here
-            else
-                spreadsheets_list.append(ssz) + "\n";
-
+                spreadsheets_list.append(element + "\n\n");
+            else spreadsheets_list.append(element + "\n");
             i++;
         }
-
-
-
-        //Send current spreadsheet separated by /n or \n\n if no spreadsheets are available
-        // TODO COMMENTED OUT
-//        int i = 0;
-//        for (auto const &element : current_spreadsheets)
-//        {
-//            if (i == current_spreadsheets.size() - 1)
-//                spreadsheets_list.append(element.first + "\n\n");
-//            else spreadsheets_list.append(element.first + "\n");
-//            i++;
-//        }
 
         if (spreadsheets_list.empty())
             spreadsheets_list = "\n\n";
@@ -290,12 +276,11 @@ namespace ss
 
 //        if (state.ErrorOccured)
 //            return;
+
         std::string crap = state.get_data();
         std::regex newlines_re("\r\n+|\r|\n");
         auto selection = std::regex_replace(crap, newlines_re, "");
         state.spreadsheet = selection;
-//        std::string selection = state.get_data();
-//        state.spreadsheet = selection;
 
         std::cout << "Spreadsheet selected: " << selection << std::endl;
 
@@ -330,17 +315,17 @@ namespace ss
         // TODO COMMENTED OUT
 
         // why tf does this not work
-        std::string file_path = "/Users/laurenschwenke/cpp-workspace/cs3505/TeamPog-CS3505/network_server/spreadsheetz/" + crap;
-        std::cout << file_path << std::endl;
-        //std::ifstream file(file_path.c_str());
-        std::ifstream file("../spreadsheetz/apple.txt"); // this ain't working unless its the whole path bruh
+        std::string file_path = "../files/" + selection;
+        std::ifstream file(file_path.c_str());
         std::vector<std::string> contents;
 
         //file.open(file_path.c_str());
-        if (file.is_open()) {
+        if (file.is_open())
+        {
 
             std::string line;
-            while (std::getline(file, line)) {
+            while (std::getline(file, line))
+            {
                 // using printf() in all tests for consistency
                 contents.push_back(line.c_str()); // should it be c_str here???
             }
@@ -352,25 +337,10 @@ namespace ss
         {
             send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0);
         }
-//        for (auto &c : cells)
-//        {
-//            std::string cell_update =
-//                    std::string("{\"messageType\":\"cellUpdated\",cellName:") + "\"" + c.first + "\"" +
-//                    ",\"contents\": \"" +
-//                    c.second + "\"}\n";
-//            send(state.get_socket(), cell_update.c_str(), strlen(cell_update.c_str()), 0);
-//        }
+
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
     }
-
-//    std::wstring ExePath() {
-//        TCHAR buffer[MAX_PATH] = { 0 };
-//        GetModuleFileName( NULL, buffer, MAX_PATH );
-//        std::wstring::size_type pos = std::wstring(buffer).find_last_of(L"\\/");
-//        return std::wstring(buffer).substr(0, pos);
-//    }
-
 
     void server_controller::receive_cell_selection(network_util::socket_state &state)
     {
@@ -380,12 +350,26 @@ namespace ss
         auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
         Writer writer1(synchronizedFile);
         std::vector<std::string> commands = process_data(state);
-        nlohmann::json data = nlohmann::json::parse(commands[0]);
 
         nlohmann::json j;
         std::string command_to_send;
+        nlohmann::json data;
 
-        std::cout << "REQUEST TYPE: " << data["requestType"] << std::endl;
+        try
+        {
+            if (commands.empty())
+                throw std::runtime_error("Bad Data. Closing Server...");
+            nlohmann::json data = nlohmann::json::parse(commands[0]);
+            std::cout << "REQUEST TYPE: " << data["requestType"] << std::endl;
+        }
+        catch (std::runtime_error &e)
+        {
+            server_shutdown c(e.what());
+            c.to_json(j, c);
+            std::cout << "before broadcast\n";
+            goto Broadcast;
+        }
+
 //        std::string cell_name = data["cellName"];
 
         if (data["requestType"] == "editCell")
@@ -445,7 +429,8 @@ namespace ss
             {
                 undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
                 current_spreadsheets[state.spreadsheet].undo();
-                cell_updated c(undo_contents.first, undo_contents.second); // cell updated class
+                cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
+                        undo_contents.first)); // cell updated class
                 c.to_json(j, c);
                 writer1.write_to_file(to_string(j));
             }
@@ -454,16 +439,19 @@ namespace ss
                 invalid_request c(undo_contents.first, e.what());
                 c.to_json(j, c);
             }
+        } else
+        {
+            server_shutdown c("Server is shutting down. All progress saved.");
+            c.to_json(j, c);
         }
-
-        command_to_send = to_string(j) + "\n";
 
         // TODO: have to lock file when writing to it
         // Create the synchronized file
         // Create the writers using the same synchronized file
 
-
         // BROADCAST CHANGES TO SPREADSHEETS
+        Broadcast:
+        command_to_send = to_string(j) + "\n";
         std::string new_id = std::to_string(state.get_id()) + " made edit\n";
         for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
         {

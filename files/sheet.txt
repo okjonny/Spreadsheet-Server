@@ -1,0 +1,4 @@
+{"requestType":"editCell","cellName":"A2","contents":"=A1"}\n
+{"requestType":"editCell","cellName":"A1","contents":"big chungus"}\n
+{"requestType":"editCell","cellName":"C4","contents":"=A1"}\n
+{"requestType":"editCell","cellName":"F11","contents":"dope"}\n

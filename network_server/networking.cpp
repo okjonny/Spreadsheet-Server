@@ -86,8 +86,6 @@ namespace network_util
             clients[thread_id].state_id = thread_id;
             clients[thread_id].on_network_action = to_call;
             threads[thread_id] = std::thread(&networking::receive_callback, thread_id);
-//            clients[thread_id] = c;
-//            broadcast_spreadsheets();
             thread_id++;
         }
     }

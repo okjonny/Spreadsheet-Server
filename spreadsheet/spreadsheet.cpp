@@ -127,7 +127,6 @@ namespace ss
 
     std::list<std::string> spreadsheet::set_cell_contents(std::string name, formula expression)
     {
-
         //Storing the contents in case we need to revert_cell_contents back
         std::string previous_contents = get_cell_contents(name);
         std::unordered_set<std::string> previous_dependees = dependencies.get_dependees(name);
