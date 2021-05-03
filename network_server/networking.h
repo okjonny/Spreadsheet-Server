@@ -28,6 +28,8 @@ namespace network_util
 
         static void accept_new_clients(std::function<void(socket_state & )> &to_call);
 //        static void broadcast_spreadsheets();
+    private:
+        static void error_call(socket_state &error_state);
     };
 }
 #endif //TEAMPOG_CS3505_SERVER_H

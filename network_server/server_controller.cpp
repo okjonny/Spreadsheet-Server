@@ -195,7 +195,7 @@ namespace ss
 
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(disconnected, messageType, user)
     };
-
+//---------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Start accepting Tcp sockets connections from clients
@@ -218,6 +218,23 @@ namespace ss
      */
     void server_controller::receive_name(network_util::socket_state &state)
     {
+        if (state.get_error_occured())
+        {
+            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
+            {
+                nlohmann::json j;
+                std::string to_send;
+                disconnected d(state.get_id());
+                d.to_json(j, d);
+                to_send = to_string(j) + R"(\n)";
+
+
+                if (s != state.get_socket())
+                    send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
+            }
+
+            return;
+        }
 //        if (state.ErrorOccured)
 //            return;
         std::string user = state.get_data();
@@ -287,6 +304,24 @@ namespace ss
      */
     void server_controller::receive_spreadsheet_selection(network_util::socket_state &state)
     {
+        if (state.get_error_occured())
+        {
+            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
+            {
+                nlohmann::json j;
+                std::string to_send;
+                disconnected d(state.get_id());
+                d.to_json(j, d);
+                to_send = to_string(j) + R"(\n)";
+
+
+                if (s != state.get_socket())
+                    send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
+            }
+
+            return;
+        }
+
         std::unordered_map<std::string, std::string> cells;
 
 //        if (state.ErrorOccured)
@@ -357,10 +392,27 @@ namespace ss
         state.on_network_action = callback;
     }
 
+
+
     void server_controller::receive_cell_selection(network_util::socket_state &state)
     {
-//        if (state.ErrorOccured)
-//            return;
+        if (state.get_error_occured())
+        {
+            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
+            {
+                nlohmann::json j;
+                std::string to_send;
+                disconnected d(state.get_id());
+                d.to_json(j, d);
+                to_send = to_string(j) + R"(\n)";
+
+
+                if (s != state.get_socket())
+                    send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
+            }
+
+            return;
+        }
         //throw std::runtime_error("disconnecting test");
 
         try {

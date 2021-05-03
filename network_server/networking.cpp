@@ -114,12 +114,19 @@ namespace network_util
 
 
 //                try {
-                    clients[thread_id].on_network_action(clients[thread_id]);
 
-            if (valread < 1) {
-                std::cout << "disconnecting" << std::endl;
+
+
+            if (valread < 1)
+            {
+                error_call(clients[thread_id]);
                 break;
             }
+
+
+                    clients[thread_id].on_network_action(clients[thread_id]);
+
+
 //                }
 //                catch(...)
 //                {
@@ -141,5 +148,11 @@ namespace network_util
         networking::thread_id--;
     }
 
+    void networking::error_call(socket_state &error_state)
+    {
+        error_state.error_occured = true;
+        error_state.error_message = std::string("Disconnected DE CLIENT.");
 
+        error_state.on_network_action(error_state);
+    }
 }
