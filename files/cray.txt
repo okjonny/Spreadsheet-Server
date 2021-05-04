@@ -1,4 +1,1 @@
-{"messageType":"cellUpdated","cellName":"A1","contents":"BiggChungus"}\n
-{"messageType":"cellUpdated","cellName":"B1","contents":"BiggChungus"}\n
-{"messageType":"cellUpdated","cellName":"C1","contents":"BiggChungus"}\n
-{"messageType":"cellUpdated","cellName":"D1","contents":"BiggChungus"}\n
+{"messageType":"cellUpdated","cellName":"A1","contents":"BiggChungus"}\n{"messageType":"cellUpdated","cellName":"B1","contents":"BiggChungus"}\n{"messageType":"cellUpdated","cellName":"C1","contents":"BiggChungus"}\n{"messageType":"cellUpdated","cellName":"D1","contents":"BiggChungus"}\n
