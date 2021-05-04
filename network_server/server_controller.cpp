@@ -41,6 +41,9 @@ namespace ss
     server_controller::server_controller()
     = default;
 
+    server_controller::~server_controller()
+    = default;
+
 
     void server_controller::start_server()
     {
@@ -165,18 +168,19 @@ namespace ss
         // !BUG: Sometimes data = json::parse throws RARELY(?) some reason
         // Not fully received message?
         std::vector<std::string> commands = process_data(state);
-        std::string dank_weed = commands[0];
+        //std::string dank_weed = commands[0];
 
-        nlohmann::json data;
+        for (std::string dank_weed : commands) {
+            nlohmann::json data;
 
-        try {
-            data = nlohmann::json::parse(dank_weed.c_str()); // can we just assume client is sending the correct things pls
-        }
-        catch(...)
-        {
-        }
-        nlohmann::json struct_to_json;
-        std::string command_to_send_client;
+            try {
+                data = nlohmann::json::parse(
+                        dank_weed.c_str()); // can we just assume client is sending the correct things pls
+            }
+            catch (...) {
+            }
+            nlohmann::json struct_to_json;
+            std::string command_to_send_client;
 
 //            if (data["requestType"] == "editCell")
 //            {
@@ -195,22 +199,18 @@ namespace ss
 //                }
 //            }
 
-        if (data["requestType"] == "selectCell")
-        {
-            selected_cell c(data["cellName"], state.get_id(), state.get_username());
-            c.to_json(struct_to_json, c);
-        } else
-        {
-            std::cout << "enterd else" << std::endl;
-            try
-            {
-                struct_to_json = updating_content(state, data);
+            if (data["requestType"] == "selectCell") {
+                selected_cell c(data["cellName"], state.get_id(), state.get_username());
+                c.to_json(struct_to_json, c);
+            } else {
+                std::cout << "enterd else" << std::endl;
+                try {
+                    struct_to_json = updating_content(state, data);
+                }
+                catch (std::runtime_error &e) {
+                    is_error_message = true;
+                }
             }
-            catch (std::runtime_error &e)
-            {
-                is_error_message = true;
-            }
-        }
 //            else if (data["requestType"] == "revertCell")
 //            {
 //                try
@@ -254,44 +254,40 @@ namespace ss
 ////                state.clear_data();
 //            }
 
-        command_to_send_client = to_string(struct_to_json) + "\n";
+            command_to_send_client = to_string(struct_to_json) + "\n";
 
-        std::cout << "Server to Client Command: " << command_to_send_client << std::endl;
+            std::cout << "Server to Client Command: " << command_to_send_client << std::endl;
 
 
-        // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
-        std::string new_id = std::to_string(state.get_id()) + " made edit\n";
+            // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
+            std::string new_id = std::to_string(state.get_id()) + " made edit\n";
 
-        for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
-        {
-            // Only Send error occurred messages to the client who sent it
-            if (is_error_message && s == state.get_socket())
-            {
-                send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
-                break;
+            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected()) {
+                // Only Send error occurred messages to the client who sent it
+                if (is_error_message && s == state.get_socket()) {
+                    send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
+                    break;
+                } else if (!is_error_message && !is_garbage_data)
+                    if (send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0) == -1) {
+                        sigset_t set;
+                        sigfillset(&set);
+                        sigaddset(&set, SIGPIPE);
+                        int retcode = sigprocmask(SIG_BLOCK, &set, NULL);
+                        if (retcode == -1)
+                            std::cout << "ignored signal??" << std::endl;
+                        std::cout << "client disconnected (3) :(" << std::endl;
+                        throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
+                    }
             }
-            else if (!is_error_message && !is_garbage_data)
-                if (send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0) == -1)
-                {
-                    sigset_t set;
-                    sigfillset(&set);
-                    sigaddset(&set, SIGPIPE);
-                    int retcode = sigprocmask(SIG_BLOCK, &set, NULL);
-                    if (retcode == -1)
-                        std::cout << "ignored signal??" << std::endl;
-                    std::cout << "client disconnected (3) :(" << std::endl;
-                    throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
-                }
-        }
-        if (struct_to_json["messageType"] == "cellUpdated")
-        {
-            //////////////////////
-        }
+            if (struct_to_json["messageType"] == "cellUpdated") {
+                //////////////////////
+            }
 //        }
 //        catch (...)
 //        {
 //            throw std::runtime_error("THROWING FROM SELECT CELL SELECTION");
 //        }
+        }
     }
 
 

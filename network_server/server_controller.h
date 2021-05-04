@@ -40,6 +40,8 @@ namespace ss
     public:
         server_controller();
 
+        ~server_controller();
+
         void start_server();
 
         static std::string unicode_to_utf8(const std::wstring &wstr);

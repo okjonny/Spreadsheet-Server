@@ -14,6 +14,10 @@ namespace ss
     {
     }
 
+    spreadsheet::~spreadsheet()
+    {
+    }
+
     void spreadsheet::add_user_to_spreadsheet(long s)
     {
         users_connected.push_back(s);
