@@ -41,6 +41,7 @@ namespace ss
 
         void add_user_to_spreadsheet(long s);
 
+        /// returns a vector of users that are connected to this spreadsheet
         std::vector<long> get_users_connected();
 
         void undo();

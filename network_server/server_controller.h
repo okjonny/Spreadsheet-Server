@@ -14,6 +14,7 @@
 #include "../spreadsheet/spreadsheet.h"
 #include "socket_state.h"
 #include <fstream>
+#include "utf8.h"
 
 class spreadsheet;
 
@@ -27,6 +28,7 @@ namespace ss
         static std::unordered_map<std::string, spreadsheet> current_spreadsheets;
         static std::mutex spreadsheet_mutex;
 
+        /// helper method that removes extra characters from the client's input
         static std::string remove_extra_characters(std::string s);
 
         static std::vector<std::string> get_existing_spreadsheets();
@@ -51,6 +53,10 @@ namespace ss
         static std::unordered_map<std::string, spreadsheet> get_spreadsheets();
 
         static std::vector<std::string> process_data(network_util::socket_state &state);
+
+//        inline void decode_utf8(const std::string& bytes, std::wstring& wstr);
+//
+//        inline void encode_utf8(const std::wstring& wstr, std::string& bytes);
     };
 }
 

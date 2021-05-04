@@ -6,6 +6,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.o: ../network_serve
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../network_server/nlohmann/json.hpp
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../network_server/server_controller.h
+CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../network_server/utf8.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../spreadsheet/cell.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../spreadsheet/dependency_graph.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../spreadsheet/formula.h
@@ -19,6 +20,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/net
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/server.cpp
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/server_controller.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/socket_state.h
+CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/utf8.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../spreadsheet/cell.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../spreadsheet/dependency_graph.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../spreadsheet/formula.h
@@ -31,6 +33,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/server_controller.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/socket_state.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/spreadsheet_file.h
+CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/utf8.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/writer.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../spreadsheet/cell.h
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../spreadsheet/dependency_graph.h
@@ -60,6 +63,7 @@ CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o: ../spreadsheet/formula.
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../network_server/nlohmann/json.hpp
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../network_server/server_controller.h
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../network_server/socket_state.h
+CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../network_server/utf8.h
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../spreadsheet/spreadsheet.h
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../spreadsheet/cell.h
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../spreadsheet/dependency_graph.h

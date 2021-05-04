@@ -13,6 +13,7 @@
 #include <locale>
 #include "json_struct.cpp"
 #include "writer.h"
+#include "utf8.h"
 
 using namespace network_util;
 namespace ss
@@ -52,6 +53,7 @@ namespace ss
 
     void server_controller::receive_name(network_util::socket_state &state)
     {
+
         check_client_connection(state);
 
         state.username = remove_extra_characters(state.get_data());
@@ -68,7 +70,8 @@ namespace ss
         {
             if (i == spreadsheets.size() - 1)
                 spreadsheets_list.append(element + "\n\n");
-            else spreadsheets_list.append(element + "\n");
+            else
+                spreadsheets_list.append(element + "\n");
             i++;
         }
 
@@ -124,9 +127,11 @@ namespace ss
         if (file.is_open())
         {
             std::string line;
+            nlohmann::json data;
+
             while (std::getline(file, line))
             {
-                contents.push_back(line.c_str()); // should it be c_str here??? -lauren
+                contents.push_back(line.c_str());
             }
             file.close();
         }
@@ -134,7 +139,7 @@ namespace ss
         // append data from file to send to client
         std::string contents_of_spreadsheet;
         for (std::string s : contents)
-            contents_of_spreadsheet += s;
+            contents_of_spreadsheet += s + "\n"; // TODO ADDED A NEWLINE HERE
 
         contents_of_spreadsheet += std::to_string(state.get_socket()) + "\n";
         // send the message to client as one long message
@@ -145,7 +150,10 @@ namespace ss
         state.on_network_action = callback;
     }
 
-
+/**
+* Callback after the server has already sent a spreadsheet to the client and is awaiting commands.
+* @param state
+*/
     void server_controller::receive_cell_selection(network_util::socket_state &state)
     {
         check_client_connection(state);
@@ -158,7 +166,15 @@ namespace ss
         // Not fully received message?
         std::vector<std::string> commands = process_data(state);
         std::string dank_weed = commands[0];
-        nlohmann::json data = nlohmann::json::parse(dank_weed);
+
+        nlohmann::json data;
+
+        try {
+            data = nlohmann::json::parse(dank_weed.c_str()); // can we just assume client is sending the correct things pls
+        }
+        catch(...)
+        {
+        }
         nlohmann::json struct_to_json;
         std::string command_to_send_client;
 
@@ -178,14 +194,18 @@ namespace ss
 //                    is_error_message = true;
 //                }
 //            }
+
         if (data["requestType"] == "selectCell")
         {
             selected_cell c(data["cellName"], state.get_id(), state.get_username());
             c.to_json(struct_to_json, c);
         } else
         {
+            std::cout << "enterd else" << std::endl;
             try
-            { struct_to_json = updating_content(state, data); }
+            {
+                struct_to_json = updating_content(state, data);
+            }
             catch (std::runtime_error &e)
             {
                 is_error_message = true;
@@ -249,7 +269,8 @@ namespace ss
             {
                 send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
                 break;
-            } else if (!is_error_message && !is_garbage_data)
+            }
+            else if (!is_error_message && !is_garbage_data)
                 if (send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0) == -1)
                 {
                     sigset_t set;
@@ -291,15 +312,17 @@ namespace ss
                 undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
                 current_spreadsheets[state.spreadsheet].undo();
                 cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
-                        undo_contents.first)); // cell updated class
+                        undo_contents.first)); // cell updated class TODO this is returning null bc "there aren't any undos" killl
                 c.to_json(struct_to_json, c);
-            } else if (data["requestType"] == "revertCell")
+            }
+            else if (data["requestType"] == "revertCell")
             {
                 current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
                 cell_updated c(data["cellName"],
                                current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
                 c.to_json(struct_to_json, c);
-            } else if (data["requestType" == "editCell"])
+            }
+            else if (data["requestType"] == "editCell")
             {
                 current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
                 cell_updated c(data["cellName"], data["contents"]); // cell updated class
@@ -395,6 +418,10 @@ namespace ss
 
     }
 
+    /**
+     * Informs clients that a user on the same spreadsheet has disconnected.
+     * @param state
+     */
     void server_controller::check_client_connection(socket_state &state)
     {
         if (state.get_error_occured())
@@ -415,4 +442,16 @@ namespace ss
         }
     }
 
+//    inline void server_controller::decode_utf8(const std::string& bytes, std::wstring& wstr)
+//    {
+//
+//        utf8to32(bytes, std::back_inserter(wstr));
+//        utf8to32();
+//    }
+//    inline void server_controller::encode_utf8(const std::wstring& wstr, std::string& bytes)
+//    {
+//        utf8::utf32to8(wstr.begin(), wstr.end(), std::back_inserter(bytes));
+//    }
+
 }
+
