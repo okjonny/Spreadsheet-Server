@@ -8,83 +8,15 @@
 #include <string>
 #include <memory>
 #include <dirent.h>
-#include <sstream>
-#include <signal.h>
-//#include "utf8.h"
+#include <csignal>
 #include <codecvt>
 #include <locale>
-#include <string>
-#include <cassert>
-//#include <experimental/filesystem>
+#include "json_struct.cpp"
+#include "writer.h"
 
 using namespace network_util;
 namespace ss
 {
-
-    //
-//Created by Lauren Schwenke on 5/1/21.
-//
-
-
-    class spreadsheet_file {
-    public:
-        std::ofstream file;
-        std::ifstream input_file;
-
-        spreadsheet_file(const std::string &path) : _path("../files/" + path)
-        {
-        }
-
-        void write(const std::string &dataToWrite)
-        {
-            file.open(_path, std::ios_base::app);
-            // Never should happen
-//            if (file.bad() || !file.is_open())
-
-//            std::lock_guard<std::mutex> lock(_writerMutex);
-            file << dataToWrite;
-            file.close();
-        }
-
-        std::vector<std::string> read()
-        {
-            input_file.open(_path);
-            std::lock_guard<std::mutex> lock(_writerMutex);
-            std::vector<std::string> contents;
-            std::string line;
-
-            if (input_file.fail())
-                return contents;
-
-            while (!file.eof())
-            {
-                input_file >> line;
-                contents.push_back(line);
-            }
-            input_file.close();
-            return contents;
-        }
-
-
-    private:
-        std::string _path;
-        std::mutex _writerMutex;
-    };
-
-    class Writer {
-    public:
-        Writer(std::shared_ptr<spreadsheet_file> sf) : _sf(sf)
-        {}
-
-        void write_to_file(const std::string &message)
-        {
-            _sf->write(message + "\n");
-        }
-
-    private:
-        std::shared_ptr<spreadsheet_file> _sf;
-
-    };
 
 //    class Reader {
 //    public:
@@ -100,112 +32,14 @@ namespace ss
 //        std::shared_ptr<spreadsheet_file> _sf;
 //    };
 
-
+    // Static Class Variables
     std::unordered_map<std::string, ss::spreadsheet> server_controller::current_spreadsheets;
-    std::fstream server_controller::file;
-
-    // CLIENT TO SERVER STRUCTS
-    struct select_cell {
-        std::string requestType;
-        std::string cellName;
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(select_cell, requestType, cellName)
-    };
+    std::mutex server_controller::spreadsheet_mutex;
 
 
-    struct undo_cell {
-        std::string requestType;
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(undo_cell, requestType)
-    };
-
-    struct redo_cell {
-        std::string requestType;
-        std::string cellName;
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(redo_cell, requestType, cellName)
-    };
-
-    // SERVER TO CLIENT STRUCTS
-    struct selected_cell {
-        std::string messageType;
-        std::string cellName;
-        int selector;
-        std::string selectorName;
-
-        selected_cell(std::string cell, int _selector, std::string name)
-        {
-            messageType = "cellSelected";
-            cellName = cell;
-            selector = _selector;
-            selectorName = name;
-        }
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(selected_cell, messageType, cellName, selector, selectorName)
-    };
-
-    struct cell_updated {
-        std::string messageType;
-        std::string cellName;
-        std::string contents;
-
-        cell_updated(std::string name, std::string cell_contents)
-        {
-            messageType = "cellUpdated";
-            cellName = name;
-            contents = cell_contents;
-        }
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(cell_updated, messageType, cellName, contents)
-    };
-
-    struct invalid_request {
-        std::string messageType;
-        std::string cellName;
-        std::string message;
-
-        invalid_request(std::string cell, std::string error_message)
-        {
-            messageType = "requestError";
-            cellName = cell;
-            message = error_message;
-        }
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(invalid_request, messageType, cellName, message)
-    };
-
-    struct server_shutdown {
-        std::string messageType;
-        std::string message;
-
-        server_shutdown(std::string error_message)
-        {
-            messageType = "serverError";
-            message = error_message;
-        }
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(server_shutdown, messageType, message)
-    };
-
-    struct disconnected {
-        std::string messageType;
-        int user;
-
-        disconnected(int _user)
-        {
-            messageType = "disconnected";
-            user = _user;
-        }
-
-        NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(disconnected, messageType, user)
-    };
-//---------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Start accepting Tcp sockets connections from clients
-    /// </summary>
     server_controller::server_controller()
     = default;
+
 
     void server_controller::start_server()
     {
@@ -216,75 +50,23 @@ namespace ss
     }
 
 
-    /**
-     *
-     * @param state - The socket_state representing the new client
-     */
     void server_controller::receive_name(network_util::socket_state &state)
     {
-        if (state.get_error_occured())
-        {
-            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
-            {
-                nlohmann::json j;
-                std::string to_send;
-                disconnected d(state.get_id());
-                d.to_json(j, d);
-                to_send = to_string(j) + R"(\n)";
+        check_client_connection(state);
 
-
-                if (s != state.get_socket())
-                    send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
-            }
-
-            return;
-        }
-//        if (state.ErrorOccured)
-//            return;
-        std::string user = state.get_data();
-        std::regex newlines_re("\r\n+|\r|\n");
-        auto result = std::regex_replace(user, newlines_re, "");
-        state.username = result;
+        state.username = remove_extra_characters(state.get_data());
 
         std::cout << "User Connected: " << state.get_username() << std::endl;
 
-        // Read from file and print working spreadsheets
-//        std::string path = "/";
-//
-//        for (const auto & file : std::experimental::filesystem::directory_iterator(path))
-//            std::cout << file.path() << std::endl;
-
-
-        // !TODO: LIST SPREADHSHEET NAMES IN ALPHABETICAL ORDER
-        DIR *dir;
-        struct dirent *diread;
-        std::vector<std::string> spreadsheetz;
-        // TODO: fix this hardcoding
-
-        if ((dir = opendir("../files")) != nullptr)
-        {
-            while ((diread = readdir(dir)) != nullptr)
-            {
-                if (!strcmp(diread->d_name, ".") || !strcmp(diread->d_name, ".."))
-                {
-                } else
-                {
-                    spreadsheetz.push_back(std::string(diread->d_name));
-                }
-            }
-            closedir(dir);
-        } else
-        {
-            std::cout << "MM PROBABLY THROW AN ERROR HERE" << std::endl;
-        }
-
+        //Send current spreadsheet separated by "\n"
+        // add "\n\n" if no spreadsheets available OR on last spreadsheet
+        std::vector<std::string> spreadsheets = get_existing_spreadsheets();
         std::string spreadsheets_list;
 
-        //Send current spreadsheet separated by /n or \n\n if no spreadsheets are available
         int i = 0;
-        for (auto const &element : spreadsheetz)
+        for (auto const &element : spreadsheets)
         {
-            if (i == spreadsheetz.size() - 1)
+            if (i == spreadsheets.size() - 1)
                 spreadsheets_list.append(element + "\n\n");
             else spreadsheets_list.append(element + "\n");
             i++;
@@ -308,101 +90,55 @@ namespace ss
      */
     void server_controller::receive_spreadsheet_selection(network_util::socket_state &state)
     {
-        if (state.get_error_occured())
+
+        check_client_connection(state);
+
+        state.spreadsheet = remove_extra_characters(state.get_data());
+
+        std::cout << "Spreadsheet selected: " << state.spreadsheet << std::endl;
+
+        //check if spreadsheet exists, otherwise create a new one
+        if (current_spreadsheets.find(state.spreadsheet) != current_spreadsheets.end())
         {
-            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
-            {
-                nlohmann::json j;
-                std::string to_send;
-                disconnected d(state.get_id());
-                d.to_json(j, d);
-                to_send = to_string(j) + R"(\n)";
-
-                if (s != state.get_socket())
-                    send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
-            }
-
-            return;
-        }
-
-        std::unordered_map<std::string, std::string> cells;
-
-//        if (state.ErrorOccured)
-//            return;
-
-        std::string crap = state.get_data();
-        std::regex newlines_re("\r\n+|\r|\n");
-        auto selection = std::regex_replace(crap, newlines_re, "");
-        state.spreadsheet = selection;
-
-        std::cout << "Spreadsheet selected: " << selection << std::endl;
-
-        // Go through current folder and look for existing files
-//        using std::experimental::filesystem::directory_iterator;
-
-        //check if spreadsheet exists, create otherwise
-        if (current_spreadsheets.find(selection) != current_spreadsheets.end())
+            std::cout << "contains spreadsheet!\n";
+            std::lock_guard<std::mutex> lock(spreadsheet_mutex);
+            current_spreadsheets[state.spreadsheet].add_user_to_spreadsheet(state.get_socket());
+        } else
         {
-            std::cout << "map contains spreadsheet!\n";
-            current_spreadsheets[selection].add_user_to_spreadsheet(state.get_socket());
-        }
-            // fix spreadsheet() we need to give it a name
-        else
-        {
+            std::lock_guard<std::mutex> lock(spreadsheet_mutex);
             spreadsheet new_spreadsheet;
             new_spreadsheet.add_user_to_spreadsheet(state.get_socket());
-            current_spreadsheets.insert({selection, new_spreadsheet});
-            std::cout << "New spreadsheet made: " << selection << std::endl;
+            current_spreadsheets.insert({state.spreadsheet, new_spreadsheet});
+            std::cout << "New spreadsheet made: " << state.spreadsheet << std::endl;
         }
 
-        //---------------CANNOT PROCESS EDIT REQUESTS HERE, MAKE SURE TO FIND SOLUTION, LOCK??------------
-        //if spreadsheetlist.contains(selection)
-        //  Spreadsheet s = spreadsheetList[selection];
-        //{messageType:"cellUpdated", cellName: “<cell name>”,contents: “<contents>”}
-//
-        // Read from file if it exists
-//        auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
-//        Reader reader(synchronizedFile);
-//        std::vector<std::string> contents = reader.read_from_file();
-
-        // TODO COMMENTED OUT
-
-        // why tf does this not work
-        std::string file_path = "../files/" + selection;
+        // Read and Send existing spreadsheet data
+        std::string file_path = "../files/" + state.spreadsheet;
         std::ifstream file(file_path.c_str());
         std::vector<std::string> contents;
 
-        //file.open(file_path.c_str());
         if (file.is_open())
         {
             std::string line;
             while (std::getline(file, line))
             {
-                // using printf() in all tests for consistency
-                contents.push_back(line.c_str()); // should it be c_str here???
+                contents.push_back(line.c_str()); // should it be c_str here??? -lauren
             }
             file.close();
         }
 
-        // send contents of the file to client
+        // append data from file to send to client
         std::string contents_of_spreadsheet;
         for (std::string s : contents)
-        {
             contents_of_spreadsheet += s;
-//            if (send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0) == -1)
-//                std::cout << "client disconnected (2) :(" << std::endl;
-        }
+
+        // send the message to client as one long message
         if (send(state.get_socket(), contents_of_spreadsheet.c_str(), strlen(contents_of_spreadsheet.c_str()), 0) == -1)
-            std::cout << "client disconnected (2) :(" << std::endl;
+            std::cout << "client disconnected (2) :(" << std::endl; // What do we really want here?
 
-
-        std::string id = std::to_string(state.get_socket()) + "\n";
-        // Send client id
-//        std::wstring str_turned_to_wstr = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(id);
-
-//        char test[] = u8"dank";
-        std::cout << state.get_socket() << std::endl;
-        send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
+        // Send client id after sending spreadsheet contents
+        send(state.get_socket(), std::to_string(state.get_socket()).c_str(),
+             strlen(std::to_string(state.get_socket()).c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
@@ -411,81 +147,40 @@ namespace ss
 
     void server_controller::receive_cell_selection(network_util::socket_state &state)
     {
-        bool garbage = false;
-        if (state.get_error_occured())
-        {
-            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
-            {
-                std::cout << state.get_id() << std::endl;
-                nlohmann::json j;
-                std::string to_send;
-                disconnected d(state.get_id());
-                d.to_json(j, d);
-                to_send = to_string(j) + R"(\n)";
+        check_client_connection(state);
 
-
-                if (s != state.get_socket())
-                    send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
-            }
-
-            return;
-        }
-        //throw std::runtime_error("disconnecting test");
-        auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
-        Writer writer1(synchronizedFile);
+        auto synchronized_file = std::make_shared<spreadsheet_file>(state.spreadsheet);
+        writer writer1(synchronized_file);
+        bool is_garbage_data = false;
+        bool is_error_message = false;
         try
         {
-
+            // !BUG: Sometimes data = json::parse throws RARELY(?) some reason
+            // Not fully received message?
             std::vector<std::string> commands = process_data(state);
-
-            nlohmann::json j;
-            std::string command_to_send;
-            nlohmann::json data;
-
-/*            try {
-                if (commands.empty())
-                    throw std::runtime_error("Bad Data. Closing Server...");
-                nlohmann::json data = nlohmann::json::parse(commands[0]);
-                std::cout << "REQUEST TYPE: " << data["requestType"] << std::endl;
-            }
-            catch (std::runtime_error &e) {
-                server_shutdown c(e.what());
-                c.to_json(j, c);
-                std::cout << "before broadcast\n";
-                goto Broadcast;
-            }*/
-
-//        std::string cell_name = data["cellName"];
+            nlohmann::json data = nlohmann::json::parse(commands[0]);
+            nlohmann::json struct_to_json;
+            std::string command_to_send_client;
 
             if (data["requestType"] == "editCell")
             {
                 cell_updated c(data["cellName"], data["contents"]); // cell updated class
-
-                c.to_json(j, c);
-
-                // Check here if cell content would cause a circular dependency
-                // if it does, send error message
-                // otherwise, server makes the change and sends "cellUpdated" to all users including itself
+                c.to_json(struct_to_json, c);
                 try
                 {
                     current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
-                    writer1.write_to_file(to_string(j));
+                    writer1.write_to_file(to_string(struct_to_json));
                 }
                 catch (const std::runtime_error &e)
                 {
                     invalid_request c(data["cellName"], e.what());
-                    c.to_json(j, c);
-                    //current_spreadsheets[state.spreadsheet].add_to_history((to_string(j) + "\n"));
-                    //command_to_send = to_string(j) + "\n";
+                    c.to_json(struct_to_json, c);
+                    is_error_message = true;
                 }
-
-                //current_spreadsheets[state.spreadsheet].add_to_history(to_string(j) + "\n");
-//                command_to_send = to_string(j) + "\n";
             } else if (data["requestType"] == "selectCell")
             {
                 selected_cell c(data["cellName"], state.get_id(), state.get_username());
-                c.to_json(j, c);
-//                command_to_send = to_string(j) + "\n";
+                c.to_json(struct_to_json, c);
             } else if (data["requestType"] == "revertCell")
             {
                 try
@@ -493,13 +188,14 @@ namespace ss
                     current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
                     cell_updated c(data["cellName"],
                                    current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
-                    c.to_json(j, c);
-                    writer1.write_to_file(to_string(j));
+                    c.to_json(struct_to_json, c);
+                    writer1.write_to_file(to_string(struct_to_json));
                 }
                 catch (std::runtime_error &e)
                 {
                     invalid_request c(data["cellName"], e.what());
-                    c.to_json(j, c);
+                    c.to_json(struct_to_json, c);
+                    is_error_message = true;
                 }
             } else if (data["requestType"] == "undo")
             {
@@ -510,40 +206,38 @@ namespace ss
                     current_spreadsheets[state.spreadsheet].undo();
                     cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
                             undo_contents.first)); // cell updated class
-                    c.to_json(j, c);
-                    writer1.write_to_file(to_string(j));
+                    c.to_json(struct_to_json, c);
+                    writer1.write_to_file(to_string(struct_to_json));
                 }
                 catch (std::runtime_error &e)
                 {
                     invalid_request c(undo_contents.first, e.what());
-                    c.to_json(j, c);
+                    c.to_json(struct_to_json, c);
+                    is_error_message = true;
                 }
-                // messages that aren't valid json
-            } else
+            } else // messages that aren't valid json
             {
-                garbage = true;
-////                server_shutdown c("Server is shutting down. All progress saved.");
-////                c.to_json(j, c);
+                is_garbage_data = true;
+//                state.clear_data();
             }
 
-            // TODO: have to lock file when writing to it
-            // Create the synchronized file
-            // Create the writers using the same synchronized file
+            command_to_send_client = to_string(struct_to_json) + "\n";
 
-            // BROADCAST CHANGES TO SPREADSHEETS
-            Broadcast:
-            command_to_send = to_string(j) + "\n";
-            std::cout << "Server to Client: " << command_to_send << std::endl;
+            std::cout << "Server to Client Command: " << command_to_send_client << std::endl;
 
-//            std::cout << "the id is " << state.get_id() << std::endl;
+
             // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
             std::string new_id = std::to_string(state.get_id()) + " made edit\n";
 
             for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
             {
-//                if (s != state.get_socket())
-                if (!garbage)
-                    if (send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0) == -1)
+                // Only Send error occurred messages to the client who sent it
+                if (is_error_message && s == state.get_socket())
+                {
+                    send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
+                    break;
+                } else if (!is_error_message && !is_garbage_data)
+                    if (send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0) == -1)
                     {
                         sigset_t set;
                         sigfillset(&set);
@@ -555,7 +249,7 @@ namespace ss
                         throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
                     }
             }
-            if (j["messageType"] == "cellUpdated")
+            if (struct_to_json["messageType"] == "cellUpdated")
             {
                 //////////////////////
             }
@@ -567,6 +261,9 @@ namespace ss
     }
 
 
+    //
+    // PRIVATE HELPER METHODS
+    //
     std::vector<std::string> server_controller::process_data(socket_state &state)
     {
         std::string s = state.get_data();
@@ -579,8 +276,6 @@ namespace ss
 
         while ((pos = s.find(delimiter)) != std::string::npos)
         {
-            //token = s.substr(0, pos);
-            //std::cout << token << std::endl;
             parts.push_back(s.substr(0, pos));
             s.erase(0, pos + delimiter.length());
         }
@@ -588,7 +283,78 @@ namespace ss
         return parts;
     }
 
+    std::string server_controller::unicode_to_utf8(const std::wstring &wstr)
+    {
+        std::string ret;
+        try
+        {
+            std::wstring_convert<std::codecvt_utf8<wchar_t> > wcv;
+            ret = wcv.to_bytes(wstr);
+        } catch (const std::exception &e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
+        return ret;
+    }
+
     std::unordered_map<std::string, spreadsheet> server_controller::get_spreadsheets()
     { return current_spreadsheets; }
+
+
+    std::string server_controller::remove_extra_characters(std::string s)
+    {
+        std::regex newlines_re("\r\n+|\r|\n");
+        std::string result = std::regex_replace(s, newlines_re, "");
+        std::cout << result << std::endl;
+        return result;
+    }
+
+    std::vector<std::string> server_controller::get_existing_spreadsheets()
+    {
+        // !TODO: LIST SPREADHSHEET NAMES IN ALPHABETICAL ORDER
+        DIR *dir;
+        struct dirent *diread;
+        std::vector<std::string> spreadsheet_list;
+
+        if ((dir = opendir("../files")) != nullptr)
+        {
+            while ((diread = readdir(dir)) != nullptr)
+            {
+                // Ignore misc. files
+                if (!strcmp(diread->d_name, ".") || !strcmp(diread->d_name, ".."))
+                {
+                } else
+                {
+                    spreadsheet_list.push_back(std::string(diread->d_name));
+                }
+            }
+            closedir(dir);
+        } else
+        {
+            std::cout << "MM PROBABLY THROW AN ERROR HERE" << std::endl;
+        }
+        return spreadsheet_list;
+
+    }
+
+    void server_controller::check_client_connection(socket_state &state)
+    {
+        if (state.get_error_occured())
+        {
+            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
+            {
+                nlohmann::json j;
+                std::string to_send;
+                disconnected d(state.get_id());
+                d.to_json(j, d);
+                to_send = to_string(j) + R"(\n)";
+
+                if (s != state.get_socket())
+                    send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
+            }
+
+            return;
+        }
+    }
 
 }

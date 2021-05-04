@@ -17,7 +17,9 @@ set(SOURCE_FILES
         #        Test/test.cpp
         network_server/server.cpp
         #        network_server/spreadsheet_file.cpp
-        )
+        network_server/writer.cpp network_server/writer.h
+        network_server/spreadsheet_file.cpp network_server/spreadsheet_file.h
+        network_server/json_struct.cpp)
 project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)
 

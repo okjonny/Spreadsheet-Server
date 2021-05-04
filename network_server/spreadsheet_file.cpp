@@ -1,40 +1,43 @@
 //
-//Created by Lauren Schwenke on 5/1/21.
+// Created by jonny on 5/4/21.
 //
-#include <string>
-#include <fstream>
-#include <memory>
 
-class spreadsheet_file {
-public:
-    std::fstream file;
+#include "spreadsheet_file.h"
 
-    spreadsheet_file(const std::string &path) : _path(path)
+
+namespace ss
+{
+    spreadsheet_file::spreadsheet_file(const std::string &path) : _path("../files/" + path)
     {
-        file.open(path);
     }
 
-    void write(const std::string &dataToWrite)
+    void spreadsheet_file::write(const std::string &dataToWrite)
     {
-        file << dataToWrite;
+        file.open(_path, std::ios_base::app);
+        {
+            std::lock_guard<std::mutex> lock(_writerMutex);
+            file << dataToWrite;
+        }
+        file.close();
     }
 
-private:
-    std::string _path;
-};
+//    std::vector<std::string> spreadsheet_file::read()
+//    {
+//        input_file.open(_path);
+//        std::lock_guard<std::mutex> lock(_writerMutex);
+//        std::vector<std::string> contents;
+//        std::string line;
+//
+//        if (input_file.fail())
+//            return contents;
+//
+//        while (!file.eof())
+//        {
+//            input_file >> line;
+//            contents.push_back(line);
+//        }
+//        input_file.close();
+//        return contents;
+//    }
 
-class Writer {
-public:
-    Writer(std::shared_ptr<spreadsheet_file> sf) : _sf(sf)
-    {}
-
-    void write_to_file(std::string message)
-    {
-        _sf->write(message);
-    }
-
-private:
-    std::shared_ptr<spreadsheet_file> _sf;
-};
-
-
+}

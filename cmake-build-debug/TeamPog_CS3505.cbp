@@ -86,6 +86,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/json_struct.cpp">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
 		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/networking.cpp">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
@@ -105,6 +108,18 @@
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
 		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/socket_state.h">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/spreadsheet_file.cpp">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/spreadsheet_file.h">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/writer.cpp">
+			<Option target="TeamPog_CS3505"/>
+		</Unit>
+		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/writer.h">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
 		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/spreadsheet/cell.cpp">

@@ -1,1 +1,7 @@
-{"messageType":"cellUpdated","cellName":"A1","contents":"BiggChungus"}\n{"messageType":"cellUpdated","cellName":"B1","contents":"BiggChungus"}\n{"messageType":"cellUpdated","cellName":"C1","contents":"BiggChungus"}\n{"messageType":"cellUpdated","cellName":"D1","contents":"BiggChungus"}\n
+{"messageType":"cellUpdated","cellName":"A1","contents":"BiggChungus"}
+{"messageType":"cellUpdated","cellName":"B1","contents":"BiggdicChungus"}
+{"messageType":"cellUpdated","cellName":"C1","contents":"BiggasChungus"}
+{"messageType":"cellUpdated","cellName":"D1","contents":"BiggpChungus"}
+{"cellName":"C4","contents":"BOOOM","messageType":"cellUpdated"}
+{"cellName":"Z1","contents":"lame","messageType":"cellUpdated"}
+{"cellName":"C7","contents":"cool","messageType":"cellUpdated"}

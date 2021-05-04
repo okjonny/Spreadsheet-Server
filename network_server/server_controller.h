@@ -7,7 +7,7 @@
 
 
 //class spreadsheet;
-
+#include <mutex>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -20,20 +20,25 @@ class spreadsheet;
 namespace ss
 {
     class server_controller {
+    private:
         friend class spreadsheet;
 
         /// map of spreadsheet names (keys) to spreadsheet objects (values)
         static std::unordered_map<std::string, spreadsheet> current_spreadsheets;
+        static std::mutex spreadsheet_mutex;
 
-        // TODO probably shouldn't be static
-        static std::fstream file;
+        static std::string remove_extra_characters(std::string s);
+
+        static std::vector<std::string> get_existing_spreadsheets();
+
+        static void check_client_connection(network_util::socket_state &state);
 
     public:
         server_controller();
 
         void start_server();
 
-        //static void first_contact(network_util::socket_state &socket);
+        static std::string unicode_to_utf8(const std::wstring &wstr);
 
         static void receive_name(network_util::socket_state &state);
 
@@ -41,10 +46,7 @@ namespace ss
 
         static void receive_cell_selection(network_util::socket_state &state);
 
-        /// return the map of spreadsheet names and spreadsheets
         static std::unordered_map<std::string, spreadsheet> get_spreadsheets();
-
-        //static void receive_edit_request(network_util::socket_state &state);
 
         static std::vector<std::string> process_data(network_util::socket_state &state);
     };
