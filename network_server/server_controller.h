@@ -33,6 +33,8 @@ namespace ss
 
         static void check_client_connection(network_util::socket_state &state);
 
+        static nlohmann::json updating_content(network_util::socket_state &s, nlohmann::json selection);
+
     public:
         server_controller();
 

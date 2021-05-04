@@ -102,13 +102,17 @@ namespace ss
         {
             std::cout << "contains spreadsheet!\n";
             std::lock_guard<std::mutex> lock(spreadsheet_mutex);
+//            spreadsheet_mutex.lock();
             current_spreadsheets[state.spreadsheet].add_user_to_spreadsheet(state.get_socket());
+//            spreadsheet_mutex.unlock();
         } else
         {
             std::lock_guard<std::mutex> lock(spreadsheet_mutex);
             spreadsheet new_spreadsheet;
+//            spreadsheet_mutex.lock();
             new_spreadsheet.add_user_to_spreadsheet(state.get_socket());
             current_spreadsheets.insert({state.spreadsheet, new_spreadsheet});
+//            spreadsheet_mutex.unlock();
             std::cout << "New spreadsheet made: " << state.spreadsheet << std::endl;
         }
 
@@ -132,13 +136,10 @@ namespace ss
         for (std::string s : contents)
             contents_of_spreadsheet += s;
 
+        contents_of_spreadsheet += std::to_string(state.get_socket()) + "\n";
         // send the message to client as one long message
         if (send(state.get_socket(), contents_of_spreadsheet.c_str(), strlen(contents_of_spreadsheet.c_str()), 0) == -1)
             std::cout << "client disconnected (2) :(" << std::endl; // What do we really want here?
-
-        // Send client id after sending spreadsheet contents
-        send(state.get_socket(), std::to_string(state.get_socket()).c_str(),
-             strlen(std::to_string(state.get_socket()).c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
@@ -149,121 +150,178 @@ namespace ss
     {
         check_client_connection(state);
 
-        auto synchronized_file = std::make_shared<spreadsheet_file>(state.spreadsheet);
-        writer writer1(synchronized_file);
         bool is_garbage_data = false;
         bool is_error_message = false;
-        try
+//        try
+//        {
+        // !BUG: Sometimes data = json::parse throws RARELY(?) some reason
+        // Not fully received message?
+        std::vector<std::string> commands = process_data(state);
+        std::string dank_weed = commands[0];
+        nlohmann::json data = nlohmann::json::parse(dank_weed);
+        nlohmann::json struct_to_json;
+        std::string command_to_send_client;
+
+//            if (data["requestType"] == "editCell")
+//            {
+//                cell_updated c(data["cellName"], data["contents"]); // cell updated class
+//                c.to_json(struct_to_json, c);
+//                try
+//                {
+//                    current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
+//                    writer1.write_to_file(to_string(struct_to_json));
+//                }
+//                catch (const std::runtime_error &e)
+//                {
+//                    invalid_request c(data["cellName"], e.what());
+//                    c.to_json(struct_to_json, c);
+//                    is_error_message = true;
+//                }
+//            }
+        if (data["requestType"] == "selectCell")
         {
-            // !BUG: Sometimes data = json::parse throws RARELY(?) some reason
-            // Not fully received message?
-            std::vector<std::string> commands = process_data(state);
-            nlohmann::json data = nlohmann::json::parse(commands[0]);
-            nlohmann::json struct_to_json;
-            std::string command_to_send_client;
-
-            if (data["requestType"] == "editCell")
+            selected_cell c(data["cellName"], state.get_id(), state.get_username());
+            c.to_json(struct_to_json, c);
+        } else
+        {
+            try
+            { struct_to_json = updating_content(state, data); }
+            catch (std::runtime_error &e)
             {
-                cell_updated c(data["cellName"], data["contents"]); // cell updated class
-                c.to_json(struct_to_json, c);
-                try
-                {
-                    current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
-                    writer1.write_to_file(to_string(struct_to_json));
-                }
-                catch (const std::runtime_error &e)
-                {
-                    invalid_request c(data["cellName"], e.what());
-                    c.to_json(struct_to_json, c);
-                    is_error_message = true;
-                }
-            } else if (data["requestType"] == "selectCell")
-            {
-                selected_cell c(data["cellName"], state.get_id(), state.get_username());
-                c.to_json(struct_to_json, c);
-            } else if (data["requestType"] == "revertCell")
-            {
-                try
-                {
-                    current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
-                    cell_updated c(data["cellName"],
-                                   current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
-                    c.to_json(struct_to_json, c);
-                    writer1.write_to_file(to_string(struct_to_json));
-                }
-                catch (std::runtime_error &e)
-                {
-                    invalid_request c(data["cellName"], e.what());
-                    c.to_json(struct_to_json, c);
-                    is_error_message = true;
-                }
-            } else if (data["requestType"] == "undo")
-            {
-                std::pair<std::string, std::string> undo_contents = {"", ""};
-                try
-                {
-                    undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
-                    current_spreadsheets[state.spreadsheet].undo();
-                    cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
-                            undo_contents.first)); // cell updated class
-                    c.to_json(struct_to_json, c);
-                    writer1.write_to_file(to_string(struct_to_json));
-                }
-                catch (std::runtime_error &e)
-                {
-                    invalid_request c(undo_contents.first, e.what());
-                    c.to_json(struct_to_json, c);
-                    is_error_message = true;
-                }
-            } else // messages that aren't valid json
-            {
-                is_garbage_data = true;
-//                state.clear_data();
-            }
-
-            command_to_send_client = to_string(struct_to_json) + "\n";
-
-            std::cout << "Server to Client Command: " << command_to_send_client << std::endl;
-
-
-            // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
-            std::string new_id = std::to_string(state.get_id()) + " made edit\n";
-
-            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
-            {
-                // Only Send error occurred messages to the client who sent it
-                if (is_error_message && s == state.get_socket())
-                {
-                    send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
-                    break;
-                } else if (!is_error_message && !is_garbage_data)
-                    if (send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0) == -1)
-                    {
-                        sigset_t set;
-                        sigfillset(&set);
-                        sigaddset(&set, SIGPIPE);
-                        int retcode = sigprocmask(SIG_BLOCK, &set, NULL);
-                        if (retcode == -1)
-                            std::cout << "ignored signal??" << std::endl;
-                        std::cout << "client disconnected (3) :(" << std::endl;
-                        throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
-                    }
-            }
-            if (struct_to_json["messageType"] == "cellUpdated")
-            {
-                //////////////////////
+                is_error_message = true;
             }
         }
-        catch (...)
+//            else if (data["requestType"] == "revertCell")
+//            {
+//                try
+//                {
+//                    current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
+//                    cell_updated c(data["cellName"],
+//                                   current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
+//                    c.to_json(struct_to_json, c);
+//                    writer1.write_to_file(to_string(struct_to_json));
+//                }
+//                catch (std::runtime_error &e)
+//                {
+//                    invalid_request c(data["cellName"], e.what());
+//                    c.to_json(struct_to_json, c);
+//                    is_error_message = true;
+//                }
+//            }
+//            else if (data["requestType"] == "undo")
+//            {
+//                std::pair<std::string, std::string> undo_contents = {"", ""};
+//                try
+//                {
+//                    undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
+//                    current_spreadsheets[state.spreadsheet].undo();
+//                    cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
+//                            undo_contents.first)); // cell updated class
+//                    c.to_json(struct_to_json, c);
+//                    writer1.write_to_file(to_string(struct_to_json));
+//                }
+//                catch (std::runtime_error &e)
+//                {
+//                    invalid_request c(undo_contents.first, e.what());
+//                    c.to_json(struct_to_json, c);
+//                    is_error_message = true;
+//                }
+//            }
+//
+//            else // messages that aren't valid json
+//            {
+//                is_garbage_data = true;
+////                state.clear_data();
+//            }
+
+        command_to_send_client = to_string(struct_to_json) + "\n";
+
+        std::cout << "Server to Client Command: " << command_to_send_client << std::endl;
+
+
+        // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
+        std::string new_id = std::to_string(state.get_id()) + " made edit\n";
+
+        for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
         {
-            throw std::runtime_error("THROWING FROM SELECT CELL SELECTION");
+            // Only Send error occurred messages to the client who sent it
+            if (is_error_message && s == state.get_socket())
+            {
+                send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
+                break;
+            } else if (!is_error_message && !is_garbage_data)
+                if (send(s, command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0) == -1)
+                {
+                    sigset_t set;
+                    sigfillset(&set);
+                    sigaddset(&set, SIGPIPE);
+                    int retcode = sigprocmask(SIG_BLOCK, &set, NULL);
+                    if (retcode == -1)
+                        std::cout << "ignored signal??" << std::endl;
+                    std::cout << "client disconnected (3) :(" << std::endl;
+                    throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
+                }
         }
+        if (struct_to_json["messageType"] == "cellUpdated")
+        {
+            //////////////////////
+        }
+//        }
+//        catch (...)
+//        {
+//            throw std::runtime_error("THROWING FROM SELECT CELL SELECTION");
+//        }
     }
 
 
     //
     // PRIVATE HELPER METHODS
     //
+
+    nlohmann::json server_controller::updating_content(socket_state &state, nlohmann::json data)
+    {
+        auto synchronized_file = std::make_shared<spreadsheet_file>(state.spreadsheet);
+        writer writer1(synchronized_file);
+        std::pair<std::string, std::string> undo_contents = {"", ""};
+        nlohmann::json struct_to_json;
+        try
+        {
+            if (data["requestType"] == "undo")
+            {
+                undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
+                current_spreadsheets[state.spreadsheet].undo();
+                cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
+                        undo_contents.first)); // cell updated class
+                c.to_json(struct_to_json, c);
+            } else if (data["requestType"] == "revertCell")
+            {
+                current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
+                cell_updated c(data["cellName"],
+                               current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
+                c.to_json(struct_to_json, c);
+            } else if (data["requestType" == "editCell"])
+            {
+                current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
+                cell_updated c(data["cellName"], data["contents"]); // cell updated class
+                c.to_json(struct_to_json, c);
+            }
+            writer1.write_to_file(to_string(struct_to_json));
+        }
+        catch (std::runtime_error &e)
+        {
+            if (data["requestType"] == "undo")
+            {
+                invalid_request c(undo_contents.first, e.what());
+                c.to_json(struct_to_json, c);
+            } else
+            {
+                invalid_request c(data["cellName"], e.what());
+                c.to_json(struct_to_json, c);
+            }
+        }
+        return struct_to_json;
+    }
+
     std::vector<std::string> server_controller::process_data(socket_state &state)
     {
         std::string s = state.get_data();
