@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\usr\;CMake Files\..\..\..\..\usr\lib64\;CMake Files\..\..\..\..\usr\lib64\cmake\;CMake Files\..\..\..\..\usr\lib64\cmake\nlohmann_json\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug"/>
+				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug"/>
+				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug"/>
+				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="TeamPog_CS3505">
-				<Option output="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/TeamPog_CS3505" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug"/>
+				<Option output="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/TeamPog_CS3505" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -54,15 +54,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 TeamPog_CS3505"/>
-					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 TeamPog_CS3505"/>
+					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="TeamPog_CS3505/fast">
-				<Option output="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/TeamPog_CS3505" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug"/>
+				<Option output="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/TeamPog_CS3505" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -77,10 +77,10 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 TeamPog_CS3505/fast"/>
-					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 TeamPog_CS3505/fast"/>
+					<CompileFile command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/bin/make -j8 -f &quot;/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>

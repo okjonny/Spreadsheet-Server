@@ -65,7 +65,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /home/hibban/CLionProjects/TeamPog-CS3505
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug
+CMAKE_BINARY_DIR = /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release
 
 # Include any dependencies generated for this target.
 include CMakeFiles/TeamPog_CS3505.dir/depend.make
@@ -78,7 +78,7 @@ include CMakeFiles/TeamPog_CS3505.dir/flags.make
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o: ../network_server/networking.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/network_server/networking.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.i: cmake_force
@@ -91,7 +91,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/networking.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o: ../network_server/socket_state.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/network_server/socket_state.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.i: cmake_force
@@ -104,7 +104,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/socket_state.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o: ../network_server/server_controller.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/network_server/server_controller.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.i: cmake_force
@@ -117,7 +117,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/server_controller.cpp.s: cmake_forc
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o: ../spreadsheet/dependency_graph.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/dependency_graph.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.i: cmake_force
@@ -130,7 +130,7 @@ CMakeFiles/TeamPog_CS3505.dir/spreadsheet/dependency_graph.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o: ../spreadsheet/spreadsheet.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/spreadsheet.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.i: cmake_force
@@ -143,7 +143,7 @@ CMakeFiles/TeamPog_CS3505.dir/spreadsheet/spreadsheet.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o: ../spreadsheet/formula.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/formula.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.i: cmake_force
@@ -156,7 +156,7 @@ CMakeFiles/TeamPog_CS3505.dir/spreadsheet/formula.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.o: ../spreadsheet/cell.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/spreadsheet/cell.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.i: cmake_force
@@ -169,7 +169,7 @@ CMakeFiles/TeamPog_CS3505.dir/spreadsheet/cell.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o: ../network_server/server.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/network_server/server.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.i: cmake_force
@@ -182,7 +182,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/server.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/writer.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/network_server/writer.cpp.o: ../network_server/writer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/writer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/writer.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/network_server/writer.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/network_server/writer.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/writer.cpp.i: cmake_force
@@ -195,7 +195,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/writer.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.o: ../network_server/spreadsheet_file.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/network_server/spreadsheet_file.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.i: cmake_force
@@ -208,7 +208,7 @@ CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cpp.s: cmake_force
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.o: CMakeFiles/TeamPog_CS3505.dir/flags.make
 CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.o: ../network_server/json_struct.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.o"
 	/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.o -c /home/hibban/CLionProjects/TeamPog-CS3505/network_server/json_struct.cpp
 
 CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.i: cmake_force
@@ -249,7 +249,7 @@ TeamPog_CS3505: CMakeFiles/TeamPog_CS3505.dir/network_server/spreadsheet_file.cp
 TeamPog_CS3505: CMakeFiles/TeamPog_CS3505.dir/network_server/json_struct.cpp.o
 TeamPog_CS3505: CMakeFiles/TeamPog_CS3505.dir/build.make
 TeamPog_CS3505: CMakeFiles/TeamPog_CS3505.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable TeamPog_CS3505"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable TeamPog_CS3505"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/TeamPog_CS3505.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -262,6 +262,6 @@ CMakeFiles/TeamPog_CS3505.dir/clean:
 .PHONY : CMakeFiles/TeamPog_CS3505.dir/clean
 
 CMakeFiles/TeamPog_CS3505.dir/depend:
-	cd /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/hibban/CLionProjects/TeamPog-CS3505 /home/hibban/CLionProjects/TeamPog-CS3505 /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles/TeamPog_CS3505.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/hibban/CLionProjects/TeamPog-CS3505 /home/hibban/CLionProjects/TeamPog-CS3505 /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-release/CMakeFiles/TeamPog_CS3505.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/TeamPog_CS3505.dir/depend
 
