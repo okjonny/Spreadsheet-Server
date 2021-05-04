@@ -1,4 +1,0 @@
-/var/lib/snapd/snap/clion/151/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/bin/make -DCMAKE_C_COMPILER=/bin/cc -DCMAKE_CXX_COMPILER=/bin/c++ -G "CodeBlocks - Unix Makefiles" /home/hibban/CLionProjects/TeamPog-CS3505
--- Configuring done
--- Generating done
--- Build files have been written to: /home/hibban/CLionProjects/TeamPog-CS3505/cmake-build-debug
