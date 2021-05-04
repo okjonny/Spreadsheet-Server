@@ -387,16 +387,17 @@ namespace ss
         // send contents of the file to client
         for (std::string s : contents)
         {
-            std::wstring commands_to_send_wstring = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(s);
-            if (send(state.get_socket(), commands_to_send_wstring.c_str(), wcslen(commands_to_send_wstring.c_str()),
-                     0) == -1)
+            char test[] = u8;
+            if (send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0) == -1)
                 std::cout << "client disconnected (2) :(" << std::endl;
         }
         std::string id = std::to_string(state.get_socket()) + "\n";
         // Send client id
+//        std::wstring str_turned_to_wstr = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(id);
+
+//        char test[] = u8"dank";
         std::cout << state.get_socket() << std::endl;
-        std::wstring str_turned_to_wstr = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(id);
-        send(state.get_socket(), str_turned_to_wstr.c_str(), wcslen(str_turned_to_wstr.c_str()), 0);
+        send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
