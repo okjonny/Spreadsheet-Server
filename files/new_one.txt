@@ -1,0 +1,2 @@
+{"cellName":"Z1","contents":"lame","messageType":"cellUpdated"}
+{"cellName":"C7","contents":"cool","messageType":"cellUpdated"}

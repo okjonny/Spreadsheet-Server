@@ -1,0 +1,3 @@
+{"cellName":"A1","contents":"big chungus","messageType":"cellUpdated"}
+{"cellName":"A1","contents":"","messageType":"cellUpdated"}
+{"cellName":"A1","contents":"big chungus","messageType":"cellUpdated"}
