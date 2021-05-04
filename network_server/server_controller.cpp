@@ -386,7 +386,7 @@ namespace ss
             if (send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0) == -1)
                 std::cout << "client disconnected (2) :(" << std::endl;
         }
-        std::string id = std::to_string(state.get_socket());
+        std::string id = std::to_string(state.get_socket()) + "\n";
 
         // Send client id
         send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
