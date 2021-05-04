@@ -10,6 +10,11 @@
 #include <dirent.h>
 #include <sstream>
 #include <signal.h>
+//#include "utf8.h"
+#include <codecvt>
+#include <locale>
+#include <string>
+#include <cassert>
 //#include <experimental/filesystem>
 
 using namespace network_util;
@@ -182,8 +187,7 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(server_shutdown, messageType, message)
     };
 
-    struct disconnected
-    {
+    struct disconnected {
         std::string messageType;
         int user;
 
@@ -383,19 +387,20 @@ namespace ss
         // send contents of the file to client
         for (std::string s : contents)
         {
-            if (send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0) == -1)
+            std::wstring commands_to_send_wstring = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(s);
+            if (send(state.get_socket(), commands_to_send_wstring.c_str(), wcslen(commands_to_send_wstring.c_str()),
+                     0) == -1)
                 std::cout << "client disconnected (2) :(" << std::endl;
         }
         std::string id = std::to_string(state.get_socket()) + "\n";
-
         // Send client id
         std::cout << state.get_socket() << std::endl;
-        send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
+        std::wstring str_turned_to_wstr = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(id);
+        send(state.get_socket(), str_turned_to_wstr.c_str(), wcslen(str_turned_to_wstr.c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
     }
-
 
 
     void server_controller::receive_cell_selection(network_util::socket_state &state)
@@ -420,7 +425,8 @@ namespace ss
         }
         //throw std::runtime_error("disconnecting test");
 
-        try {
+        try
+        {
             auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
             Writer writer1(synchronizedFile);
             std::vector<std::string> commands = process_data(state);
@@ -444,7 +450,8 @@ namespace ss
 
 //        std::string cell_name = data["cellName"];
 
-            if (data["requestType"] == "editCell") {
+            if (data["requestType"] == "editCell")
+            {
                 cell_updated c(data["cellName"], data["contents"]); // cell updated class
 
                 c.to_json(j, c);
@@ -452,11 +459,13 @@ namespace ss
                 // Check here if cell content would cause a circular dependency
                 // if it does, send error message
                 // otherwise, server makes the change and sends "cellUpdated" to all users including itself
-                try {
+                try
+                {
                     current_spreadsheets[state.spreadsheet].set_contents_of_cell(data["cellName"], data["contents"]);
                     writer1.write_to_file(to_string(j));
                 }
-                catch (const std::runtime_error &e) {
+                catch (const std::runtime_error &e)
+                {
                     invalid_request c(data["cellName"], e.what());
                     c.to_json(j, c);
                     //current_spreadsheets[state.spreadsheet].add_to_history((to_string(j) + "\n"));
@@ -465,7 +474,8 @@ namespace ss
 
                 //current_spreadsheets[state.spreadsheet].add_to_history(to_string(j) + "\n");
                 command_to_send = to_string(j) + "\n";
-            } else if (data["requestType"] == "selectCell") {
+            } else if (data["requestType"] == "selectCell")
+            {
 
                 // Selects a cell from the user and sends the information to all users in the current spreadsheet.
                 //{"requestType":"selectCell","cellName":"A1"}\n
@@ -475,21 +485,26 @@ namespace ss
                 current_spreadsheets[state.spreadsheet].add_to_history((to_string(j) + "\n"));
                 command_to_send = to_string(j) + "\n";
 
-            } else if (data["requestType"] == "revertCell") {
-                try {
+            } else if (data["requestType"] == "revertCell")
+            {
+                try
+                {
                     current_spreadsheets[state.spreadsheet].revert_cell_contents(data["cellName"]);
                     cell_updated c(data["cellName"],
                                    current_spreadsheets[state.spreadsheet].get_cell_contents(data["cellName"]));
                     c.to_json(j, c);
                     writer1.write_to_file(to_string(j));
                 }
-                catch (std::runtime_error &e) {
+                catch (std::runtime_error &e)
+                {
                     invalid_request c(data["cellName"], e.what());
                     c.to_json(j, c);
                 }
-            } else if (data["requestType"] == "undo") {
+            } else if (data["requestType"] == "undo")
+            {
                 std::pair<std::string, std::string> undo_contents = {"", ""};
-                try {
+                try
+                {
                     undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
                     current_spreadsheets[state.spreadsheet].undo();
                     cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
@@ -497,12 +512,14 @@ namespace ss
                     c.to_json(j, c);
                     writer1.write_to_file(to_string(j));
                 }
-                catch (std::runtime_error &e) {
+                catch (std::runtime_error &e)
+                {
                     invalid_request c(undo_contents.first, e.what());
                     c.to_json(j, c);
                 }
                 // messages that aren't valid json
-            } else {
+            } else
+            {
                 server_shutdown c("Server is shutting down. All progress saved.");
                 c.to_json(j, c);
             }
@@ -520,9 +537,11 @@ namespace ss
             // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
             std::string new_id = std::to_string(state.get_id()) + " made edit\n";
 
-            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected()) {
+            for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
+            {
                 //if (s != state.get_socket())
-                if (send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0) == -1) {
+                if (send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0) == -1)
+                {
                     sigset_t set;
                     sigfillset(&set);
                     sigaddset(&set, SIGPIPE);
@@ -533,11 +552,12 @@ namespace ss
                     throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
                 }
             }
-            if (j["messageType"] == "cellUpdated") {
+            if (j["messageType"] == "cellUpdated")
+            {
                 //////////////////////
             }
         }
-        catch(...)
+        catch (...)
         {
             throw std::runtime_error("THROWING FROM SELECT CELL SELECTION");
         }
