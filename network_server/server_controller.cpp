@@ -533,7 +533,7 @@ namespace ss
             // BROADCAST CHANGES TO SPREADSHEETS
             Broadcast:
             command_to_send = to_string(j) + "\n";
-//            std::cout << command_to_send << std::endl;
+            std::cout << command_to_send << std::endl;
 
 //            std::cout << "the id is " << state.get_id() << std::endl;
             // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
