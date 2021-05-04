@@ -1,4 +1,4 @@
-{"requestType":"editCell","cellName":"F2","contents":"=A1"}\n
-{"requestType":"editCell","cellName":"Z4","contents":"big chungus"}\n
-{"requestType":"editCell","cellName":"W3","contents":"=A1"}\n
-{"requestType":"editCell","cellName":"C3","contents":"dope"}\n
+{"messageType":"cellUpdated","cellName":"A1","contents":"BiggChungus"}\n
+{"messageType":"cellUpdated","cellName":"B1","contents":"BiggChungus"}\n
+{"messageType":"cellUpdated","cellName":"C1","contents":"BiggChungus"}\n
+{"messageType":"cellUpdated","cellName":"D1","contents":"BiggChungus"}\n

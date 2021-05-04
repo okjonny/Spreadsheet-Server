@@ -389,6 +389,7 @@ namespace ss
         std::string id = std::to_string(state.get_socket()) + "\n";
 
         // Send client id
+        std::cout << state.get_socket() << std::endl;
         send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
