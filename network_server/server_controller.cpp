@@ -49,7 +49,7 @@ namespace ss
         std::vector<std::string> read()
         {
             input_file.open(_path);
-//            std::lock_guard<std::mutex> lock(_writerMutex);
+            std::lock_guard<std::mutex> lock(_writerMutex);
             std::vector<std::string> contents;
             std::string line;
 
@@ -385,12 +385,17 @@ namespace ss
         }
 
         // send contents of the file to client
+        std::string contents_of_spreadsheet;
         for (std::string s : contents)
         {
-            char test[] = u8;
-            if (send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0) == -1)
-                std::cout << "client disconnected (2) :(" << std::endl;
+            contents_of_spreadsheet += s;
+//            if (send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0) == -1)
+//                std::cout << "client disconnected (2) :(" << std::endl;
         }
+        if (send(state.get_socket(), contents_of_spreadsheet.c_str(), strlen(contents_of_spreadsheet.c_str()), 0) == -1)
+            std::cout << "client disconnected (2) :(" << std::endl;
+
+
         std::string id = std::to_string(state.get_socket()) + "\n";
         // Send client id
 //        std::wstring str_turned_to_wstr = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(id);
@@ -406,6 +411,7 @@ namespace ss
 
     void server_controller::receive_cell_selection(network_util::socket_state &state)
     {
+        bool garbage = false;
         if (state.get_error_occured())
         {
             for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
@@ -425,11 +431,11 @@ namespace ss
             return;
         }
         //throw std::runtime_error("disconnecting test");
-
+        auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
+        Writer writer1(synchronizedFile);
         try
         {
-            auto synchronizedFile = std::make_shared<spreadsheet_file>(state.spreadsheet);
-            Writer writer1(synchronizedFile);
+
             std::vector<std::string> commands = process_data(state);
 
             nlohmann::json j;
@@ -474,18 +480,12 @@ namespace ss
                 }
 
                 //current_spreadsheets[state.spreadsheet].add_to_history(to_string(j) + "\n");
-                command_to_send = to_string(j) + "\n";
+//                command_to_send = to_string(j) + "\n";
             } else if (data["requestType"] == "selectCell")
             {
-
-                // Selects a cell from the user and sends the information to all users in the current spreadsheet.
-                //{"requestType":"selectCell","cellName":"A1"}\n
-
                 selected_cell c(data["cellName"], state.get_id(), state.get_username());
                 c.to_json(j, c);
-                current_spreadsheets[state.spreadsheet].add_to_history((to_string(j) + "\n"));
-                command_to_send = to_string(j) + "\n";
-
+//                command_to_send = to_string(j) + "\n";
             } else if (data["requestType"] == "revertCell")
             {
                 try
@@ -521,8 +521,9 @@ namespace ss
                 // messages that aren't valid json
             } else
             {
-                server_shutdown c("Server is shutting down. All progress saved.");
-                c.to_json(j, c);
+                garbage = true;
+////                server_shutdown c("Server is shutting down. All progress saved.");
+////                c.to_json(j, c);
             }
 
             // TODO: have to lock file when writing to it
@@ -532,26 +533,27 @@ namespace ss
             // BROADCAST CHANGES TO SPREADSHEETS
             Broadcast:
             command_to_send = to_string(j) + "\n";
-            std::cout << command_to_send << std::endl;
+//            std::cout << command_to_send << std::endl;
 
-            std::cout << "the id is " << state.get_id() << std::endl;
+//            std::cout << "the id is " << state.get_id() << std::endl;
             // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
             std::string new_id = std::to_string(state.get_id()) + " made edit\n";
 
             for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
             {
-                //if (s != state.get_socket())
-                if (send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0) == -1)
-                {
-                    sigset_t set;
-                    sigfillset(&set);
-                    sigaddset(&set, SIGPIPE);
-                    int retcode = sigprocmask(SIG_BLOCK, &set, NULL);
-                    if (retcode == -1)
-                        std::cout << "ignored signal??" << std::endl;
-                    std::cout << "client disconnected (3) :(" << std::endl;
-                    throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
-                }
+//                if (s != state.get_socket())
+                if (!garbage)
+                    if (send(s, command_to_send.c_str(), strlen(command_to_send.c_str()), 0) == -1)
+                    {
+                        sigset_t set;
+                        sigfillset(&set);
+                        sigaddset(&set, SIGPIPE);
+                        int retcode = sigprocmask(SIG_BLOCK, &set, NULL);
+                        if (retcode == -1)
+                            std::cout << "ignored signal??" << std::endl;
+                        std::cout << "client disconnected (3) :(" << std::endl;
+                        throw std::runtime_error("This boomer disconnect like bitconnnneeeect.");
+                    }
             }
             if (j["messageType"] == "cellUpdated")
             {
