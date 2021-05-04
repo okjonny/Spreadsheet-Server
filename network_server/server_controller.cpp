@@ -187,10 +187,10 @@ namespace ss
         std::string messageType;
         int user;
 
-        disconnected(int user)
+        disconnected(int _user)
         {
             messageType = "disconnected";
-            user = user;
+            user = _user;
         }
 
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(disconnected, messageType, user)
@@ -314,7 +314,6 @@ namespace ss
                 d.to_json(j, d);
                 to_send = to_string(j) + R"(\n)";
 
-
                 if (s != state.get_socket())
                     send(s, std::string(to_send).c_str(), strlen(to_send.c_str()), 0);
             }
@@ -387,6 +386,10 @@ namespace ss
             if (send(state.get_socket(), s.c_str(), strlen(s.c_str()), 0) == -1)
                 std::cout << "client disconnected (2) :(" << std::endl;
         }
+        std::string id = std::to_string(state.get_socket());
+
+        // Send client id
+        send(state.get_socket(), id.c_str(), strlen(id.c_str()), 0);
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
@@ -400,6 +403,7 @@ namespace ss
         {
             for (long s : get_spreadsheets()[state.spreadsheet].get_users_connected())
             {
+                std::cout << state.get_id() << std::endl;
                 nlohmann::json j;
                 std::string to_send;
                 disconnected d(state.get_id());

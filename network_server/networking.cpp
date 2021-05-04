@@ -102,14 +102,14 @@ namespace network_util
             std::fill_n(clients[thread_id].buffer, 4096, 0);
 
 
-                valread = read(clients[thread_id].socket, clients[thread_id].buffer, 4096);
+            valread = read(clients[thread_id].socket, clients[thread_id].buffer, 4096);
 
 
-                std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
-                std::string s = clients[thread_id].buffer;
-                clients[thread_id].data = s;
+            std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
+            std::string s = clients[thread_id].buffer;
+            clients[thread_id].data = s;
 
-                std::cout << "valread: " << valread << std::endl;
+            std::cout << "valread: " << valread << std::endl;
 //            int value = std::stoi(s);
 
 
@@ -123,8 +123,7 @@ namespace network_util
                 break;
             }
 
-
-                    clients[thread_id].on_network_action(clients[thread_id]);
+            clients[thread_id].on_network_action(clients[thread_id]);
 
 
 //                }
@@ -135,11 +134,11 @@ namespace network_util
 //            value++;
 //            std::string sToSend = std::to_string(value);
 //            send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
-                std::fill_n(clients[thread_id].buffer, 4096, 0);
-                //   mtx.unlock();
-            }
+            std::fill_n(clients[thread_id].buffer, 4096, 0);
+            //   mtx.unlock();
+        }
 
-  //      }
+        //      }
 /*        catch(...)
         {
             std::cout << thread_id << " disconnected" << std::endl;
