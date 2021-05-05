@@ -12,12 +12,12 @@ int main()
     int command;
     ss::server_controller spreadsheet;
     spreadsheet.start_server();
-
-    std::cin >> command;
-    if(command == 0){
-        spreadsheet.stop_server();
-        return 0;
-    }
+//
+//    std::cin >> command;
+//    if(command == 0){
+//        spreadsheet.stop_server();
+//        return 0;
+//    }
 
     while (true)
     {
