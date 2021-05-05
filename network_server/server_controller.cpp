@@ -55,6 +55,14 @@ namespace ss
         networking::start_server(callback);
     }
 
+    void server_controller::stop_server()
+    {
+        nlohmann::json j;
+        server_shutdown shutdown("Server is shutting down.");
+        shutdown.to_json(j, shutdown);
+        networking::stop_server(to_string(j)+"\n");
+    }
+
 
     void server_controller::receive_name(network_util::socket_state &state)
     {
@@ -565,9 +573,6 @@ namespace ss
 
         return false;
     }
-
-
-    void server_controller::shutdown()
 
 
 

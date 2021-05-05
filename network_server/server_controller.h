@@ -48,6 +48,8 @@ namespace ss
 
         void start_server();
 
+        void stop_server();
+
         static std::string unicode_to_utf8(const std::wstring &wstr);
 
         static void receive_name(network_util::socket_state &state);

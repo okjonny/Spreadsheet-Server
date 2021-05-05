@@ -1,0 +1,5 @@
+{"cellName":"B2","contents":"meemp","messageType":"cellUpdated"}
+{"cellName":"B2","contents":"","messageType":"cellUpdated"}
+{"cellName":"D5","contents":"dank","messageType":"cellUpdated"}
+{"cellName":"D5","contents":"","messageType":"cellUpdated"}
+{"cellName":"B2","contents":"meemp","messageType":"cellUpdated"}

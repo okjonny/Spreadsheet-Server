@@ -1,6 +1,7 @@
 #include "networking.h"
 #include "socket_state.h"
 #include "server_controller.h"
+#include <iostream>
 
 using namespace network_util;
 
@@ -8,11 +9,19 @@ using namespace network_util;
 //{
 int main()
 {
+    int command;
     ss::server_controller spreadsheet;
     spreadsheet.start_server();
 
-    //error shutdown --> errbuddy on the server SHUTDOWN METHOD
+    std::cin >> command;
+    if(command == 0){
+        spreadsheet.stop_server();
+        return 0;
+    }
+
     while (true)
-    {}
+    {
+
+    }
 }
 //}

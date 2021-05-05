@@ -27,6 +27,9 @@ namespace network_util
         static void receive_callback(int thread_id);
 
         static void accept_new_clients(std::function<void(socket_state & )> &to_call);
+
+        static void stop_server(std::string shutdown_message);
+
 //        static void broadcast_spreadsheets();
     private:
         static void error_call(socket_state &error_state);

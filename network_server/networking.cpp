@@ -4,6 +4,7 @@
 #include "networking.h"
 #include <unistd.h>
 #include <stdio.h>
+#include <array>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string>
@@ -57,18 +58,21 @@ namespace network_util
         return 0;
     }
 
-    void networking::stop_server()
+    void networking::stop_server(std::string shutdown_message)
     {
-        for (network_util::socket_state *s : current_spreadsheets[state.spreadsheet].users_connected)
+        for (const socket_state &c : clients)
         {
-            if (!s->get_error_occured())
-            {
-                send(s->get_socket(), command_to_send_client.c_str(),
-                     strlen(command_to_send_client.c_str()), 0);
-
-                std::cout << "SENT: " << command_to_send_client << std::endl;
-            }
+            if(!c.get_error_occured())
+                send(c.get_socket(), shutdown_message.c_str(), strlen(shutdown_message.c_str()), 0);
         }
+
+        for(std::thread &t : threads)
+        {
+            if(t.joinable())
+                t.join();
+        }
+
+        std::cout << "Shutting down..." << std::endl;
     }
 
 
