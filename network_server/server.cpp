@@ -9,19 +9,23 @@ using namespace network_util;
 //{
 int main()
 {
-    int command;
     ss::server_controller spreadsheet;
+
+    // Credits: StackOverflow
+    // https://stackoverflow.com/questions/49462557/how-to-terminate-a-listening-tcp-server-with-keyboard-input-in-c
+    std::thread t{
+            [&spreadsheet] {
+                std::string s;
+                while (std::cin >> s)
+                    if (s == "exit")
+                    {
+                        spreadsheet.stop_server();
+                        std::cout << "exit command given on stdin\n";
+                        exit(0);
+                    }
+            }
+    };
+    t.detach();
+
     spreadsheet.start_server();
-//
-//    std::cin >> command;
-//    if(command == 0){
-//        spreadsheet.stop_server();
-//        return 0;
-//    }
-
-    while (true)
-    {
-
-    }
 }
-//}

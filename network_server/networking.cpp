@@ -68,8 +68,10 @@ namespace network_util
 
         for(std::thread &t : threads)
         {
-            if(t.joinable())
-                t.join();
+            if (t.joinable())
+                t.detach();
+//                t.join();
+
         }
 
         std::cout << "Shutting down..." << std::endl;

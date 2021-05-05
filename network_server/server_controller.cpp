@@ -127,7 +127,7 @@ namespace ss
            spreadsheet_mutex.lock();
             current_spreadsheets[state.spreadsheet].users_connected.push_back(&state);
            spreadsheet_mutex.unlock();
-            std::cout << "LINE 121 =================== " << state.get_socket() << std::endl;
+//            std::cout << "LINE 121 =================== " << state.get_socket() << std::endl;
         }
         else
         {
@@ -141,12 +141,12 @@ namespace ss
             spreadsheet_mutex.unlock();
             //std::cout << "New spreadsheet made: " << state.spreadsheet << std::endl;
             std::cout << state.get_username() << " CREATED NEW SPREADSHEET: " << "---- " << state.spreadsheet << std::endl;
-            std::cout << "LINE 133 =================== " << state.get_socket() << std::endl;
+//            std::cout << "LINE 133 =================== " << state.get_socket() << std::endl;
 
 
         }
 
-        std::cout << "LINE 138 =================== " << state.get_socket() << std::endl;
+//        std::cout << "LINE 138 =================== " << state.get_socket() << std::endl;
 
         // Read and Send existing spreadsheet data
         std::string file_path = "../files/" + state.spreadsheet;
@@ -165,7 +165,7 @@ namespace ss
             file.close();
         }
 
-        std::cout << "LINE 157 =================== " << state.get_socket() << std::endl;
+//        std::cout << "LINE 157 =================== " << state.get_socket() << std::endl;
 
 
         // append data from file to send to client
@@ -185,7 +185,7 @@ namespace ss
         std::cout << "SENT: " << contents_of_spreadsheet << std::endl;
 
 
-        std::cout << "LINE 177 =================== " << state.get_socket() << std::endl;
+//        std::cout << "LINE 177 =================== " << state.get_socket() << std::endl;
 
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
@@ -201,7 +201,7 @@ namespace ss
         if(is_disconnected(state))
             return;
 
-        std::cout << "LINE 193 =================== " << state.get_socket() << std::endl;
+//        std::cout << "LINE 193 =================== " << state.get_socket() << std::endl;
 
 
         bool is_garbage_data = false;
