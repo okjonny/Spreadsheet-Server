@@ -30,7 +30,7 @@ namespace network_util
 
     int networking::start_server(std::function<void(socket_state &)> &to_call)
     {
-        std::cout << "Running..." << std::endl;
+        //std::cout << "Running..." << std::endl;
         // Creating socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
         {
@@ -56,6 +56,21 @@ namespace network_util
         accept_new_clients(to_call);
         return 0;
     }
+
+    void networking::stop_server()
+    {
+        for (network_util::socket_state *s : current_spreadsheets[state.spreadsheet].users_connected)
+        {
+            if (!s->get_error_occured())
+            {
+                send(s->get_socket(), command_to_send_client.c_str(),
+                     strlen(command_to_send_client.c_str()), 0);
+
+                std::cout << "SENT: " << command_to_send_client << std::endl;
+            }
+        }
+    }
+
 
     void networking::accept_new_clients(std::function<void(socket_state &)> &to_call)
     {
@@ -105,11 +120,11 @@ namespace network_util
             valread = read(clients[thread_id].socket, clients[thread_id].buffer, 4096);
 
 
-            std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
+            //std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
             std::string s = clients[thread_id].buffer;
             clients[thread_id].data = s;
 
-            std::cout << "valread: " << valread << std::endl;
+            std::cout << thread_id << "======================VALREAD: " << valread << std::endl;
 //            int value = std::stoi(s);
 
 
@@ -120,6 +135,7 @@ namespace network_util
             if (valread < 1)
             {
                 error_call(clients[thread_id]);
+                std::cout << "ERROR" << std::endl;
                 break;
             }
 
@@ -144,14 +160,16 @@ namespace network_util
             std::cout << thread_id << " disconnected" << std::endl;
         }*/
 
-        networking::thread_id--;
+/*       if(threads[thread_id].joinable())
+           threads[thread_id].join();
+       */
+        //networking::thread_id--;
     }
 
     void networking::error_call(socket_state &error_state)
     {
         error_state.error_occured = true;
         error_state.error_message = std::string("Disconnected DE CLIENT.");
-
         error_state.on_network_action(error_state);
     }
 }

@@ -10,10 +10,8 @@ int main()
 {
     ss::server_controller spreadsheet;
     spreadsheet.start_server();
-//
-//        std::function<void (socket_state & )> boom = boomer;
-//        network_util::networking::start_server(boom);
 
+    //error shutdown --> errbuddy on the server SHUTDOWN METHOD
     while (true)
     {}
 }

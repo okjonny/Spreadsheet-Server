@@ -1,2 +1,7 @@
 {"cellName":"Z1","contents":"lame","messageType":"cellUpdated"}
 {"cellName":"C7","contents":"cool","messageType":"cellUpdated"}
+{"cellName":"D2","contents":"=232","messageType":"cellUpdated"}
+{"cellName":"E3","contents":"=322","messageType":"cellUpdated"}
+{"cellName":"F9","contents":"sdf","messageType":"cellUpdated"}
+{"cellName":"E6","contents":"do some stuff","messageType":"cellUpdated"}
+{"cellName":"F2","contents":"yayeey","messageType":"cellUpdated"}

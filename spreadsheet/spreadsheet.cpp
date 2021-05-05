@@ -18,12 +18,12 @@ namespace ss
     {
     }
 
-    void spreadsheet::add_user_to_spreadsheet(long s)
+    void spreadsheet::add_user_to_spreadsheet(network_util::socket_state &state)
     {
-        users_connected.push_back(s);
+        users_connected.push_back(&state);
     }
 
-    std::vector<long> spreadsheet::get_users_connected()
+    std::vector<network_util::socket_state*> spreadsheet::get_users_connected()
     {
         return users_connected;
     }

@@ -1,3 +1,8 @@
 {"cellName":"A1","contents":"big chungus","messageType":"cellUpdated"}
 {"cellName":"A1","contents":"","messageType":"cellUpdated"}
 {"cellName":"A1","contents":"big chungus","messageType":"cellUpdated"}
+{"cellName":"B1","contents":"=A1","messageType":"cellUpdated"}
+{"cellName":"C1","contents":"asdf","messageType":"cellUpdated"}
+{"cellName":"B5","contents":"POG","messageType":"cellUpdated"}
+{"cellName":"D4","contents":"fdfs","messageType":"cellUpdated"}
+{"cellName":"C2","contents":"sdf","messageType":"cellUpdated"}

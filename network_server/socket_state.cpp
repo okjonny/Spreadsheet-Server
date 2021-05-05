@@ -23,7 +23,7 @@ namespace network_util
         return error_occured;
     }
 
-    int socket_state::get_socket() const
+    long socket_state::get_socket() const
     {
         return socket;
     }

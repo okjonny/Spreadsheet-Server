@@ -1,8 +1,7 @@
 #include <mutex>
 #include <string>
 #include <functional>
-//#include "server_controller.h"
-//#include "server_controller.h"
+
 
 #ifndef SOCKSTATE_H
 #define SOCKSTATE_H
@@ -12,12 +11,14 @@ namespace network_util
     class socket_state {
 
         friend class networking;
+
         std::string data;
-        int socket;
         int state_id;
         std::string error_message;
         bool error_occured;
         std::mutex data_lock;
+
+        long socket;
 
     public:
         std::string spreadsheet;
@@ -41,7 +42,8 @@ namespace network_util
         std::string get_username();
 
         int get_id() const;
-        int get_socket() const;
+        long get_socket() const;
+
 
         void remove_data(int start, int length);
 

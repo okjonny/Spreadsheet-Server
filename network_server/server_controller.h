@@ -26,6 +26,7 @@ namespace ss
 
         /// map of spreadsheet names (keys) to spreadsheet objects (values)
         static std::unordered_map<std::string, spreadsheet> current_spreadsheets;
+
         static std::mutex spreadsheet_mutex;
 
         /// helper method that removes extra characters from the client's input
@@ -33,11 +34,14 @@ namespace ss
 
         static std::vector<std::string> get_existing_spreadsheets();
 
-        static void check_client_connection(network_util::socket_state &state);
+        static bool is_disconnected(network_util::socket_state &state);
 
         static nlohmann::json updating_content(network_util::socket_state &s, nlohmann::json selection);
 
+        static std::string process_data(network_util::socket_state &state);
+
     public:
+
         server_controller();
 
         ~server_controller();
@@ -53,8 +57,6 @@ namespace ss
         static void receive_cell_selection(network_util::socket_state &state);
 
         static std::unordered_map<std::string, spreadsheet> get_spreadsheets();
-
-        static std::vector<std::string> process_data(network_util::socket_state &state);
 
 //        inline void decode_utf8(const std::string& bytes, std::wstring& wstr);
 //

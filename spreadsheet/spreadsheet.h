@@ -26,7 +26,7 @@ namespace ss
 
         bool is_Undo;
         std::string name;
-        std::vector<long> users_connected;
+        std::vector<network_util::socket_state*> users_connected;
         std::stack<std::string> commands_received;
 
         /// Keeps track of edits made to this spreadsheet in a stack.
@@ -41,10 +41,10 @@ namespace ss
 
         ~spreadsheet();
 
-        void add_user_to_spreadsheet(long s);
+        void add_user_to_spreadsheet(network_util::socket_state &state);
 
         /// returns a vector of users that are connected to this spreadsheet
-        std::vector<long> get_users_connected();
+        std::vector<network_util::socket_state*> get_users_connected();
 
         void undo();
 

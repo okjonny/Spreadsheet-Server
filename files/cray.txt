@@ -14,3 +14,43 @@
 {"cellName":"A1","contents":"big chungus","messageType":"cellUpdated"}
 {"cellName":"A1","contents":"big chungus","messageType":"cellUpdated"}
 {"cellName":"A1","contents":"big chungus","messageType":"cellUpdated"}
+{"cellName":"E7","contents":"=32","messageType":"cellUpdated"}
+{"cellName":"F2","contents":"=24","messageType":"cellUpdated"}
+{"cellName":"E3","contents":"=B1","messageType":"cellUpdated"}
+{"cellName":"A4","contents":"=e7","messageType":"cellUpdated"}
+{"cellName":"G5","contents":"100000","messageType":"cellUpdated"}
+{"cellName":"F5","contents":"pp","messageType":"cellUpdated"}
+{"cellName":"F6","contents":"dawg","messageType":"cellUpdated"}
+{"cellName":"F7","contents":"dd","messageType":"cellUpdated"}
+{"cellName":"E8","contents":"dasfasdf","messageType":"cellUpdated"}
+{"cellName":"E8","contents":"","messageType":"cellUpdated"}
+{"cellName":"F8","contents":"=A1","messageType":"cellUpdated"}
+{"cellName":"E8","contents":"=D1","messageType":"cellUpdated"}
+{"cellName":"B6","contents":"send nudes","messageType":"cellUpdated"}
+{"cellName":"B11","contents":"=3232","messageType":"cellUpdated"}
+{"cellName":"F4","contents":"big luv","messageType":"cellUpdated"}
+{"cellName":"D5","contents":"wtf breh","messageType":"cellUpdated"}
+{"cellName":"C10","contents":"=23+A4","messageType":"cellUpdated"}
+{"cellName":"E10","contents":"=32","messageType":"cellUpdated"}
+{"cellName":"E6","contents":"hi","messageType":"cellUpdated"}
+{"cellName":"E4","contents":"yeet","messageType":"cellUpdated"}
+{"cellName":"D4","contents":"yuh","messageType":"cellUpdated"}
+{"cellName":"D3","contents":"harro","messageType":"cellUpdated"}
+{"cellName":"C3","contents":"gang","messageType":"cellUpdated"}
+{"cellName":"D3","contents":"shit","messageType":"cellUpdated"}
+{"cellName":"D3","contents":"harro","messageType":"cellUpdated"}
+{"cellName":"C3","contents":"","messageType":"cellUpdated"}
+{"cellName":"D3","contents":"","messageType":"cellUpdated"}
+{"cellName":"D4","contents":"","messageType":"cellUpdated"}
+{"cellName":"E4","contents":"","messageType":"cellUpdated"}
+{"cellName":"E6","contents":"","messageType":"cellUpdated"}
+{"cellName":"E10","contents":"","messageType":"cellUpdated"}
+{"cellName":"D7","contents":"hi","messageType":"cellUpdated"}
+{"cellName":"C3","contents":"gang","messageType":"cellUpdated"}
+{"cellName":"D10","contents":"=344","messageType":"cellUpdated"}
+{"cellName":"B4","contents":"ii","messageType":"cellUpdated"}
+{"cellName":"B5","contents":"love","messageType":"cellUpdated"}
+{"cellName":"B6","contents":"yall","messageType":"cellUpdated"}
+{"cellName":"B7","contents":"yuh","messageType":"cellUpdated"}
+{"cellName":"G7","contents":"a","messageType":"cellUpdated"}
+{"cellName":"E12","contents":"IDSDKF","messageType":"cellUpdated"}
