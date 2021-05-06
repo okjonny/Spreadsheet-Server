@@ -30,7 +30,6 @@ namespace network_util
 
         static void stop_server(std::string shutdown_message);
 
-//        static void broadcast_spreadsheets();
     private:
         static void error_call(socket_state &error_state);
     };

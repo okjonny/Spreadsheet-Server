@@ -1,12 +1,6 @@
-//
-// Created by jonny on 4/22/21.
-//
-
 #ifndef TEAMPOG_CS3505_SERVER_CONTROLLER_H
 #define TEAMPOG_CS3505_SERVER_CONTROLLER_H
 
-
-//class spreadsheet;
 #include <mutex>
 #include <string>
 #include <vector>
@@ -20,11 +14,13 @@ class spreadsheet;
 
 namespace ss
 {
+    /**
+     * Used to create our server_controller methods
+     */
     class server_controller {
     private:
         friend class spreadsheet;
 
-        /// map of spreadsheet names (keys) to spreadsheet objects (values)
         static std::unordered_map<std::string, spreadsheet> current_spreadsheets;
 
         static std::mutex spreadsheet_mutex;
@@ -60,9 +56,6 @@ namespace ss
 
         static std::unordered_map<std::string, spreadsheet> get_spreadsheets();
 
-//        inline void decode_utf8(const std::string& bytes, std::wstring& wstr);
-//
-//        inline void encode_utf8(const std::wstring& wstr, std::string& bytes);
     };
 }
 

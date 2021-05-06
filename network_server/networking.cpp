@@ -10,13 +10,13 @@
 #include <string>
 #include <cstdlib>
 #include <thread>
-#include <unordered_map>
 #include <server_controller.h>
 
 #define PORT 1100
 
 namespace network_util
 {
+    // Class Static Variables
     int networking::addrlen = sizeof(address);
     int networking::opt = 1;
     int networking::thread_id = 0;
@@ -29,16 +29,19 @@ namespace network_util
     socket_state networking::clients[100];
 
 
+    /**
+     * Begins the start server callback
+     * @param to_call - action to callback
+     * @return 0 if successful
+     */
     int networking::start_server(std::function<void(socket_state &)> &to_call)
     {
-        //std::cout << "Running..." << std::endl;
-        // Creating socket file descriptor
         if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
         {
             perror("socket failed");
             exit(EXIT_FAILURE);
         }
-//if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+
         if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
         {
             perror("setsockopt");
@@ -58,15 +61,19 @@ namespace network_util
         return 0;
     }
 
+    /**
+     * Stop server from accepting client
+     * @param shutdown_message
+     */
     void networking::stop_server(std::string shutdown_message)
     {
         for (const socket_state &c : clients)
         {
-            if(!c.get_error_occured())
+            if (!c.get_error_occured())
                 send(c.get_socket(), shutdown_message.c_str(), strlen(shutdown_message.c_str()), 0);
         }
 
-        for(std::thread &t : threads)
+        for (std::thread &t : threads)
         {
             if (t.joinable())
                 t.detach();
@@ -80,7 +87,6 @@ namespace network_util
 
     void networking::accept_new_clients(std::function<void(socket_state &)> &to_call)
     {
-        // Accepting clients forever
         while (true)
         {
             socket_state c(to_call, thread_id);
@@ -117,26 +123,12 @@ namespace network_util
         std::cout << "Operating on Threadid " << (long) thread_id << std::endl;
         while (true)
         {
-//            for(spreadsheet s: ss::server_controller::get_spreadsheets())
-
-            // mtx.lock();
             std::fill_n(clients[thread_id].buffer, 4096, 0);
-
 
             valread = read(clients[thread_id].socket, clients[thread_id].buffer, 4096);
 
-
-            //std::cout << thread_id << ":" << clients[thread_id].buffer << std::endl;
             std::string s = clients[thread_id].buffer;
             clients[thread_id].data = s;
-
-            std::cout << thread_id << "======================VALREAD: " << valread << std::endl;
-//            int value = std::stoi(s);
-
-
-//                try {
-
-
 
             if (valread < 1)
             {
@@ -146,30 +138,10 @@ namespace network_util
             }
 
             clients[thread_id].on_network_action(clients[thread_id]);
-
-
-//                }
-//                catch(...)
-//                {
-//                    break;
-//                }
-//            value++;
-//            std::string sToSend = std::to_string(value);
-//            send(clients[thread_id].socket, sToSend.c_str(), strlen(sToSend.c_str()), 0);
+            std::string sToSend = std::to_string(value);
             std::fill_n(clients[thread_id].buffer, 4096, 0);
-            //   mtx.unlock();
         }
 
-        //      }
-/*        catch(...)
-        {
-            std::cout << thread_id << " disconnected" << std::endl;
-        }*/
-
-/*       if(threads[thread_id].joinable())
-           threads[thread_id].join();
-       */
-        //networking::thread_id--;
     }
 
     void networking::error_call(socket_state &error_state)

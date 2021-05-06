@@ -4,9 +4,9 @@
 #include <iostream>
 
 using namespace network_util;
-
-//namespace spreadsheet_server
-//{
+/**
+ * Class to run the server and accept new clients
+ */
 int main()
 {
     ss::server_controller spreadsheet;

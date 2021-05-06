@@ -1,7 +1,3 @@
-//
-// Created by jonny on 5/4/21.
-//
-
 #ifndef TEAMPOG_CS3505_WRITER_H
 #define TEAMPOG_CS3505_WRITER_H
 

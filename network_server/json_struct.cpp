@@ -1,12 +1,12 @@
-//
-// Created by jonny on 5/4/21.
-//
-
 #include <nlohmann/json.hpp>
-
+/**
+ * Structs for all the json messages we send to clients
+ */
 namespace ss
 {
-    // CLIENT TO SERVER STRUCTS
+    /**
+     * select_cell json struct
+     */
     struct select_cell {
         std::string requestType;
         std::string cellName;
@@ -14,13 +14,18 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(select_cell, requestType, cellName)
     };
 
-
+    /**
+     * undo_cell json struct
+     */
     struct undo_cell {
         std::string requestType;
 
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(undo_cell, requestType)
     };
 
+    /**
+     * redo_cell json struct
+     */
     struct redo_cell {
         std::string requestType;
         std::string cellName;
@@ -28,7 +33,9 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(redo_cell, requestType, cellName)
     };
 
-    // SERVER TO CLIENT STRUCTS
+    /**
+    * redo_cell json struct
+    */
     struct selected_cell {
         std::string messageType;
         std::string cellName;
@@ -46,6 +53,9 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(selected_cell, messageType, cellName, selector, selectorName)
     };
 
+    /**
+     * cell_updated json struct
+     */
     struct cell_updated {
         std::string messageType;
         std::string cellName;
@@ -61,6 +71,9 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(cell_updated, messageType, cellName, contents)
     };
 
+    /**
+     * invalid_request json struct
+     */
     struct invalid_request {
         std::string messageType;
         std::string cellName;
@@ -76,6 +89,9 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(invalid_request, messageType, cellName, message)
     };
 
+    /**
+     * server_shutdown json struct
+     */
     struct server_shutdown {
         std::string messageType;
         std::string message;
@@ -89,6 +105,9 @@ namespace ss
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(server_shutdown, messageType, message)
     };
 
+    /**
+     * disconnected json struct
+     */
     struct disconnected {
         std::string messageType;
         int user;
@@ -101,5 +120,4 @@ namespace ss
 
         NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(disconnected, messageType, user)
     };
-
 }

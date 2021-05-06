@@ -5,7 +5,7 @@
 
 #ifndef SOCKSTATE_H
 #define SOCKSTATE_H
-//using namespace ss;
+
 namespace network_util
 {
     class socket_state {
@@ -39,11 +39,12 @@ namespace network_util
         bool get_error_occured() const;
 
         std::string get_data();
+
         std::string get_username();
 
         int get_id() const;
-        long get_socket() const;
 
+        long get_socket() const;
 
         void remove_data(int start, int length);
 
