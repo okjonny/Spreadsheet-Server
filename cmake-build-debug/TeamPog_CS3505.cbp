@@ -116,9 +116,6 @@
 		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/spreadsheet_file.h">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>
-		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/utf8.h">
-			<Option target="TeamPog_CS3505"/>
-		</Unit>
 		<Unit filename="/home/jonny/CLionProjects/TeamPog-CS3505/network_server/writer.cpp">
 			<Option target="TeamPog_CS3505"/>
 		</Unit>

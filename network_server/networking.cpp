@@ -4,7 +4,6 @@
 #include "networking.h"
 #include <unistd.h>
 #include <stdio.h>
-#include <array>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string>
@@ -138,7 +137,6 @@ namespace network_util
             }
 
             clients[thread_id].on_network_action(clients[thread_id]);
-            std::string sToSend = std::to_string(value);
             std::fill_n(clients[thread_id].buffer, 4096, 0);
         }
 
