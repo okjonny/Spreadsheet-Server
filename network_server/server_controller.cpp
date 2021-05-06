@@ -62,13 +62,12 @@ namespace ss
     */
     void server_controller::receive_name(network_util::socket_state &state)
     {
-
         if (is_disconnected(state))
             return;
 
         state.username = remove_extra_characters(state.get_data());
 
-        std::cout << "JOINED: " << "---- " << state.get_username() << std::endl;
+        std::cout << "JOINED: " << state.get_username() << std::endl;
 
         //Send current spreadsheet separated by "\n"
         // add "\n\n" if no spreadsheets available OR on last spreadsheet
@@ -90,8 +89,6 @@ namespace ss
         if (spreadsheets_list.empty())
             spreadsheets_list = "\n\n";
 
-        std::cout << "SENDING LIST: " << spreadsheets_list << std::endl;
-
         // send the list of spreadsheets to the client
         send(state.get_socket(), spreadsheets_list.c_str(), strlen(spreadsheets_list.c_str()), 0);
         spreadsheet_mutex.unlock();
@@ -112,12 +109,9 @@ namespace ss
 
         state.spreadsheet = remove_extra_characters(state.get_data());
 
-        std::cout << state.get_username() << " SENT AS CHOICE OF SPREADSHEET: " << "---- " << state.spreadsheet << std::endl;
-
         //check if spreadsheet exists, otherwise create a new one
         if (current_spreadsheets.find(state.spreadsheet) != current_spreadsheets.end())
         {
-            std::cout << state.get_username() << " SPREADSHEET EXISTS: " << "---- " << state.spreadsheet << std::endl;
             //std::lock_guard<std::mutex> lock(spreadsheet_mutex);
             spreadsheet_mutex.lock();
             current_spreadsheets[state.spreadsheet].users_connected.push_back(&state);
@@ -132,9 +126,6 @@ namespace ss
             new_spreadsheet.users_connected.push_back(&state);
             current_spreadsheets.insert({state.spreadsheet, new_spreadsheet});
             spreadsheet_mutex.unlock();
-            std::cout << state.get_username() << " CREATED NEW SPREADSHEET: " << "---- " << state.spreadsheet << std::endl;
-
-
         }
 
         // Read and Send existing spreadsheet data
@@ -147,6 +138,7 @@ namespace ss
             std::string line;
             nlohmann::json data;
 
+            // read through the file of cell updates for this spreadsheet
             while (std::getline(file, line))
             {
                 contents.push_back(line.c_str());
@@ -157,15 +149,14 @@ namespace ss
         // append data from file to send to client
         std::string contents_of_spreadsheet;
         for (std::string s : contents)
-            contents_of_spreadsheet += s + "\n"; // TODO ADDED A NEWLINE HERE
+            contents_of_spreadsheet += s + "\n";
 
         contents_of_spreadsheet += std::to_string(state.get_id()) + "\n";
 
+        // send contents of spreadsheet to the client
         spreadsheet_mutex.lock();
         send(state.get_socket(), contents_of_spreadsheet.c_str(), strlen(contents_of_spreadsheet.c_str()), 0);
         spreadsheet_mutex.unlock();
-
-        std::cout << "SENT: " << contents_of_spreadsheet << std::endl;
 
         std::function<void(socket_state &)> callback = receive_cell_selection;
         state.on_network_action = callback;
@@ -187,35 +178,40 @@ namespace ss
 
         nlohmann::json data;
 
+        // read the request from client
         try {
             data = nlohmann::json::parse(
-                    request.c_str()); // can we just assume client is sending the correct things pls
+                    request.c_str());
         }
         catch (...) {
         }
+
+        // read the command from client
         nlohmann::json struct_to_json;
         std::string command_to_send_client;
 
+        // handle select commands
         if (data["requestType"] == "selectCell")
         {
             selected_cell c(data["cellName"], state.get_id(), state.get_username());
             c.to_json(struct_to_json, c);
-            std::cout << "SELECTED CELL ----------------" << std::endl;
-        } else
+        }
+        // handle request types that could edit the spreadsheet
+        else
         {
             try
             {
                 struct_to_json = updating_content(state, data);
-                std::cout << "CONSTRUCTED JSON TO SEND ----------------" << std::endl;
             }
             catch (std::runtime_error &e)
             {
                 is_error_message = true;
             }
         }
+
+        // convert the json object to a string to send to client
         command_to_send_client = to_string(struct_to_json) + "\n";
 
-        // TODO: BROADCAST TO EVERYONE EXCEPT THE CLIENT THAT JUST DISCONNECTED, STATE.GET_ID????
         std::string new_id = std::to_string(state.get_id()) + " made edit\n";
 
         if (struct_to_json["messageType"] == "cellUpdated")
@@ -226,8 +222,6 @@ namespace ss
                 {
                     send(s->get_socket(), command_to_send_client.c_str(),
                          strlen(command_to_send_client.c_str()), 0);
-
-                    std::cout << "SENT: " << command_to_send_client << std::endl;
                 }
             }
         } else if (struct_to_json["messageType"] == "cellSelected")
@@ -236,15 +230,12 @@ namespace ss
             {
                 if (!s->get_error_occured() && s -> get_socket() != state.get_socket()){
                     send(s->get_socket(), command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
-
-                    std::cout << "SENT: " << command_to_send_client << std::endl;
                 }
 
             }
         } else if (struct_to_json["messageType"] == "requestError")
         {
             send(state.get_socket(), command_to_send_client.c_str(), strlen(command_to_send_client.c_str()), 0);
-            std::cout << "SENT: " << command_to_send_client << std::endl;
         }
 
 
@@ -276,7 +267,7 @@ namespace ss
                 undo_contents = current_spreadsheets[state.spreadsheet].get_undo_contents();
                 current_spreadsheets[state.spreadsheet].undo();
                 cell_updated c(undo_contents.first, current_spreadsheets[state.spreadsheet].get_cell_contents(
-                        undo_contents.first)); // cell updated class TODO this is returning null bc "there aren't any undos" killl
+                        undo_contents.first)); // cell updated class
                 c.to_json(struct_to_json, c);
                 update = to_string(struct_to_json);
             } else if (data["requestType"] == "revertCell")
@@ -347,7 +338,6 @@ namespace ss
      */
     std::vector<std::string> server_controller::get_existing_spreadsheets()
     {
-        // !TODO: LIST SPREADHSHEET NAMES IN ALPHABETICAL ORDER
         DIR *dir;
         struct dirent *diread;
         std::vector<std::string> spreadsheet_list;
