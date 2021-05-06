@@ -156,7 +156,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=TeamPog_CS3505
+CMAKE_PROJECT_NAME:STATIC=spreadsheet_server
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -234,6 +234,12 @@ TeamPog_CS3505_SOURCE_DIR:STATIC=/home/jonny/CLionProjects/TeamPog-CS3505
 
 //The directory containing a CMake configuration file for nlohmann_json.
 nlohmann_json_DIR:PATH=/usr/lib/cmake/nlohmann_json
+
+//Value Computed by CMake
+spreadsheet_server_BINARY_DIR:STATIC=/home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug
+
+//Value Computed by CMake
+spreadsheet_server_SOURCE_DIR:STATIC=/home/jonny/CLionProjects/TeamPog-CS3505
 
 
 ########################

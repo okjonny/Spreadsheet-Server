@@ -20,7 +20,7 @@ set(SOURCE_FILES
         network_server/writer.cpp network_server/writer.h
         network_server/spreadsheet_file.cpp network_server/spreadsheet_file.h
         network_server/json_struct.cpp)
-project(TeamPog_CS3505)
+project(spreadsheet_server)
 set(CMAKE_CXX_STANDARD 14)
 
 find_package(Threads)
@@ -30,8 +30,8 @@ find_package(nlohmann_json REQUIRED
         PATHS "/usr/lib/cmake/"
         )
 
-add_executable(TeamPog_CS3505
+add_executable(spreadsheet_server
         ${SOURCE_FILES}
         )
-target_link_libraries(TeamPog_CS3505 ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(spreadsheet_server ${CMAKE_THREAD_LIBS_INIT})
 #target_link_libraries(TeamPog_CS3505 stdc++fs)

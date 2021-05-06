@@ -56,5 +56,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/TeamPog_CS3505.dir/DependInfo.cmake"
+  "CMakeFiles/spreadsheet_server.dir/DependInfo.cmake"
   )

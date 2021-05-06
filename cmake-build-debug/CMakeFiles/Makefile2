@@ -72,7 +72,7 @@ CMAKE_BINARY_DIR = /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/TeamPog_CS3505.dir/all
+all: CMakeFiles/spreadsheet_server.dir/all
 
 .PHONY : all
 
@@ -82,36 +82,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/TeamPog_CS3505.dir/clean
+clean: CMakeFiles/spreadsheet_server.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/TeamPog_CS3505.dir
+# Target rules for target CMakeFiles/spreadsheet_server.dir
 
 # All Build rule for target.
-CMakeFiles/TeamPog_CS3505.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12 "Built target TeamPog_CS3505"
-.PHONY : CMakeFiles/TeamPog_CS3505.dir/all
+CMakeFiles/spreadsheet_server.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/spreadsheet_server.dir/build.make CMakeFiles/spreadsheet_server.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/spreadsheet_server.dir/build.make CMakeFiles/spreadsheet_server.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12 "Built target spreadsheet_server"
+.PHONY : CMakeFiles/spreadsheet_server.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/TeamPog_CS3505.dir/rule: cmake_check_build_system
+CMakeFiles/spreadsheet_server.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles 12
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/TeamPog_CS3505.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/spreadsheet_server.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/CLionProjects/TeamPog-CS3505/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/TeamPog_CS3505.dir/rule
+.PHONY : CMakeFiles/spreadsheet_server.dir/rule
 
 # Convenience name for target.
-TeamPog_CS3505: CMakeFiles/TeamPog_CS3505.dir/rule
+spreadsheet_server: CMakeFiles/spreadsheet_server.dir/rule
 
-.PHONY : TeamPog_CS3505
+.PHONY : spreadsheet_server
 
 # clean rule for target.
-CMakeFiles/TeamPog_CS3505.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TeamPog_CS3505.dir/build.make CMakeFiles/TeamPog_CS3505.dir/clean
-.PHONY : CMakeFiles/TeamPog_CS3505.dir/clean
+CMakeFiles/spreadsheet_server.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/spreadsheet_server.dir/build.make CMakeFiles/spreadsheet_server.dir/clean
+.PHONY : CMakeFiles/spreadsheet_server.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
