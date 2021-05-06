@@ -21,23 +21,4 @@ namespace ss
         file.close();
     }
 
-//    std::vector<std::string> spreadsheet_file::read()
-//    {
-//        input_file.open(_path);
-//        std::lock_guard<std::mutex> lock(_writerMutex);
-//        std::vector<std::string> contents;
-//        std::string line;
-//
-//        if (input_file.fail())
-//            return contents;
-//
-//        while (!file.eof())
-//        {
-//            input_file >> line;
-//            contents.push_back(line);
-//        }
-//        input_file.close();
-//        return contents;
-//    }
-
 }
