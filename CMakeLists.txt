@@ -19,7 +19,7 @@ set(SOURCE_FILES
         #        network_server/spreadsheet_file.cpp
         network_server/writer.cpp network_server/writer.h
         network_server/spreadsheet_file.cpp network_server/spreadsheet_file.h
-        network_server/json_struct.cpp network_server/utf8.h)
+        network_server/json_struct.cpp)
 project(TeamPog_CS3505)
 set(CMAKE_CXX_STANDARD 14)
 

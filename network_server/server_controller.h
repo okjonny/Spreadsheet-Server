@@ -8,7 +8,6 @@
 #include "../spreadsheet/spreadsheet.h"
 #include "socket_state.h"
 #include <fstream>
-#include "utf8.h"
 
 class spreadsheet;
 
